@@ -1,0 +1,10 @@
+/usr/lib/php/@PHP_VERSION@
+/usr/share/lintian/overrides
+/usr/share/doc/php@PHP_VERSION@-common
+/usr/share/php/@PHP_VERSION@
+/usr/share/php/@PHP_VERSION@/sapi
+/etc/php/@PHP_VERSION@/mods-available
+/usr/sbin
+/var/lib/php/@PHP_VERSION@
+/var/lib/php/@PHP_VERSION@/sessions
+/var/lib/php/@PHP_VERSION@/modules

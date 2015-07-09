@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+#EXTRA#
+
+php@PHP_MAJOR@_@PHP_MINOR@_enable() { return 0; }
+
+if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ]; then
+    . /usr/share/php/php@PHP_VERSION@-maintscript-helper
+
+    mods=$(php@PHP_VERSION@query -M)
+    for mod in $mods; do
+	php@PHP_VERSION@_invoke dismod @sapi@ $mod
+    done
+fi
+
+#DEBHELPER#
+
+exit 0

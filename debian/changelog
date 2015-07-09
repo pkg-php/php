@@ -1,0 +1,5 @@
+php7.0 (7.0.0~alpha2-1) experimental; urgency=medium
+
+  * Initial packaging of PHP 7.0
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 15 Jun 2015 09:18:33 +0200

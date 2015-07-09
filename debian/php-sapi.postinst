@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -e
+
+#EXTRA#
+
+CONFDIR=/etc/php/@PHP_VERSION@/@sapi@/conf.d
+
+if [ -L $CONFDIR ]; then
+    rm $CONFDIR
+    mkdir $CONFDIR
+fi
+
+if [ "$1" = "configure" ]; then
+    phpini="/etc/php/@PHP_VERSION@/@sapi@/php.ini"
+
+    if [ "@sapi@" = "cli" ]; then
+	ucf /usr/share/php/@PHP_VERSION@/php.ini-production.@sapi@ $phpini
+    else
+	ucf /usr/share/php/@PHP_VERSION@/php.ini-production $phpini
+    fi
+    ucfr @package@ $phpini
+
+    if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ]; then
+	. /usr/share/php/php@PHP_VERSION@-maintscript-helper
+	
+	mods=$(php@PHP_VERSION@query -M)
+	for mod in $mods; do
+	    php@PHP_VERSION@_invoke enmod @sapi@ $mod
+	done
+    fi
+
+fi
+
+#DEBHELPER#
+
+exit 0
