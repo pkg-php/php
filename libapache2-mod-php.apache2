@@ -1,3 +1,2 @@
-mod apache2-build/.libs/libphp@PHP_VERSION@.so
 mod debian/php@PHP_VERSION@.load
 mod debian/php@PHP_VERSION@.conf

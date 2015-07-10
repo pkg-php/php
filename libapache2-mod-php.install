@@ -1,0 +1,2 @@
+#!/usr/bin/dh-exec
+usr/lib/apache2/modules/libphp@PHP_MAJOR@.so /usr/lib/apache2/modules/libphp@PHP_VERSION@.so
