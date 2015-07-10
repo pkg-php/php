@@ -8,11 +8,9 @@ Subject: php-5.3.3-macropen
  ext/dba/dba_db4.c | 4 ++--
  3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/ext/dba/dba.c b/ext/dba/dba.c
-index e54af28..389f4bc 100644
---- a/ext/dba/dba.c
-+++ b/ext/dba/dba.c
-@@ -937,7 +937,7 @@ static void php_dba_open(INTERNAL_FUNCTION_PARAMETERS, int persistent)
+--- php7.0.orig/ext/dba/dba.c
++++ php7.0/ext/dba/dba.c
+@@ -937,7 +937,7 @@ static void php_dba_open(INTERNAL_FUNCTI
  		}
  	}
  
@@ -21,10 +19,8 @@ index e54af28..389f4bc 100644
  		dba_close(info);
  		php_error_docref2(NULL, Z_STRVAL(args[0]), Z_STRVAL(args[1]), E_WARNING, "Driver initialization failed for handler: %s%s%s", hptr->name, error?": ":"", error?error:"");
  		FREENOW;
-diff --git a/ext/dba/dba_db3.c b/ext/dba/dba_db3.c
-index a582ad5..2d62a6c 100644
---- a/ext/dba/dba_db3.c
-+++ b/ext/dba/dba_db3.c
+--- php7.0.orig/ext/dba/dba_db3.c
++++ php7.0/ext/dba/dba_db3.c
 @@ -96,9 +96,9 @@ DBA_OPEN_FUNC(db3)
  	    dbp->set_errcall(dbp, php_dba_db3_errcall_fcn);
  		if(
@@ -37,10 +33,8 @@ index a582ad5..2d62a6c 100644
  #endif
  			dba_db3_data *data;
  
-diff --git a/ext/dba/dba_db4.c b/ext/dba/dba_db4.c
-index 83fd26a..cca2b37 100644
---- a/ext/dba/dba_db4.c
-+++ b/ext/dba/dba_db4.c
+--- php7.0.orig/ext/dba/dba_db4.c
++++ php7.0/ext/dba/dba_db4.c
 @@ -125,9 +125,9 @@ DBA_OPEN_FUNC(db4)
  	    dbp->set_errcall(dbp, php_dba_db4_errcall_fcn);
  	    if (
