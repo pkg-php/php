@@ -398,7 +398,7 @@ override_dh_prep:
 	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
 	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    < $${versionless} $(SED_REPLACEMENT) > $${package}; \
-	    [ --x $${versionless} ] && chmod +x $${package}; \
+	    [ -x $${versionless} ] && chmod +x $${package}; \
 	done
 
 	# generate the config snippets for various php
@@ -443,8 +443,9 @@ override_dh_prep:
 	    < debian/php-sapi.bug.script $(SED_REPLACEMENT) > debian/$${package}/usr/share/bug/$${package}/script; \
 	    chmod 755 debian/$${package}/usr/share/bug/$${package}/script; \
 	    < debian/php-sapi.bug.control $(SED_REPLACEMENT) > debian/$${package}/usr/share/bug/$${package}/control; \
-	    for tmpl in postrm prerm postinst dirs triggers; do \
+	    for tmpl in postrm prerm postinst dirs install triggers; do \
 	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
+	        [ -x debian/php-sapi.$${tmpl} ] && chmod +x debian/$${package}.$${tmpl}; \
 	    done; \
 	done
 
@@ -492,14 +493,18 @@ PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h sed -ne "/^PHP_FUNCTION/ s/PH
 
 override_dh_auto_install: $(INSTALL_TARGETS)
 
+.NOTPARALLEL: override_dh_auto_install
+
 install-%-stamp: configure-%-stamp
-build-%-stamp: build-%-stamp
-#	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-modules install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp/
-	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp/
+	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-modules install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp/
+#	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp/
 	touch install-$*-stamp
 
 override_dh_install:
 #TODO
+
+	dh_install --fail-missing
+
 	# rename the include directory from php5 to phpX.Y
 	[ -d debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION) ] || \
 	mv debian/$(PHP_APACHE2)/usr/include/php5 debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION)
@@ -509,8 +514,6 @@ override_dh_install:
 
 	[ -d debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build ] || \
 	mv debian/$(PHP_APACHE2)/usr/lib/php5/build debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build
-
-	dh_install --fail-missing
 
 	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 
