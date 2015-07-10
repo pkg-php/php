@@ -32,6 +32,7 @@ PRIORITY             := $(PHP_MAJOR_VERSION)$(PHP_MINOR_VERSION)
 TARGETS              := apache2 cli phpdbg embed fpm cgi
 CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
 BUILD_TARGETS        := $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
+INSTALL_TARGETS      := $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
 
 # Special package names
 PHP_PHP = php$(PHP_NAME_VERSION)
@@ -387,20 +388,19 @@ override_dh_auto_configure: prepared-stamp $(CONFIGURE_TARGETS)
 configure-%-stamp:
 	echo ${$*_config}
 	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
-#	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
-#	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
-#	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
-#	   Zend/
 	touch configure-$*-stamp
 
 override_dh_prep:
+	# Do this first so we don't overwrite any debhelper-generated files
+	#
+	# generate versioned files from versionless variants
 	for file in $(PREPARE_FILES); do \
 	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
 	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    < $${versionless} $(SED_REPLACEMENT) > $${package}; \
+	    [ --x $${versionless} ] && chmod +x $${package}; \
 	done
-	# Do this first so we don't overwrite any debhelper-generated files
-	#
+
 	# generate the config snippets for various php
 	# modules from the templates.
 	cat debian/modulelist debian/extramodulelist | while read module extname dsoname priority extension; do \
@@ -490,53 +490,16 @@ override_dh_auto_clean: unprepared
 
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h sed -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
-override_dh_auto_install: DH_OPTIONS=
-override_dh_auto_install:
+override_dh_auto_install: $(INSTALL_TARGETS)
 
-	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
+install-%-stamp: configure-%-stamp
+build-%-stamp: build-%-stamp
+#	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-modules install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp/
+	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp/
+	touch install-$*-stamp
 
-	# Mangle apache2 DSO name before running dh_apache2
-	ln -f apache2-build/.libs/libphp$(PHP_MAJOR_VERSION).so apache2-build/.libs/libphp$(PHP_NAME_VERSION).so
-
-	# install apache2 DSO module
-	dh_apache2 --conditional=php$(PHP_MAJOR_VERSION)_$(PHP_MINOR_VERSION)_enable
-
-	# sanitize php.ini file
-	cat php.ini-production | tr "\t" " " | \
-	sed -e'/session.gc_probability =/ s/1/0/g;' \
-	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
-	    -e'/expose_php =/ s/On/Off/g;' \
-	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-production
-	cat php.ini-production | tr "\t" " " | \
-	sed -e'/memory_limit =/ s/128M/-1/g;' \
-	    -e'/session.gc_probability =/ s/1/0/g' \
-	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-production.cli
-	cat php.ini-development | tr "\t" " " | \
-	sed -e'/session.gc_probability =/ s/1/0/g;' \
-	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
-	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-development
-ifeq (yes,$(RUN_TESTS))
-	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
-endif
-
-	# Install reportbug for main php package
-	mkdir -p debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)
-	install -m644 debian/php.bug.control debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)/control
-	ln -sf ../$(PHP_COMMON)/script debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)/script
-
-	# Install helper shell fragment
-	install -m644 debian/php$(PHP_NAME_VERSION)-helper $(CURDIR)/debian/$(PHP_COMMON)/usr/share/php/
-	install -m644 debian/debhelper/php$(PHP_NAME_VERSION)-maintscript-helper $(CURDIR)/debian/$(PHP_COMMON)/usr/share/php/
-
-	# install embed SAPI
-	cd embed-build && make install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/$(PHP_LIBEMBED)
-
-	# install the apache modules' files
-	cd apache2-build && $(MAKE) install-headers install-build install-modules install-programs INSTALL_ROOT=$(CURDIR)/debian/$(PHP_APACHE2)
-
-	# install the headers from cgi-build
-	cd cgi-build && $(MAKE) install-headers INSTALL_ROOT=$(CURDIR)/debian/$(PHP_DEV)
-
+override_dh_install:
+#TODO
 	# rename the include directory from php5 to phpX.Y
 	[ -d debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION) ] || \
 	mv debian/$(PHP_APACHE2)/usr/include/php5 debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION)
@@ -547,14 +510,34 @@ endif
 	[ -d debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build ] || \
 	mv debian/$(PHP_APACHE2)/usr/lib/php5/build debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build
 
-	# remove netware and win32 headers that we don't want
-	cd debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION)/ && \
-		  $(RM) TSRM/readdir.h \
-			TSRM/tsrm_config.nw.h TSRM/tsrm_config.w32.h\
-			TSRM/tsrm_nw.h TSRM/tsrm_win32.h\
-			Zend/zend_config.nw.h Zend/zend_config.w32.h\
-			main/config.nw.h main/config.w32.h\
-			main/win95nt.h
+	dh_install --fail-missing
+
+	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
+
+	# sanitize php.ini file
+	cat php.ini-production | tr "\t" " " | \
+	sed -e'/session.gc_probability =/ s/1/0/g;' \
+	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
+	    -e'/expose_php =/ s/On/Off/g;' \
+	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-production
+
+	cat php.ini-production | tr "\t" " " | \
+	sed -e'/memory_limit =/ s/128M/-1/g;' \
+	    -e'/session.gc_probability =/ s/1/0/g' \
+	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-production.cli
+
+	cat php.ini-development | tr "\t" " " | \
+	sed -e'/session.gc_probability =/ s/1/0/g;' \
+	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
+	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-development
+
+	# Install helper shell fragment
+	install -m644 debian/php$(PHP_NAME_VERSION)-helper $(CURDIR)/debian/$(PHP_COMMON)/usr/share/php/
+	install -m644 debian/debhelper/php$(PHP_NAME_VERSION)-maintscript-helper $(CURDIR)/debian/$(PHP_COMMON)/usr/share/php/
+
+ifeq (yes,$(RUN_TESTS))
+	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
+endif
 
 	# install extensions
 	ext=`./debian/$(PHP_APACHE2)/usr/bin/php-config$(PHP_NAME_VERSION) --extension-dir`;\
@@ -611,9 +594,6 @@ endif
 	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
 
-	# move and install -dev files
-	dh_movefiles --sourcedir=debian/$(PHP_LIBEMBED)
-	dh_movefiles --sourcedir=debian/$(PHP_APACHE2)
 	rm -rf debian/$(PHP_LIBEMBED)/usr/include/ \
 	       debian/$(PHP_LIBEMBED)/usr/bin/
 	rm -rf debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build/ \
@@ -661,12 +641,18 @@ endif
 	# directories cleanup:
 	-rmdir -p debian/$(PHP_APACHE2)/usr/share/man/man1
 
+override_dh_bugfiles:
+	# Install reportbug for main php package
+	mkdir -p debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)
+	install -m644 debian/php.bug.control debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)/control
+	ln -sf ../$(PHP_COMMON)/script debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)/script
+
 override_dh_apache2:
 	for sapi in apache2 cgi; do \
 	    $(SAPI_PACKAGE) \
 	    < debian/$${versionless}.apache2 $(SED_REPLACEMENT) > debian/$${package}.apache2; \
 	done
-	dh_apache2
+	dh_apache2 --conditional=php$(PHP_MAJOR_VERSION)_$(PHP_MINOR_VERSION)_enable
 
 override_dh_installdoc-indep:
 	dh_installdoc -p$(PHP_PHP) --link-doc=$(PHP_COMMON)

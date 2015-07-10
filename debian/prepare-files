@@ -25,3 +25,5 @@ php@PHP_VERSION@.load
 php@PHP_VERSION@-phpdbg.links
 php@PHP_VERSION@query
 debhelper/php@PHP_VERSION@-maintscript-helper
+php@PHP_VERSION@-common.install
+libapache2-mod-php@PHP_VERSION@.install
