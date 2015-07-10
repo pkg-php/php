@@ -51,11 +51,12 @@ PHP_PHPDBG = php$(PHP_NAME_VERSION)-phpdbg
 SED_VARIABLES = \
 	-e "s,@sapi@,$${sapi},g"					\
 	-e "s,@package@,$${package},g"					\
+	-e "s,@modules@,$${modules},g"					\
+	-e "s,@priority@,$(PRIORITY),g"					\
 	-e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"			\
 	-e "s,@PHP_MAJOR@,$(PHP_MAJOR_VERSION),g"			\
 	-e "s,@PHP_MINOR@,$(PHP_MINOR_VERSION),g"			\
-	-e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"			\
-	-e "s,@priority@,$(PRIORITY),g"					\
+	-e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"
 
 SED_REPLACEMENT = sed -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | sed $(SED_VARIABLES) | sed -e '/\#EXTRA\#/ d'
 
@@ -138,10 +139,10 @@ CFLAGS += -g
 # some other helpful (for readability at least) shorthand variables
 PHPIZE_BUILDDIR = debian/$(PHP_DEV)/usr/lib/php/$(PHP_NAME_VERSION)/build
 
-#ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-#    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-#    MAKEFLAGS += -j$(NUMJOBS)
-#endif
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    MAKEFLAGS += -j$(NUMJOBS)
+endif
 
 COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--host=$(DEB_HOST_GNU_TYPE) \
@@ -390,7 +391,8 @@ configure-%-stamp:
 	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
 	touch configure-$*-stamp
 
-override_dh_prep:
+prepare-files: prepare-file-stamp
+prepare-files-stamp:
 	# Do this first so we don't overwrite any debhelper-generated files
 	#
 	# generate versioned files from versionless variants
@@ -398,7 +400,7 @@ override_dh_prep:
 	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
 	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    < $${versionless} $(SED_REPLACEMENT) > $${package}; \
-	    [ -x $${versionless} ] && chmod +x $${package}; \
+	    if [ -x $${versionless} ]; then chmod +x $${package}; fi; \
 	done
 
 	# generate the config snippets for various php
@@ -408,13 +410,15 @@ override_dh_prep:
 	    if [ -z "$${dsoname}" ]; then dsoname=$${module}; fi; \
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
 	    if [ -z "$${extension}" ]; then extension=extension; fi; \
-	    mkdir -p debian/$${package}/usr/share/php/$(PHP_NAME_VERSION)/$${module}; \
+	    mkdir -p debian/tmp/usr/share/php/$(PHP_NAME_VERSION)/$${module}; \
 	    sed -e "s|@extname@|$${extname}|g" \
 	        -e "s/@dsoname@/$${dsoname}/g" \
 	        -e "s/@extension@/$${extension}/g" \
 	        -e "s/@priority@/$${priority}/g" \
 	      < debian/php-module.ini \
-	      > debian/$${package}/usr/share/php/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini; \
+	      > debian/tmp/usr/share/php/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini; \
+	    echo "usr/lib/php/*/*/$${dsoname}.so" >> debian/$${package}.install; \
+	    echo "usr/share/php/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
 	    echo -n "$$dsoname " >> debian/$${package}.modules; \
 	done
 
@@ -423,32 +427,25 @@ override_dh_prep:
 	cat debian/modulelist | while read module extname dsoname priority; do \
 	    $(MODULE_PACKAGE) \
 	    modules=$$(cat debian/$${package}.modules); \
-	    for script in postinst preinst postrm prerm; do \
+	    for script in postinst preinst postrm prerm bug-script bug-control triggers; do \
 	        < debian/php-module.$${script} $(SED_REPLACEMENT) > debian/$${package}.$${script}; \
 	    done; \
-	    cp debian/php-module.triggers debian/$${package}.triggers; \
 	    rm debian/$${package}.modules; \
-	    mkdir -p debian/$${package}/usr/share/bug/$${package}; \
-	    < debian/php-module.bug.script $(SED_REPLACEMENT) > debian/$${package}/usr/share/bug/$${package}/script; \
-	    chmod 755 debian/$${package}/usr/share/bug/$${package}/script; \
-	    cp debian/php-module.bug.control debian/$${package}/usr/share/bug/$${package}/control; \
 	done
 
 	# likewise, for the different sapi implementations
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
-	    mkdir -p "$(CURDIR)/debian/$${package}/usr/share/php/$(PHP_NAME_VERSION)/sapi/"; \
-	    touch "$(CURDIR)/debian/$${package}/usr/share/php/$(PHP_NAME_VERSION)/sapi/$${sapi}"; \
-	    mkdir -p debian/$${package}/usr/share/bug/$${package}; \
-	    < debian/php-sapi.bug.script $(SED_REPLACEMENT) > debian/$${package}/usr/share/bug/$${package}/script; \
-	    chmod 755 debian/$${package}/usr/share/bug/$${package}/script; \
-	    < debian/php-sapi.bug.control $(SED_REPLACEMENT) > debian/$${package}/usr/share/bug/$${package}/control; \
-	    for tmpl in postrm prerm postinst dirs install triggers; do \
+	    mkdir -p "debian/tmp/usr/share/php/$(PHP_NAME_VERSION)/sapi/"; \
+	    touch "debian/tmp/usr/share/php/$(PHP_NAME_VERSION)/sapi/$${sapi}"; \
+	    for tmpl in postrm prerm postinst dirs install triggers bug-script bug-control; do \
 	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
-	        [ -x debian/php-sapi.$${tmpl} ] && chmod +x debian/$${package}.$${tmpl}; \
+	        if [ -x debian/php-sapi.$${tmpl} ]; then chmod +x debian/$${package}.$${tmpl}; fi; \
 	    done; \
 	done
+	touch prepare-files-stamp
 
+override_dh_prep: prepare-files
 	dh_prep
 
 override_dh_auto_clean: unprepared
@@ -505,16 +502,6 @@ override_dh_install:
 
 	dh_install --fail-missing
 
-	# rename the include directory from php5 to phpX.Y
-	[ -d debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION) ] || \
-	mv debian/$(PHP_APACHE2)/usr/include/php5 debian/$(PHP_APACHE2)/usr/include/php$(PHP_NAME_VERSION)
-
-	[ -d debian/$(PHP_LIBEMBED)/usr/lib/php/$(PHP_NAME_VERSION)/build ] || \
-	mv debian/$(PHP_LIBEMBED)/usr/lib/php5/build debian/$(PHP_LIBEMBED)/usr/lib/php/$(PHP_NAME_VERSION)/build
-
-	[ -d debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build ] || \
-	mv debian/$(PHP_APACHE2)/usr/lib/php5/build debian/$(PHP_APACHE2)/usr/lib/php/$(PHP_NAME_VERSION)/build
-
 	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 
 	# sanitize php.ini file
@@ -548,22 +535,6 @@ endif
 	    $(SAPI_PACKAGE) \
 	    mkdir -p debian/$${package}/$${ext}; \
 	done;
-
-	ext=`./debian/$(PHP_APACHE2)/usr/bin/php-config$(PHP_NAME_VERSION) --extension-dir`;\
-	cat debian/modulelist debian/extramodulelist | while read module extname dsoname priority; do \
-	    $(MODULE_PACKAGE) \
-	    if [ "$${module}" = "mysqlnd" ]; then \
-	        modulepath=cgi-build/modules; \
-	    elif [ "$${module}" = "readline" ]; then \
-	        modulepath=cli-build/modules; \
-	    else \
-	        modulepath=debian/$(PHP_APACHE2)/$${ext}; \
-	    fi; \
-	    if [ -z "$$dsoname" ]; then dsoname=$${module}; fi; \
-	    mkdir -p debian/$${package}$${ext}; \
-	    [ -f debian/$${package}$${ext}/$${dsoname}.so ] || \
-	    install -m 644 -o root -g root $${modulepath}/$${dsoname}.so debian/$${package}$${ext}/$${dsoname}.so; \
-	done
 
 	# install CGI
 	cp cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION) debian/$(PHP_CGI)/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)

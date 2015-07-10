@@ -13,8 +13,6 @@ php@PHP_VERSION@-dev.lintian-overrides
 php@PHP_VERSION@-dev.postinst
 php@PHP_VERSION@-dev.prerm
 php@PHP_VERSION@enmod
-php@PHP_VERSION@filter.conf
-php@PHP_VERSION@filter.load
 php@PHP_VERSION@-fpm-checkconf
 php@PHP_VERSION@-fpm.init
 php@PHP_VERSION@-fpm.logrotate
@@ -25,6 +23,5 @@ php@PHP_VERSION@.load
 php@PHP_VERSION@-phpdbg.links
 php@PHP_VERSION@query
 debhelper/php@PHP_VERSION@-maintscript-helper
-php@PHP_VERSION@-common.install
-php@PHP_VERSION@-common.install
 php@PHP_VERSION@-dev.install
+php@PHP_VERSION@.bug-control
