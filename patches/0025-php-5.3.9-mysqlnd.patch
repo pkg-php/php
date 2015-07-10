@@ -7,11 +7,9 @@ Subject: php-5.3.9-mysqlnd
  ext/pdo_mysql/pdo_mysql.c | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/ext/mysqlnd/mysqlnd.c b/ext/mysqlnd/mysqlnd.c
-index 227c420..143682f 100644
---- a/ext/mysqlnd/mysqlnd.c
-+++ b/ext/mysqlnd/mysqlnd.c
-@@ -943,7 +943,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, connect)(MYSQLND_CONN_DATA * conn,
+--- php7.0.orig/ext/mysqlnd/mysqlnd.c
++++ php7.0/ext/mysqlnd/mysqlnd.c
+@@ -943,7 +943,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, connec
  		if (host_len == sizeof("localhost") - 1 && !strncasecmp(host, "localhost", host_len)) {
  			DBG_INF_FMT("socket=%s", socket_or_pipe? socket_or_pipe:"n/a");
  			if (!socket_or_pipe) {
@@ -20,10 +18,8 @@ index 227c420..143682f 100644
  			}
  			transport_len = mnd_sprintf(&transport, 0, "unix://%s", socket_or_pipe);
  			unix_socket = TRUE;
-diff --git a/ext/pdo_mysql/pdo_mysql.c b/ext/pdo_mysql/pdo_mysql.c
-index 6adf3b1..fbe6edb 100644
---- a/ext/pdo_mysql/pdo_mysql.c
-+++ b/ext/pdo_mysql/pdo_mysql.c
+--- php7.0.orig/ext/pdo_mysql/pdo_mysql.c
++++ php7.0/ext/pdo_mysql/pdo_mysql.c
 @@ -53,7 +53,7 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_mysql)
  #  define PDO_MYSQL_UNIX_ADDR PHP_MYSQL_UNIX_SOCK_ADDR
  # else
