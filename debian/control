@@ -293,6 +293,17 @@ Description: Debug symbols for PHP7.0
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php7.0-json
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php7.0-common (= ${binary:Version}), ucf
+Pre-Depends: ${misc:Pre-Depends}
+Description: CURL module for php7.0
+ JavaScript Object Notation (JSON) data-interchange format parser and encoder.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php7.0-curl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php7.0-common (= ${binary:Version}), ucf
