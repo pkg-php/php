@@ -15,7 +15,8 @@ pspell pspell
 readline readline
 recode recode
 snmp SNMP
-sqlite SQLite sqlite3
+sqlite SQLite3 sqlite3
 tidy tidy
 xmlrpc XML-RPC
 xsl XSL
+json JSON

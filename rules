@@ -180,7 +180,6 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-wddx \
 		--with-libxml-dir=/usr \
 		--with-zlib \
-		--with-json=shared,/usr \
 		--with-kerberos=/usr \
 		--with-openssl=/usr \
 		--enable-soap \
@@ -206,6 +205,7 @@ apache2_config = \
 		--with-freetype-dir=shared,/usr \
 		--with-vpx-dir=shared,/usr \
 		--with-imap=shared,/usr \
+		--with-json=shared,/usr \
 		--with-imap-ssl \
 		--enable-intl=shared \
 		--without-t1lib \
@@ -245,6 +245,7 @@ cgi_config = \
 		--without-pdo-sqlite \
 		--without-sybase-ct \
 		--without-sqlite3 \
+		--disable-json \
 		--enable-pcntl
 
 cli_config = \
@@ -254,6 +255,7 @@ cli_config = \
 		$(COMMON_CONFIG) \
 		--without-mm \
 		--disable-pdo \
+		--disable-json \
 		--without-sybase-ct \
 		--without-sqlite3 --enable-pcntl \
 		--with-libedit=shared
@@ -265,6 +267,7 @@ embed_config = \
 		$(COMMON_CONFIG) \
 		--without-mm \
 		--disable-pdo \
+		--disable-json \
 		--without-sybase-ct \
 		--without-sqlite3 --enable-pcntl
 
@@ -277,6 +280,7 @@ fpm_config = \
 		--with-libevent-dir=/usr \
 		--without-mm \
 		--disable-pdo \
+		--disable-json \
 		--without-sybase-ct \
 		--without-sqlite3 \
 		$(CONFIGURE_SYSTEMD)
@@ -288,6 +292,7 @@ phpdbg_config = \
 		$(COMMON_CONFIG) \
 		--without-mm \
 		--disable-pdo \
+		--disable-json \
 		--without-sybase-ct \
 		--without-sqlite3 --enable-pcntl \
 		--with-libedit=shared
