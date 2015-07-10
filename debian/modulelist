@@ -6,6 +6,7 @@ gmp GMP
 imap IMAP
 interbase Interbase
 intl Internationalisation
+json JSON
 ldap LDAP
 mcrypt MCrypt
 mysqlnd MySQL mysqlnd 10
@@ -16,7 +17,7 @@ readline readline
 recode recode
 snmp SNMP
 sqlite SQLite3 sqlite3
+sybase Sybase pdo_dblib
 tidy tidy
 xmlrpc XML-RPC
 xsl XSL
-json JSON
