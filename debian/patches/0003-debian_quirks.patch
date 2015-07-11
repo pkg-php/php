@@ -48,14 +48,8 @@ Subject: debian_quirks
      ;;
  esac
  
-@@ -1195,8 +1195,14 @@ datadir=`eval eval echo $datadir`
+@@ -1197,6 +1197,8 @@ dnl Build extension directory path
  
- dnl Build extension directory path
- 
-+PHP_API_VERSION=`$EGREP '#define PHP_API_VERSION' $srcdir/main/php.h|$SED 's/#define PHP_API_VERSION //'`
-+
-+AC_SUBST(PHP_API_VERSION)
-+
  ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modules.h|$SED 's/#define ZEND_MODULE_API_NO //'`
  
 +AC_SUBST(ZEND_MODULE_API_NO)
@@ -63,7 +57,7 @@ Subject: debian_quirks
  if test -z "$EXTENSION_DIR"; then
    extbasedir=$ZEND_MODULE_API_NO
    if test "$oldstyleextdir" = "yes"; then
-@@ -1245,7 +1251,7 @@ EXPANDED_SYSCONFDIR=`eval echo $sysconfd
+@@ -1245,7 +1247,7 @@ EXPANDED_SYSCONFDIR=`eval echo $sysconfd
  EXPANDED_DATADIR=$datadir
  EXPANDED_PHP_CONFIG_FILE_PATH=`eval echo "$PHP_CONFIG_FILE_PATH"`
  EXPANDED_PHP_CONFIG_FILE_SCAN_DIR=`eval echo "$PHP_CONFIG_FILE_SCAN_DIR"`
@@ -72,7 +66,7 @@ Subject: debian_quirks
  
  exec_prefix=$old_exec_prefix
  libdir=$old_libdir
-@@ -1527,6 +1533,7 @@ $php_shtool mkdir -p scripts/man1
+@@ -1527,6 +1529,7 @@ $php_shtool mkdir -p scripts/man1
  ALL_OUTPUT_FILES="php7.spec main/build-defs.h \
  scripts/phpize scripts/man1/phpize.1 \
  scripts/php-config scripts/man1/php-config.1 \
@@ -467,8 +461,8 @@ Subject: debian_quirks
  
 -phpincludedir = $(includedir)/php
 -phpbuilddir = $(libdir)/build
-+phpincludedir = $(includedir)/php/$(PHP_API_VERSION)
-+phpbuilddir = $(prefix)/lib/php/$(PHP_API_VERSION)/build
++phpincludedir = $(includedir)/php/$(DEBIAN_PHP_API)
++phpbuilddir = $(prefix)/lib/php/$(DEBIAN_PHP_API)/build
  
  BUILD_FILES = \
  	scripts/phpize.m4 \
@@ -481,9 +475,9 @@ Subject: debian_quirks
 -include_dir="@includedir@/php"
 -includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib"
 -ldflags="@PHP_LDFLAGS@"
-+include_dir="@includedir@/php/@PHP_API_VERSION@"
++include_dir="@includedir@/php/@DEBIAN_PHP_API@"
 +includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib $(getconf LFS_CFLAGS)"
-+ldflags="-L$prefix/lib/php/@PHP_API_VERSION@ @PHP_LDFLAGS@"
++ldflags="-L$prefix/lib/php/@DEBIAN_PHP_API@ @PHP_LDFLAGS@"
  libs="@EXTRA_LIBS@"
  extension_dir='@EXTENSION_DIR@'
  man_dir=`eval echo @mandir@`
@@ -495,8 +489,8 @@ Subject: debian_quirks
  exec_prefix="`eval echo @exec_prefix@`"
 -phpdir="`eval echo @libdir@`/build"
 -includedir="`eval echo @includedir@`/php"
-+phpdir="$prefix/lib/php/@PHP_API_VERSION@/build"
-+includedir="$prefix/include/php/@PHP_API_VERSION@"
++phpdir="$prefix/lib/php/@DEBIAN_PHP_API@/build"
++includedir="$prefix/include/php/@DEBIAN_PHP_API@"
  builddir="`pwd`"
  SED="@SED@"
  
@@ -575,7 +569,7 @@ Subject: debian_quirks
 +fi
 +
 +if test -z "$skel_dir"; then
-+  skel_dir="/usr/lib/php/@PHP_API_VERSION@/skeleton" #FIXME!!!
++  skel_dir="/usr/lib/php/@DEBIAN_PHP_API@/skeleton" #FIXME!!!
 +fi
 +
 +## convert skel_dir to full path
