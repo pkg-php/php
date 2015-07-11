@@ -9,7 +9,7 @@ Subject: extension_api
 
 --- php7.0.orig/configure.in
 +++ php7.0/configure.in
-@@ -1203,8 +1203,10 @@ ZEND_MODULE_API_NO=`$EGREP '#define ZEND
+@@ -1199,8 +1199,10 @@ ZEND_MODULE_API_NO=`$EGREP '#define ZEND
  
  AC_SUBST(ZEND_MODULE_API_NO)
  
@@ -21,7 +21,7 @@ Subject: extension_api
    if test "$oldstyleextdir" = "yes"; then
      if test "$PHP_DEBUG" = "1"; then
        part1=debug
-@@ -1348,6 +1350,7 @@ PHP_SUBST(CXX)
+@@ -1344,6 +1346,7 @@ PHP_SUBST(CXX)
  PHP_SUBST(CXXFLAGS)
  PHP_SUBST(CXXFLAGS_CLEAN)
  PHP_SUBST_OLD(DEBUG_CFLAGS)

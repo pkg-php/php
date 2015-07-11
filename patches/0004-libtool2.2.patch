@@ -8,15 +8,12 @@ Subject: libtool2.2
 
 --- php7.0.orig/scripts/phpize.in
 +++ php7.0/scripts/phpize.in
-@@ -6,10 +6,12 @@ datarootdir='@datarootdir@'
- exec_prefix="`eval echo @exec_prefix@`"
- phpdir="$prefix/lib/php/@PHP_API_VERSION@/build"
- includedir="$prefix/include/php/@PHP_API_VERSION@"
-+aclocaldir="$prefix/share/aclocal"
+@@ -9,7 +9,9 @@ includedir="$prefix/include/php/@DEBIAN_
  builddir="`pwd`"
  SED="@SED@"
  
 -FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4"
++aclocaldir="$prefix/share/aclocal"
 +FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool"
 +LIBTOOL_FILES="libtool.m4 ltoptions.m4 ltsugar.m4 ltversion.m4 lt~obsolete.m4"
  FILES="acinclude.m4 Makefile.global config.sub config.guess ltmain.sh run-tests*.php"
