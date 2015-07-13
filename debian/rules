@@ -499,7 +499,7 @@ prepare-files-stamp:
 
 	# install extra CGI-BIN
 	mkdir -p debian/tmp/usr/lib/cgi-bin/
-	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/tmp/usr/lib/cgi-bin/$(PHP_CGI)
+	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
 
 	touch prepare-files-stamp
 
