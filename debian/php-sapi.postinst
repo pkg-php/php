@@ -26,7 +26,7 @@ if [ "$1" = "configure" ]; then
 	
 	mods=$(php@PHP_VERSION@query -M)
 	for mod in $mods; do
-	    php@PHP_VERSION@_invoke enmod @sapi@ $mod
+	    php@PHP_MAJOR@_@PHP_MINOR@_invoke enmod @sapi@ $mod
 	done
     fi
 

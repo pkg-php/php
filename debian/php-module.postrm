@@ -4,11 +4,9 @@ set -e
 
 #EXTRA#
 
-inidir=/etc/php5/mods-available
+inidir=/etc/php/@PHP_VERSION@/mods-available
 for dsoname in @modules@; do
     inifile=${dsoname}.ini
-
-    dpkg-maintscript-helper mv_conffile /etc/php5/conf.d/${inifile} ${inidir}/${inifile} 5.4.0~rc6-1 -- "$@";
 
     if [ "$1" = "purge" ]; then
         # Query which package has this conffile registered
@@ -17,7 +15,7 @@ for dsoname in @modules@; do
 	fi
 
         # Only work with the config file if it still belongs to us
-	if test "$ucfp" = php5-@package@; then
+	if test "$ucfp" = php@PHP_VERSION@-@package@; then
 	    for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist;  do
 		rm -f ${inidir}/${inifile}${ext}
 	    done
@@ -26,15 +24,15 @@ for dsoname in @modules@; do
 		ucf --purge ${inidir}/${inifile}
 	    fi
 	    if which ucfr >/dev/null; then
-		ucfr --purge php5-@package@ ${inidir}/${inifile}
+		ucfr --purge php@PHP_VERSION@-@package@ ${inidir}/${inifile}
 	    fi
 	fi
 	
-	if [ -e /usr/share/php5/php5-maintscript-helper ] ; then
-	    . /usr/share/php5/php5-maintscript-helper
+	if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ] ; then
+	    . /usr/share/php/php@PHP_VERSION@-maintscript-helper
 
 	    for dsoname in @modules@; do
-		php5_invoke dismod ALL ${dsoname}
+		php@PHP_MAJOR@_@PHP_MINOR@_invoke dismod ALL ${dsoname}
 	    done
 	fi
     fi

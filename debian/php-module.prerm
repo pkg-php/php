@@ -5,11 +5,11 @@ set -e
 #EXTRA#
 
 if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
-    if [ -e /usr/share/php5/php5-maintscript-helper ] ; then
-	. /usr/share/php5/php5-maintscript-helper
+    if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ] ; then
+	. /usr/share/php/php@PHP_VERSION@-maintscript-helper
 
 	for dsoname in @modules@; do
-	    php5_invoke dismod ALL ${dsoname}
+	    php@PHP_MAJOR@_@PHP_MINOR@_invoke dismod ALL ${dsoname}
 	done
     fi
 fi
