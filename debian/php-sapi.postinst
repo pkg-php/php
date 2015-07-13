@@ -10,9 +10,9 @@ if [ "$1" = "configure" ]; then
     phpini="/etc/php/@PHP_VERSION@/@sapi@/php.ini"
 
     if [ "@sapi@" = "cli" ]; then
-	ucf /usr/share/php-common/@PHP_VERSION@/php.ini-production.@sapi@ $phpini
+	ucf /usr/lib/php/@PHP_VERSION@/php.ini-production.@sapi@ $phpini
     else
-	ucf /usr/share/php-common/@PHP_VERSION@/php.ini-production $phpini
+	ucf /usr/lib/php/@PHP_VERSION@/php.ini-production $phpini
     fi
     ucfr @package@ $phpini
 

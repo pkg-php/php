@@ -1,8 +1,6 @@
 /usr/lib/php/@PHP_VERSION@
 /usr/lib/php/@PHP_API@
 /usr/share/doc/php@PHP_VERSION@-common
-/usr/share/php-common/@PHP_VERSION@
-/usr/share/php-common/@PHP_VERSION@/sapi
 /etc/php/@PHP_VERSION@/mods-available
 /usr/sbin
 /var/lib/php/@PHP_VERSION@

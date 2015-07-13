@@ -582,6 +582,7 @@ endif
 	sed -e's,pid = /var/run/$(PHP_FPM).pid,pid = /run/php/$(PHP_FPM).pid,' \
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/php-fpm.conf
 	# extract the first pool, called "www," from the config file:
+	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/
 	sed -nr '/('"'"'|\[)www('"'"'|\])/{h;p;d};x;/www/{x;p}' < fpm-build/sapi/fpm/php-fpm.conf | \
 	sed -e's{^;listen\.owner{listen.owner{;' \
             -e's{^;listen\.group{listen.group{;' \
@@ -589,12 +590,6 @@ endif
 	# install a helper script for checking PHP FPM configuration
 	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
-
-	# TODO - check if this is really needed or not (looks like not)
-	#mkdir -p debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)
-	#cp -a ext/skeleton ext/ext_skel debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)
-	#sed -i 's,skel_dir="skeleton",skel_dir="/usr/share/php/$(PHP_ZEND_VERSION)/skeleton",' \
-	#    debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)/ext_skel
 
 # shipping duplicate files from other packages is hell for security audits
 	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
