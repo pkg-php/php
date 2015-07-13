@@ -1,1 +1,1 @@
-usr/lib/php/libphp@PHP_MAJOR@.so => usr/lib/libphp@PHP_VERSION@.so
+usr/lib/libphp@PHP_VERSION@.so
