@@ -46,6 +46,7 @@ extern int zenddebug;
 
 
 /* Token type.  */
+#include "zend.h"
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
@@ -330,6 +331,6 @@ extern int zenddebug;
 
 
 
-int zendparse (void);
+ZEND_API int zendparse (void);
 
 #endif /* !YY_ZEND_ZEND_ZEND_LANGUAGE_PARSER_H_INCLUDED  */

@@ -27,91 +27,29 @@
 
 ZEND_EXTERN_MODULE_GLOBALS(phpdbg);
 
-static inline char *phpdbg_decode_op(zend_op_array *ops, znode_op *op, uint32_t type, HashTable *vars) /* {{{ */
+static inline char *phpdbg_decode_op(zend_op_array *ops, znode_op *op, uint32_t type) /* {{{ */
 {
 	char *decode = NULL;
 
-	switch (type &~ EXT_TYPE_UNUSED) {
+	switch (type) {
 		case IS_CV: {
 			zend_string *var = ops->vars[EX_VAR_TO_NUM(op->var)];
-			asprintf(&decode, "$%.*s%c", var->len <= 19 ? (int) var->len : 18, var->val, var->len <= 19 ? 0 : '+');
+			asprintf(&decode, "$%.*s%c", ZSTR_LEN(var) <= 19 ? (int) ZSTR_LEN(var) : 18, ZSTR_VAL(var), ZSTR_LEN(var) <= 19 ? 0 : '+');
 		} break;
 
 		case IS_VAR:
 		case IS_TMP_VAR: {
-			zend_ulong id = 0, *pid = NULL;
-			if (vars != NULL) {
-				if ((pid = zend_hash_index_find_ptr(vars, (zend_ulong) ops->vars - op->var))) {
-					id = *pid;
-				} else {
-					id = zend_hash_num_elements(vars);
-					zend_hash_index_update_mem(vars, (zend_ulong) ops->vars - op->var, &id, sizeof(zend_ulong));
-				}
-			}
-			asprintf(&decode, "@" ZEND_ULONG_FMT, id);
+			asprintf(&decode, "@%" PRIu32, EX_VAR_TO_NUM(op->var) - ops->last_var);
 		} break;
-
 		case IS_CONST: {
 			zval *literal = RT_CONSTANT(ops, *op);
-			switch (Z_TYPE_P(literal)) {
-				case IS_UNDEF:
-					decode = zend_strndup("", 0);
-					break;
-				case IS_NULL:
-					decode = zend_strndup(ZEND_STRL("null"));
-					break;
-				case IS_FALSE:
-					decode = zend_strndup(ZEND_STRL("false"));
-					break;
-				case IS_TRUE:
-					decode = zend_strndup(ZEND_STRL("true"));
-					break;
-				case IS_LONG:
-					asprintf(&decode, ZEND_ULONG_FMT, Z_LVAL_P(literal));
-					break;
-				case IS_DOUBLE:
-					asprintf(&decode, "%.*G", 14, Z_DVAL_P(literal));
-					break;
-				case IS_STRING: {
-					int i;
-					zend_string *str = php_addcslashes(Z_STR_P(literal), 0, "\\\"", 2);
-					for (i = 0; i < str->len; i++) {
-						if (str->val[i] < 32) {
-							str->val[i] = ' ';
-						}
-					}
-					asprintf(&decode, "\"%.*s\"%c", str->len <= 18 ? (int) str->len : 17, str->val, str->len <= 18 ? 0 : '+');
-					zend_string_release(str);
-					} break;
-				case IS_RESOURCE:
-					asprintf(&decode, "Rsrc #%d", Z_RES_HANDLE_P(literal));
-					break;
-				case IS_ARRAY:
-					asprintf(&decode, "array(%d)", zend_hash_num_elements(Z_ARR_P(literal)));
-					break;
-				case IS_OBJECT: {
-					zend_string *str = Z_OBJCE_P(literal)->name;
-					asprintf(&decode, "%.*s%c", str->len <= 18 ? (int) str->len : 18, str->val, str->len <= 18 ? 0 : '+');
-					} break;
-				case IS_CONSTANT:
-					decode = zend_strndup(ZEND_STRL("<constant>"));
-					break;
-				case IS_CONSTANT_AST:
-					decode = zend_strndup(ZEND_STRL("<ast>"));
-					break;
-				default:
-					asprintf(&decode, "unknown type: %d", Z_TYPE_P(literal));
-					break;
-			}
+			decode = phpdbg_short_zval_print(literal, 20);
 		} break;
-
-		case IS_UNUSED:
-			return NULL;
 	}
 	return decode;
 } /* }}} */
 
-char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op, HashTable *vars) /*{{{ */
+char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op) /*{{{ */
 {
 	char *decode[4] = {NULL, NULL, NULL, NULL};
 
@@ -131,7 +69,7 @@ char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op, HashTable *vars) /*{
 		break;
 
 	default:
-		decode[1] = phpdbg_decode_op(ops, &op->op1, op->op1_type, vars);
+		decode[1] = phpdbg_decode_op(ops, &op->op1, op->op1_type);
 		break;
 	}
 
@@ -139,7 +77,7 @@ char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op, HashTable *vars) /*{
 	switch (op->opcode) {
 	/* TODO: ZEND_FAST_CALL, ZEND_FAST_RET op2 */
 	case ZEND_JMPZNZ:
-		asprintf(&decode[2], "J%u or J%" PRIu32, op->op2.opline_num, op->extended_value);
+		asprintf(&decode[2], "J%u or J%" PRIu32, OP_JMP_ADDR(op, op->op2) - ops->opcodes, ZEND_OFFSET_TO_OPLINE(op, op->extended_value) - ops->opcodes);
 		break;
 
 	case ZEND_JMPZ:
@@ -162,7 +100,7 @@ char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op, HashTable *vars) /*{
 		break;
 
 	default:
-		decode[2] = phpdbg_decode_op(ops, &op->op2, op->op2_type, vars);
+		decode[2] = phpdbg_decode_op(ops, &op->op2, op->op2_type);
 		break;
 	}
 
@@ -172,7 +110,7 @@ char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op, HashTable *vars) /*{
 		asprintf(&decode[2], "%" PRIu32, op->result.num);
 		break;
 	default:
-		decode[3] = phpdbg_decode_op(ops, &op->result, op->result_type, vars);
+		decode[3] = phpdbg_decode_op(ops, &op->result, op->result_type);
 		break;
 	}
 
@@ -192,7 +130,7 @@ char *phpdbg_decode_opline(zend_op_array *ops, zend_op *op, HashTable *vars) /*{
 	return decode[0];
 } /* }}} */
 
-void phpdbg_print_opline_ex(zend_execute_data *execute_data, HashTable *vars, zend_bool ignore_flags) /* {{{ */
+void phpdbg_print_opline_ex(zend_execute_data *execute_data, zend_bool ignore_flags) /* {{{ */
 {
 	/* force out a line while stepping so the user knows what is happening */
 	if (ignore_flags ||
@@ -201,7 +139,7 @@ void phpdbg_print_opline_ex(zend_execute_data *execute_data, HashTable *vars, ze
 		(PHPDBG_G(oplog)))) {
 
 		zend_op *opline = (zend_op *) execute_data->opline;
-		char *decode = phpdbg_decode_opline(&execute_data->func->op_array, opline, vars);
+		char *decode = phpdbg_decode_opline(&execute_data->func->op_array, opline);
 
 		if (ignore_flags || (!(PHPDBG_G(flags) & PHPDBG_IS_QUIET) || (PHPDBG_G(flags) & PHPDBG_IS_STEPPING))) {
 			/* output line info */
@@ -210,7 +148,7 @@ void phpdbg_print_opline_ex(zend_execute_data *execute_data, HashTable *vars, ze
 			   opline,
 			   phpdbg_decode_opcode(opline->opcode),
 			   decode,
-			   execute_data->func->op_array.filename ? execute_data->func->op_array.filename->val : "unknown");
+			   execute_data->func->op_array.filename ? ZSTR_VAL(execute_data->func->op_array.filename) : "unknown");
 		}
 
 		if (!ignore_flags && PHPDBG_G(oplog)) {
@@ -219,7 +157,7 @@ void phpdbg_print_opline_ex(zend_execute_data *execute_data, HashTable *vars, ze
 				opline,
 				phpdbg_decode_opcode(opline->opcode),
 				decode,
-				execute_data->func->op_array.filename ? execute_data->func->op_array.filename->val : "unknown");
+				execute_data->func->op_array.filename ? ZSTR_VAL(execute_data->func->op_array.filename) : "unknown");
 		}
 
 		if (decode) {
@@ -239,7 +177,7 @@ void phpdbg_print_opline_ex(zend_execute_data *execute_data, HashTable *vars, ze
 
 void phpdbg_print_opline(zend_execute_data *execute_data, zend_bool ignore_flags) /* {{{ */
 {
-	phpdbg_print_opline_ex(execute_data, NULL, ignore_flags);
+	phpdbg_print_opline_ex(execute_data, ignore_flags);
 } /* }}} */
 
 const char *phpdbg_decode_opcode(zend_uchar opcode) /* {{{ */

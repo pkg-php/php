@@ -433,7 +433,7 @@ extern int zenddebug;
 
 
 
-int zendparse (void);
+ZEND_API int zendparse (void);
 
 #endif /* !YY_ZEND_ZEND_ZEND_LANGUAGE_PARSER_H_INCLUDED  */
 
@@ -6129,7 +6129,7 @@ yyreduce:
 
   case 378:
 
-    { (yyval.ast) = zend_ast_create_zval_from_str(STR_EMPTY_ALLOC()); }
+    { (yyval.ast) = zend_ast_create_zval_from_str(ZSTR_EMPTY_ALLOC()); }
 
     break;
 
@@ -6243,7 +6243,7 @@ yyreduce:
 
   case 397:
 
-    { (yyval.ast) = zend_ast_create_zval_from_str(STR_EMPTY_ALLOC()); }
+    { (yyval.ast) = zend_ast_create_zval_from_str(ZSTR_EMPTY_ALLOC()); }
 
     break;
 
