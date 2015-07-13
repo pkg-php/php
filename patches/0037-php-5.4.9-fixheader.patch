@@ -7,8 +7,10 @@ Make generated php_config.h constant across rebuilds.
  configure.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- php7.0.orig/configure.in
-+++ php7.0/configure.in
+diff --git a/configure.in b/configure.in
+index 502c395..0a0bea9 100644
+--- a/configure.in
++++ b/configure.in
 @@ -1284,7 +1284,7 @@ fi
  EXTRA_LDFLAGS="$EXTRA_LDFLAGS $PHP_LDFLAGS"
  EXTRA_LDFLAGS_PROGRAM="$EXTRA_LDFLAGS_PROGRAM $PHP_LDFLAGS"

@@ -7,8 +7,10 @@ Use -lldap_r by default.
  ext/ldap/config.m4 | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
---- php7.0.orig/ext/ldap/config.m4
-+++ php7.0/ext/ldap/config.m4
+diff --git a/ext/ldap/config.m4 b/ext/ldap/config.m4
+index b2da7b4..7ebec8d 100644
+--- a/ext/ldap/config.m4
++++ b/ext/ldap/config.m4
 @@ -117,7 +117,10 @@ if test "$PHP_LDAP" != "no"; then
      LDAP_PTHREAD=
    fi
