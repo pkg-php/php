@@ -29,7 +29,7 @@ if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ]; then
 
     mods=$(php@PHP_VERSION@query -M)
     for mod in $mods; do
-	php@PHP_VERSION@_invoke dismod @sapi@ $mod
+	php@PHP_MAJOR@_@PHP_MINOR@_invoke dismod @sapi@ $mod
     done
 fi
 

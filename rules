@@ -58,7 +58,8 @@ SED_VARIABLES = \
 	-e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"			\
 	-e "s,@PHP_MAJOR@,$(PHP_MAJOR_VERSION),g"			\
 	-e "s,@PHP_MINOR@,$(PHP_MINOR_VERSION),g"			\
-	-e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"
+	-e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"			\
+	-e "s,@PHP_API@,$(PHP_ZEND_VERSION),g"
 
 SED_REPLACEMENT = sed -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | sed $(SED_VARIABLES) | sed -e '/\#EXTRA\#/ d'
 
@@ -501,6 +502,9 @@ override_dh_install: prepare-files-stamp
 #TODO
 
 	dh_install --fail-missing
+
+	# install extra CGI-BIN
+	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/$(PHP_CGI)/usr/lib/cgi-bin/$(PHP_CGI)
 
 	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 
