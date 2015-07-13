@@ -38,6 +38,5 @@
 0038-php-5.6.0-noNO.patch
 0039-php-5.6.0-oldpcre.patch
 0040-hack-phpdbg-to-explicitly-link-with-libedit.patch
-0042-Fix-ZEND_MM_ALIGNMENT-on-m64k.patch
-0043-revert-f07b8f36ae8099e29d19fbe8806bc07b21dcd4ac.patch
-0044-Add-patch-to-remove-build-timestamps-from-generated-.patch
+0041-Fix-ZEND_MM_ALIGNMENT-on-m64k.patch
+0042-Add-patch-to-remove-build-timestamps-from-generated-.patch

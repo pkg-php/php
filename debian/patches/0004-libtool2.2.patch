@@ -3,12 +3,14 @@ Date: Sat, 2 May 2015 10:26:51 +0200
 Subject: libtool2.2
 
 ---
- scripts/phpize.in | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ scripts/phpize.in | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- php7.0.orig/scripts/phpize.in
-+++ php7.0/scripts/phpize.in
-@@ -9,7 +9,9 @@ includedir="$prefix/include/php/@DEBIAN_
+diff --git a/scripts/phpize.in b/scripts/phpize.in
+index 9bd3b9a..7a0e599 100644
+--- a/scripts/phpize.in
++++ b/scripts/phpize.in
+@@ -9,7 +9,9 @@ includedir="$prefix/include/php/@DEBIAN_PHP_API@"
  builddir="`pwd`"
  SED="@SED@"
  
