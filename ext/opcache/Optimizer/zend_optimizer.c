@@ -62,9 +62,9 @@ int zend_optimizer_lookup_cv(zend_op_array *op_array, zend_string* name)
 
 	while (i < op_array->last_var) {
 		if (op_array->vars[i] == name ||
-		    (op_array->vars[i]->h == hash_value &&
-		     op_array->vars[i]->len == name->len &&
-		     memcmp(op_array->vars[i]->val, name->val, name->len) == 0)) {
+		    (ZSTR_H(op_array->vars[i]) == hash_value &&
+		     ZSTR_LEN(op_array->vars[i]) == ZSTR_LEN(name) &&
+		     memcmp(ZSTR_VAL(op_array->vars[i]), ZSTR_VAL(name), ZSTR_LEN(name)) == 0)) {
 			return (int)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, i);
 		}
 		i++;
@@ -107,8 +107,6 @@ int zend_optimizer_add_literal(zend_op_array *op_array, zval *zv)
 	op_array->literals = (zval*)erealloc(op_array->literals, op_array->last_literal * sizeof(zval));
 	ZVAL_COPY_VALUE(&op_array->literals[i], zv);
 	Z_CACHE_SLOT(op_array->literals[i]) = -1;
-//???	Z_SET_REFCOUNT(op_array->literals[i].constant, 2);
-//???	Z_SET_ISREF(op_array->literals[i].constant);
 	return i;
 }
 

@@ -3640,7 +3640,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
 PHP_MAJOR_VERSION=7
 PHP_MINOR_VERSION=0
 PHP_RELEASE_VERSION=0
-PHP_EXTRA_VERSION="alpha2"
+PHP_EXTRA_VERSION="beta1"
 PHP_VERSION="$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION.$PHP_RELEASE_VERSION$PHP_EXTRA_VERSION"
 PHP_VERSION_ID=`expr $PHP_MAJOR_VERSION \* 10000 + $PHP_MINOR_VERSION \* 100 + $PHP_RELEASE_VERSION`
 
@@ -29546,7 +29546,7 @@ $as_echo "#define HAVE_ENCHANT 1" >>confdefs.h
 
 
   save_old_LDFLAGS=$LDFLAGS
-  ac_stuff=" -L$ENCHANT_LIB $ENCHANT_SHARED_LIBADD"
+  ac_stuff=" -L$ENCHANT_LIBDIR $ENCHANT_SHARED_LIBADD"
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -48685,7 +48685,7 @@ $as_echo "#define HAVE_3ARG_SETREBINDPROC 1" >>confdefs.h
 
   fi
 
-      for ac_func in ldap_parse_result ldap_parse_reference ldap_start_tls_s
+      for ac_func in ldap_parse_result ldap_parse_reference ldap_start_tls_s ldap_control_find
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
