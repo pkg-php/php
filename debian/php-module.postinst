@@ -7,18 +7,15 @@ set -e
 if [ "$1" = "configure" ]; then
     inidir=/etc/php/@PHP_VERSION@/mods-available
 
-    if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ] ; then
-	. /usr/share/php/php@PHP_VERSION@-maintscript-helper
+    if [ -e /usr/lib/php/php-maintscript-helper ] ; then
+	. /usr/lib/php/php-maintscript-helper
 
 	for dsoname in @modules@; do
 	    inifile=${dsoname}.ini
 
 	    # Register new conffile with UCF
-	    ucf /usr/share/php/@PHP_API@/@package@/${inifile} ${inidir}/${inifile}
+	    ucf /usr/share/php-common/@PHP_VERSION@/@package@/${inifile} ${inidir}/${inifile}
 	    ucfr --force php@PHP_VERSION@-@package@ ${inidir}/${inifile}
-
-	    # Move pre-extension manager conffile
-	    dpkg-maintscript-helper mv_conffile /etc/php/@PHP_VERSION@/conf.d/${inifile} ${inidir}/${inifile} 5.4.0~rc6-1 -- "$@";
 
 	    if [ -f "${inidir}/${inifile}.dpkg-new" ]; then
 		md5sum="$(md5sum ${inidir}/${inifile}.dpkg-new | sed -e 's/ .*//')"
@@ -28,7 +25,7 @@ if [ "$1" = "configure" ]; then
 		fi
 	    fi
 	
-	    php@PHP_MAJOR@_@PHP_MINOR@_invoke enmod ALL ${dsoname}
+	    php_invoke enmod @PHP_VERSION@ ALL ${dsoname}
 	done
     fi
 fi

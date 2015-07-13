@@ -28,8 +28,6 @@ ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION)
 endif
 
-PRIORITY             := $(PHP_MAJOR_VERSION)$(PHP_MINOR_VERSION)
-
 TARGETS              := apache2 cli phpdbg embed fpm cgi
 CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
 BUILD_TARGETS        := $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
@@ -53,8 +51,8 @@ SED_VARIABLES = \
 	-e "s,@sapi@,$${sapi},g"					\
 	-e "s,@package@,$${package},g"					\
 	-e "s,@modules@,$${modules},g"					\
-	-e "s,@priority@,$(PRIORITY),g"					\
 	-e "s,@extdir@,$${extdir},g"					\
+	-e "s,@priority@,$${priority},g"				\
 	-e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"			\
 	-e "s,@PHP_MAJOR@,$(PHP_MAJOR_VERSION),g"			\
 	-e "s,@PHP_MINOR@,$(PHP_MINOR_VERSION),g"			\
@@ -463,15 +461,15 @@ prepare-files-stamp:
 	    if [ -z "$${dsoname}" ]; then dsoname=$${module}; fi; \
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
 	    if [ -z "$${extension}" ]; then extension=extension; fi; \
-	    mkdir -p debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/$${module}; \
+	    mkdir -p debian/tmp/usr/share/php-common/$(PHP_NAME_VERSION)/$${module}; \
 	    sed -e "s|@extname@|$${extname}|g" \
 	        -e "s/@dsoname@/$${dsoname}/g" \
 	        -e "s/@extension@/$${extension}/g" \
 	        -e "s/@priority@/$${priority}/g" \
 	      < debian/php-module.ini \
-	      > debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/$${module}/$${dsoname}.ini; \
+	      > debian/tmp/usr/share/php-common/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini; \
 	    echo "usr/lib/php/$(PHP_ZEND_VERSION)/$${dsoname}.so" >> debian/$${package}.install; \
-	    echo "usr/share/php/$(PHP_ZEND_VERSION)/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
+	    echo "usr/share/php-common/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
 	    echo -n "$$dsoname " >> debian/$${package}.modules; \
 	done
 
@@ -489,8 +487,8 @@ prepare-files-stamp:
 	# likewise, for the different sapi implementations
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
-	    mkdir -p "debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/sapi/"; \
-	    touch "debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/sapi/$${sapi}"; \
+	    mkdir -p "debian/tmp/usr/share/php-common/$(PHP_NAME_VERSION)/sapi/"; \
+	    touch "debian/tmp/usr/share/php-common/$(PHP_NAME_VERSION)/sapi/$${sapi}"; \
 	    for tmpl in postrm prerm postinst dirs install triggers bug-script bug-control; do \
 	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
 	        if [ -x debian/php-sapi.$${tmpl} ]; then chmod +x debian/$${package}.$${tmpl}; fi; \
@@ -504,6 +502,7 @@ prepare-files-stamp:
 	touch prepare-files-stamp
 
 rename-files-stamp:
+	mv -u debian/tmp/usr/lib/apache2/modules/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/apache2/modules/libphp$(PHP_NAME_VERSION).so
 	mv -u debian/tmp/usr/lib/php/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
 	mv -u debian/tmp/usr/bin/phar.phar debian/tmp/usr/bin/phar.phar$(PHP_NAME_VERSION)
 	mv debian/tmp/usr/share/man/man1/phar.phar.1 debian/tmp/usr/share/man/man1/phar.phar$(PHP_NAME_VERSION).1
@@ -554,23 +553,23 @@ override_dh_install: prepare-files-stamp rename-files-stamp remove-files-stamp
 	mkdir -p debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 
-	mkdir -p debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/
+	mkdir -p debian/$(PHP_COMMON)/usr/share/php-common/$(PHP_NAME_VERSION)/
 	# sanitize php.ini file
 	cat php.ini-production | tr "\t" " " | \
 	sed -e'/session.gc_probability =/ s/1/0/g;' \
 	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
 	    -e'/expose_php =/ s/On/Off/g;' \
-	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-production
+	  > debian/$(PHP_COMMON)/usr/share/php-common/$(PHP_NAME_VERSION)/php.ini-production
 
 	cat php.ini-production | tr "\t" " " | \
 	sed -e'/memory_limit =/ s/128M/-1/g;' \
 	    -e'/session.gc_probability =/ s/1/0/g' \
-	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-production.cli
+	  > debian/$(PHP_COMMON)/usr/share/php-common/$(PHP_NAME_VERSION)/php.ini-production.cli
 
 	cat php.ini-development | tr "\t" " " | \
 	sed -e'/session.gc_probability =/ s/1/0/g;' \
 	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
-	  > debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/php.ini-development
+	  > debian/$(PHP_COMMON)/usr/share/php-common/$(PHP_NAME_VERSION)/php.ini-development
 
 	# Install helper shell fragment
 	install -m644 debian/php$(PHP_NAME_VERSION)-helper $(CURDIR)/debian/$(PHP_COMMON)/usr/share/php/
@@ -618,7 +617,7 @@ override_dh_apache2:
 	    $(SAPI_PACKAGE) \
 	    < debian/$${versionless}.apache2 $(SED_REPLACEMENT) > debian/$${package}.apache2; \
 	done
-	dh_apache2 --conditional=php$(PHP_MAJOR_VERSION)_$(PHP_MINOR_VERSION)_enable
+	dh_apache2 --conditional=php_enable
 
 override_dh_installdoc-indep:
 	dh_installdoc -p$(PHP_PHP) --link-doc=$(PHP_COMMON)

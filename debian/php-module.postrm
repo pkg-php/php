@@ -28,11 +28,11 @@ for dsoname in @modules@; do
 	    fi
 	fi
 	
-	if [ -e /usr/share/php/php@PHP_VERSION@-maintscript-helper ] ; then
-	    . /usr/share/php/php@PHP_VERSION@-maintscript-helper
+	if [ -e /usr/lib/php/php-maintscript-helper ] ; then
+	    . /usr/lib/php/php-maintscript-helper
 
 	    for dsoname in @modules@; do
-		php@PHP_MAJOR@_@PHP_MINOR@_invoke dismod ALL ${dsoname}
+		php_invoke dismod @PHP_VERSION@ ALL ${dsoname}
 	    done
 	fi
     fi
