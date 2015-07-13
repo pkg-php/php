@@ -6,7 +6,6 @@ gmp GMP
 imap IMAP
 interbase Interbase
 intl Internationalisation
-json JSON
 ldap LDAP
 mcrypt MCrypt
 mysqlnd MySQL mysqlnd 10

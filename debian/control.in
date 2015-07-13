@@ -98,8 +98,11 @@ Depends: ${misc:Depends},
 	 psmisc (>= 22.15-1~),
 	 lsof [!kfreebsd-any !hurd-any],
 	 ucf
-Provides: php@PHP_VERSION@-mhash, ${php:Provides}
-Conflicts: php@PHP_VERSION@-mhash
+Provides: php@PHP_VERSION@-mhash,
+	  php@PHP_VERSION@-json,
+	  ${php:Provides}
+Conflicts: php@PHP_VERSION@-mhash,
+	   php5-json
 Suggests: php@PHP_VERSION@-user-cache
 Description: Common files for packages built from the PHP source
  This package contains the documentation and example files relevant to all
@@ -118,7 +121,6 @@ Depends: ${shlibs:Depends},
 	 mime-support,
 	 php@PHP_VERSION@-common (= ${binary:Version}),
 	 php@PHP_VERSION@-cli,
-	 php@PHP_VERSION@-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -144,7 +146,6 @@ Depends: ${shlibs:Depends},
 	 mime-support,
 	 php@PHP_VERSION@-common (= ${binary:Version}),
 	 php@PHP_VERSION@-cli,
-	 php@PHP_VERSION@-json,
 	libmagic1,
 	ucf,
 	tzdata
@@ -168,7 +169,6 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
 	 php@PHP_VERSION@-common (= ${binary:Version}),
-	 php@PHP_VERSION@-json,
 	 libmagic1,
 	 ucf,
 	 tzdata,
@@ -192,7 +192,6 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
 	 php@PHP_VERSION@-common (= ${binary:Version}),
-	 php@PHP_VERSION@-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -215,7 +214,6 @@ Depends: ${shlibs:Depends},
 	 mime-support,
 	 php@PHP_VERSION@-common (= ${binary:Version}),
 	 php@PHP_VERSION@-cli,
-	 php@PHP_VERSION@-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -289,17 +287,6 @@ Architecture: any
 Description: Debug symbols for PHP@PHP_VERSION@
  This package provides the debug symbols for PHP@PHP_VERSION@ needed for properly
  debugging errors in PHP@PHP_VERSION@ with gdb.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php@PHP_VERSION@-json
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php@PHP_VERSION@-common (= ${binary:Version}), ucf
-Pre-Depends: ${misc:Pre-Depends}
-Description: CURL module for php@PHP_VERSION@
- JavaScript Object Notation (JSON) data-interchange format parser and encoder.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -510,6 +497,20 @@ Description: SQLite module for php@PHP_VERSION@
  database engine from within your PHP scripts, eliminating the need for a full
  SQL server installation like MySQL or PostgreSQL.  It also includes the
  pdo_sqlite module, for use with the PHP Data Object extension.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php@PHP_VERSION@-sybase
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php@PHP_VERSION@-common (= ${binary:Version}), ucf
+Provides: php@PHP_VERSION@-mssql
+Pre-Depends: ${misc:Pre-Depends}
+Description: PDO_DBLIB (Sybase / MS SQL Server) module for PHP @PHP_VERSION@
+ This package includes the pdo_dblib module that implements the PHP
+ Data Objects (PDO) interface to enable access from PHP to Microsoft
+ SQL Server and Sybase databases through the FreeTDS library.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
