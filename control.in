@@ -264,6 +264,7 @@ Depends: ${misc:Depends},
 	 libtool (>= 2.2),
 	 shtool,
 	 php@PHP_VERSION@-common (>= ${binary:Version}),
+	 php@PHP_VERSION@-cli (>= ${binary:Version}),
 	 ${perl:Depends}
 Conflicts: ${libtool:Conflicts}
 Architecture: any
