@@ -140,7 +140,7 @@ endif
 CFLAGS += -g
 
 # some other helpful (for readability at least) shorthand variables
-PHPIZE_BUILDDIR = debian/$(PHP_DEV)/usr/lib/php/$(PHP_NAME_VERSION)/build
+PHPIZE_BUILDDIR = debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
 
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
     NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
@@ -168,6 +168,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-sysvshm \
 		--enable-sysvmsg \
 		--enable-bcmath \
+		--enable-json \
 		--with-bz2 \
 		--enable-ctype \
 		--with-db4 \
@@ -210,7 +211,6 @@ apache2_config = \
 		--with-freetype-dir=shared,/usr \
 		--with-vpx-dir=shared,/usr \
 		--with-imap=shared,/usr \
-		--with-json=shared,/usr \
 		--with-imap-ssl \
 		--enable-intl=shared \
 		--without-t1lib \
@@ -314,7 +314,7 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 
 PREPARE_FILES := $(shell cat debian/prepare-files)
 
-prepared: prepared-stamp
+prepared: prepared-stamp debian/control
 prepared-stamp:
 	sed -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.in
 	./buildconf --force
@@ -394,59 +394,6 @@ configure-%-stamp:
 	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
 	touch configure-$*-stamp
 
-prepare-files-stamp:
-	# Do this first so we don't overwrite any debhelper-generated files
-	#
-	# generate versioned files from versionless variants
-	for file in $(PREPARE_FILES); do \
-	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
-	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
-	    < $${versionless} $(SED_REPLACEMENT) > $${package}; \
-	    if [ -x $${versionless} ]; then chmod +x $${package}; fi; \
-	done
-
-	# generate the config snippets for various php
-	# modules from the templates.
-	cat debian/modulelist debian/extramodulelist | while read module extname dsoname priority extension; do \
-	    $(MODULE_PACKAGE) \
-	    if [ -z "$${dsoname}" ]; then dsoname=$${module}; fi; \
-	    if [ -z "$${priority}" ]; then priority=20; fi; \
-	    if [ -z "$${extension}" ]; then extension=extension; fi; \
-	    mkdir -p debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/$${module}; \
-	    sed -e "s|@extname@|$${extname}|g" \
-	        -e "s/@dsoname@/$${dsoname}/g" \
-	        -e "s/@extension@/$${extension}/g" \
-	        -e "s/@priority@/$${priority}/g" \
-	      < debian/php-module.ini \
-	      > debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/$${module}/$${dsoname}.ini; \
-	    echo "usr/lib/php/$(PHP_ZEND_VERSION)/$${dsoname}.so" >> debian/$${package}.install; \
-	    echo "usr/share/php/$(PHP_ZEND_VERSION)/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
-	    echo -n "$$dsoname " >> debian/$${package}.modules; \
-	done
-
-	# generate the maintscripts for various php
-	# modules from the templates.
-	cat debian/modulelist | while read module extname dsoname priority; do \
-	    $(MODULE_PACKAGE) \
-	    modules=$$(cat debian/$${package}.modules); \
-	    for script in postinst preinst postrm prerm bug-script bug-control triggers; do \
-	        < debian/php-module.$${script} $(SED_REPLACEMENT) > debian/$${package}.$${script}; \
-	    done; \
-	    rm debian/$${package}.modules; \
-	done
-
-	# likewise, for the different sapi implementations
-	for sapi in $(TARGETS); do \
-	    $(SAPI_PACKAGE) \
-	    mkdir -p "debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/sapi/"; \
-	    touch "debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/sapi/$${sapi}"; \
-	    for tmpl in postrm prerm postinst dirs install triggers bug-script bug-control; do \
-	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
-	        if [ -x debian/php-sapi.$${tmpl} ]; then chmod +x debian/$${package}.$${tmpl}; fi; \
-	    done; \
-	done
-	touch prepare-files-stamp
-
 override_dh_auto_clean: unprepared
 	for file in $(PREPARE_FILES); do \
 	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/'); \
@@ -498,24 +445,116 @@ install-%-stamp: configure-%-stamp
 #	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp
 	touch install-$*-stamp
 
-rename-files-stamp:
-	mv debian/tmp/usr/lib/php$(PHP_MAJOR).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
-	mv debian/tmp/usr/bin/phar.phar debian/tmp/usr/bin/phar.phar$(PHP_NAME_VERSION)
-	mv debian/tmp/usr/bin/phar debian/tmp/usr/bin/phar$(PHP_VERSION)
-	mv debian/tmp/usr/share/man/man1/phar.1 debian/tmp/usr/share/man/man1/phar$(PHP_VERSION).1
-	mv debian/tmp/usr/share/man/man1/phar.phar.1 debian/tmp/usr/share/man/man1/phar.phar$(PHP_VERSION).1
-	touch rename-files-stamp
+prepare-files-stamp:
+	# Do this first so we don't overwrite any debhelper-generated files
+	#
+	# generate versioned files from versionless variants
+	for file in $(PREPARE_FILES); do \
+	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
+	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    < $${versionless} $(SED_REPLACEMENT) > $${package}; \
+	    if [ -x $${versionless} ]; then chmod +x $${package}; fi; \
+	done
 
-override_dh_install: prepare-files-stamp rename-files-stamp
-#TODO
+	# generate the config snippets for various php
+	# modules from the templates.
+	cat debian/modulelist debian/extramodulelist | while read module extname dsoname priority extension; do \
+	    $(MODULE_PACKAGE) \
+	    if [ -z "$${dsoname}" ]; then dsoname=$${module}; fi; \
+	    if [ -z "$${priority}" ]; then priority=20; fi; \
+	    if [ -z "$${extension}" ]; then extension=extension; fi; \
+	    mkdir -p debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/$${module}; \
+	    sed -e "s|@extname@|$${extname}|g" \
+	        -e "s/@dsoname@/$${dsoname}/g" \
+	        -e "s/@extension@/$${extension}/g" \
+	        -e "s/@priority@/$${priority}/g" \
+	      < debian/php-module.ini \
+	      > debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/$${module}/$${dsoname}.ini; \
+	    echo "usr/lib/php/$(PHP_ZEND_VERSION)/$${dsoname}.so" >> debian/$${package}.install; \
+	    echo "usr/share/php/$(PHP_ZEND_VERSION)/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
+	    echo -n "$$dsoname " >> debian/$${package}.modules; \
+	done
 
-	dh_install --fail-missing
+	# generate the maintscripts for various php
+	# modules from the templates.
+	cat debian/modulelist | while read module extname dsoname priority; do \
+	    $(MODULE_PACKAGE) \
+	    modules=$$(cat debian/$${package}.modules); \
+	    for script in postinst preinst postrm prerm bug-script bug-control triggers; do \
+	        < debian/php-module.$${script} $(SED_REPLACEMENT) > debian/$${package}.$${script}; \
+	    done; \
+	    rm debian/$${package}.modules; \
+	done
+
+	# likewise, for the different sapi implementations
+	for sapi in $(TARGETS); do \
+	    $(SAPI_PACKAGE) \
+	    mkdir -p "debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/sapi/"; \
+	    touch "debian/tmp/usr/share/php/$(PHP_ZEND_VERSION)/sapi/$${sapi}"; \
+	    for tmpl in postrm prerm postinst dirs install triggers bug-script bug-control; do \
+	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
+	        if [ -x debian/php-sapi.$${tmpl} ]; then chmod +x debian/$${package}.$${tmpl}; fi; \
+	    done; \
+	done
 
 	# install extra CGI-BIN
-	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/$(PHP_CGI)/usr/lib/cgi-bin/$(PHP_CGI)
+	mkdir -p debian/tmp/usr/lib/cgi-bin/
+	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/tmp/usr/lib/cgi-bin/$(PHP_CGI)
 
+	touch prepare-files-stamp
+
+rename-files-stamp:
+	mv -u debian/tmp/usr/lib/php/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
+	mv -u debian/tmp/usr/bin/phar.phar debian/tmp/usr/bin/phar.phar$(PHP_NAME_VERSION)
+	mv debian/tmp/usr/share/man/man1/phar.phar.1 debian/tmp/usr/share/man/man1/phar.phar$(PHP_NAME_VERSION).1
+	rm -f debian/tmp/usr/bin/phar
+	ln -s phar.phar$(PHP_NAME_VERSION) debian/tmp/usr/bin/phar$(PHP_NAME_VERSION)
+	rm -f debian/tmp/usr/share/man/man1/phar.1
+	ln -s phar.phar$(PHP_NAME_VERSION).1 debian/tmp/usr/share/man/man1/phar$(PHP_NAME_VERSION).1
+	touch rename-files-stamp
+
+remove-files-stamp:
+	# get rid of dreaded libtool files
+	find debian/tmp/ -name '*.la' -delete
+	# get rid of static versions of PHP modules (WTF?)
+	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/*.a
+
+	# get rid of extra PHP-FPM configuration files
+	rm -f debian/tmp/etc/php-fpm.conf.default \
+              debian/tmp/etc/php-fpm.d/www.conf.default
+
+	rm -rf \
+	  debian/tmp/.filemap \
+	  debian/tmp/.channels \
+	  debian/tmp/.lock \
+	  debian/tmp/.depdb* \
+	  debian/tmp/usr/bin/pear* \
+	  debian/tmp/usr/bin/pecl* \
+	  debian/tmp/usr/share/php/.filemap \
+	  debian/tmp/usr/share/php/.lock \
+	  debian/tmp/usr/share/php/.depdb* \
+	  debian/tmp/usr/share/php/*.php \
+	  debian/tmp/usr/share/php/.registry/ \
+	  debian/tmp/usr/share/php/.channels/ \
+	  debian/tmp/usr/share/php/doc/ \
+	  debian/tmp/usr/share/php/Archive/ \
+	  debian/tmp/usr/share/php/Console/ \
+	  debian/tmp/usr/share/php/Structures/ \
+	  debian/tmp/usr/share/php/test/ \
+	  debian/tmp/usr/share/php/XML/ \
+	  debian/tmp/usr/share/php/OS/ \
+	  debian/tmp/usr/share/php/PEAR/ \
+	  debian/tmp/usr/share/php/data/ \
+	  debian/tmp/etc/pear.conf
+	touch remove-files-stamp
+
+override_dh_install: prepare-files-stamp rename-files-stamp remove-files-stamp
+	dh_install --fail-missing
+
+	mkdir -p debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
 
+	mkdir -p debian/$(PHP_COMMON)/usr/share/php/$(PHP_NAME_VERSION)/
 	# sanitize php.ini file
 	cat php.ini-production | tr "\t" " " | \
 	sed -e'/session.gc_probability =/ s/1/0/g;' \
@@ -541,6 +580,7 @@ ifeq (yes,$(RUN_TESTS))
 	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
 endif
 
+	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/
 	# we don't want the FPM pool definitions on the main file itself:
 	sed -r '/('"'"'|\[)www('"'"'|\])/Q' < fpm-build/sapi/fpm/php-fpm.conf | \
 	sed -e's,pid = /var/run/$(PHP_FPM).pid,pid = /run/php/$(PHP_FPM).pid,' \
@@ -554,11 +594,11 @@ endif
 	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
 
-	# FIXME - is this still needed?
-	mkdir -p debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)
-	cp -a ext/skeleton ext/ext_skel debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)
-	sed -i 's,skel_dir="skeleton",skel_dir="/usr/share/php/$(PHP_ZEND_VERSION)/skeleton",' \
-	    debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)/ext_skel
+	# TODO - check if this is really needed or not (looks like not)
+	#mkdir -p debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)
+	#cp -a ext/skeleton ext/ext_skel debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)
+	#sed -i 's,skel_dir="skeleton",skel_dir="/usr/share/php/$(PHP_ZEND_VERSION)/skeleton",' \
+	#    debian/$(PHP_DEV)/usr/share/php/$(PHP_ZEND_VERSION)/ext_skel
 
 # shipping duplicate files from other packages is hell for security audits
 	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
@@ -572,12 +612,6 @@ endif
 	install -m755 debian/php$(PHP_NAME_VERSION)enmod debian/$(PHP_COMMON)/usr/sbin/php$(PHP_NAME_VERSION)enmod #TODO - move to php-common
 	ln -sf php$(PHP_NAME_VERSION)enmod debian/$(PHP_COMMON)/usr/sbin/php$(PHP_NAME_VERSION)dismod #TODO - move to php-common
 	install -m755 debian/php$(PHP_NAME_VERSION)query $(CURDIR)/debian/$(PHP_COMMON)/usr/sbin/php$(PHP_NAME_VERSION)query # TODO - move to php-common
-
-override_dh_bugfiles:
-	# Install reportbug for main php package
-	mkdir -p debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)
-	install -m644 debian/php.bug.control debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)/control
-	ln -sf ../$(PHP_COMMON)/script debian/$(PHP_PHP)/usr/share/bug/$(PHP_PHP)/script
 
 override_dh_apache2:
 	for sapi in apache2 cgi; do \

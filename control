@@ -98,8 +98,11 @@ Depends: ${misc:Depends},
 	 psmisc (>= 22.15-1~),
 	 lsof [!kfreebsd-any !hurd-any],
 	 ucf
-Provides: php7.0-mhash, ${php:Provides}
-Conflicts: php7.0-mhash
+Provides: php7.0-mhash,
+	  php7.0-json,
+	  ${php:Provides}
+Conflicts: php7.0-mhash,
+	   php5-json
 Suggests: php7.0-user-cache
 Description: Common files for packages built from the PHP source
  This package contains the documentation and example files relevant to all
@@ -118,7 +121,6 @@ Depends: ${shlibs:Depends},
 	 mime-support,
 	 php7.0-common (= ${binary:Version}),
 	 php7.0-cli,
-	 php7.0-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -144,7 +146,6 @@ Depends: ${shlibs:Depends},
 	 mime-support,
 	 php7.0-common (= ${binary:Version}),
 	 php7.0-cli,
-	 php7.0-json,
 	libmagic1,
 	ucf,
 	tzdata
@@ -168,7 +169,6 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
 	 php7.0-common (= ${binary:Version}),
-	 php7.0-json,
 	 libmagic1,
 	 ucf,
 	 tzdata,
@@ -192,7 +192,6 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
 	 php7.0-common (= ${binary:Version}),
-	 php7.0-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -215,7 +214,6 @@ Depends: ${shlibs:Depends},
 	 mime-support,
 	 php7.0-common (= ${binary:Version}),
 	 php7.0-cli,
-	 php7.0-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -289,17 +287,6 @@ Architecture: any
 Description: Debug symbols for PHP7.0
  This package provides the debug symbols for PHP7.0 needed for properly
  debugging errors in PHP7.0 with gdb.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php7.0-json
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php7.0-common (= ${binary:Version}), ucf
-Pre-Depends: ${misc:Pre-Depends}
-Description: CURL module for php7.0
- JavaScript Object Notation (JSON) data-interchange format parser and encoder.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -510,6 +497,20 @@ Description: SQLite module for php7.0
  database engine from within your PHP scripts, eliminating the need for a full
  SQL server installation like MySQL or PostgreSQL.  It also includes the
  pdo_sqlite module, for use with the PHP Data Object extension.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php7.0-sybase
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php7.0-common (= ${binary:Version}), ucf
+Provides: php7.0-mssql
+Pre-Depends: ${misc:Pre-Depends}
+Description: PDO_DBLIB (Sybase / MS SQL Server) module for PHP 7.0
+ This package includes the pdo_dblib module that implements the PHP
+ Data Objects (PDO) interface to enable access from PHP to Microsoft
+ SQL Server and Sybase databases through the FreeTDS library.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
