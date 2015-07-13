@@ -639,9 +639,6 @@ override_dh_installdoc-arch:
 override_dh_compress:
 	dh_compress -Xphp.ini
 
-override_dh_installcron:
-	dh_installcron -p$(PHP_COMMON) --name=$(PHP_PHP)
-
 override_dh_installchangelogs:
 	dh_installchangelogs -p$(PHP_COMMON) NEWS
 
