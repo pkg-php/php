@@ -14,7 +14,7 @@ if [ "$1" = "configure" ]; then
 	    inifile=${dsoname}.ini
 
 	    # Register new conffile with UCF
-	    ucf /usr/share/php-common/@PHP_VERSION@/@package@/${inifile} ${inidir}/${inifile}
+	    ucf /usr/share/@package@/@PHP_VERSION@/@module@/${inifile} ${inidir}/${inifile}
 	    ucfr --force php@PHP_VERSION@-@package@ ${inidir}/${inifile}
 
 	    if [ -f "${inidir}/${inifile}.dpkg-new" ]; then
