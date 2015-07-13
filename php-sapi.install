@@ -1,3 +1,3 @@
 #!/usr/bin/dh-exec
-usr/share/php/@PHP_API@/sapi/@sapi@
+usr/share/php/@PHP_VERSION@/sapi/@sapi@
 #EXTRA#
