@@ -494,11 +494,19 @@ override_dh_auto_install: $(INSTALL_TARGETS)
 .NOTPARALLEL: override_dh_auto_install
 
 install-%-stamp: configure-%-stamp
-#	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-modules install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
-	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp
+	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-modules install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
+#	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp
 	touch install-$*-stamp
 
-override_dh_install: prepare-files-stamp
+rename-files-stamp:
+	mv debian/tmp/usr/lib/php$(PHP_MAJOR).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
+	mv debian/tmp/usr/bin/phar.phar debian/tmp/usr/bin/phar.phar$(PHP_NAME_VERSION)
+	mv debian/tmp/usr/bin/phar debian/tmp/usr/bin/phar$(PHP_VERSION)
+	mv debian/tmp/usr/share/man/man1/phar.1 debian/tmp/usr/share/man/man1/phar$(PHP_VERSION).1
+	mv debian/tmp/usr/share/man/man1/phar.phar.1 debian/tmp/usr/share/man/man1/phar.phar$(PHP_VERSION).1
+	touch rename-files-stamp
+
+override_dh_install: prepare-files-stamp rename-files-stamp
 #TODO
 
 	dh_install --fail-missing
