@@ -1,6 +1,5 @@
 PEAR-Builder-print-info-about-php@PHP_VERSION@-dev.patch
 php@PHP_VERSION@-cgi.conf
-php@PHP_VERSION@-common.dirs
 php@PHP_VERSION@-common.docs
 php@PHP_VERSION@-common.lintian-overrides
 php@PHP_VERSION@-common.README.Debian
