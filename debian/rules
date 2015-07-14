@@ -548,7 +548,10 @@ remove-files-stamp:
 	  debian/tmp/etc/pear.conf
 	touch remove-files-stamp
 
-override_dh_install: prepare-files-stamp rename-files-stamp remove-files-stamp
+override_dh_prep: prepare-files-stamp
+	dh_prep
+
+override_dh_install: rename-files-stamp remove-files-stamp
 	dh_install --fail-missing
 
 	mkdir -p debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
