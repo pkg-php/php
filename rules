@@ -44,6 +44,7 @@ PHP_CGI = php$(PHP_NAME_VERSION)-cgi
 PHP_CLI = php$(PHP_NAME_VERSION)-cli
 PHP_DBG = php$(PHP_NAME_VERSION)-dbg
 PHP_PHPDBG = php$(PHP_NAME_VERSION)-phpdbg
+PHP_MODULES_SOURCE = php$(PHP_NAME_VERSION)-modules-source
 
 # Generic commands
 
@@ -313,7 +314,7 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 
 PREPARE_FILES := $(shell cat debian/prepare-files)
 
-prepared: prepared-stamp debian/control
+prepared: prepared-stamp
 prepared-stamp:
 	sed -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.in
 	./buildconf --force
@@ -386,7 +387,7 @@ build-cgi-stamp: configure-cgi-stamp
 
 	touch build-cgi-stamp
 
-override_dh_auto_configure: prepared-stamp $(CONFIGURE_TARGETS)
+override_dh_auto_configure: debian/control prepared-stamp $(CONFIGURE_TARGETS)
 
 configure-%-stamp:
 	echo ${$*_config}
@@ -548,10 +549,15 @@ remove-files-stamp:
 	  debian/tmp/etc/pear.conf
 	touch remove-files-stamp
 
+create-modules-source-stamp: debian/tmp/usr/src/$(PHP_MODULES_SOURCE).tar.xz
+	mkdir -p debian/tmp/usr/src/
+	tar -cJf debian/tmp/usr/src/$(PHP_MODULES_SOURCE).tar.xz ext/
+	touch create-modules-source-stamp
+
 override_dh_installdirs: prepare-files-stamp
 	dh_installdirs
 
-override_dh_install: rename-files-stamp remove-files-stamp
+override_dh_install: rename-files-stamp remove-files-stamp create-modules-source-stamp
 	dh_install --fail-missing
 
 	mkdir -p debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
@@ -609,18 +615,19 @@ override_dh_apache2:
 	dh_apache2 --conditional=php_enable
 
 override_dh_installdocs-indep:
-	dh_installdoc -p$(PHP_PHP) --link-doc=$(PHP_COMMON)
+	dh_installdocs -p$(PHP_PHP) --link-doc=$(PHP_COMMON)
+	dh_installdocs -p$(PHP_MODULES_SOURCE) --link-doc=$(PHP_COMMON)
 
 override_dh_installdocs-arch:
 
 	cat debian/modulelist | grep -v common | while read module extname dsoname priority; do \
 	    $(MODULE_PACKAGE) \
-	    dh_installdoc -p$${package} --link-doc=$(PHP_COMMON)
+	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
 	done
 
-	for sapi in $(TARGETS); do
+	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
-	    dh_installdoc -p$${package} --link-doc=$(PHP_COMMON)
+	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
 	done
 
 	dh_installdocs -a --remaining-packages
@@ -663,7 +670,7 @@ override_dh_gencontrol-arch:
 	done
 	dh_gencontrol -a
 
-debian/control: debian/control.in debian/changelog
+debian/control: debian/rules debian/control.in debian/changelog
 	sed -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
 
-.PHONY: debian/control
+.PHONY: prepared unprepared
