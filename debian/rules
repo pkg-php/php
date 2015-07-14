@@ -479,7 +479,7 @@ prepare-files-stamp:
 	cat debian/modulelist | while read module extname dsoname priority; do \
 	    $(MODULE_PACKAGE) \
 	    modules=$$(cat debian/$${package}.modules); \
-	    for script in postinst preinst postrm prerm bug-script bug-control triggers; do \
+	    for script in postinst preinst postrm prerm bug-script bug-control triggers dirs; do \
 	        < debian/php-module.$${script} $(SED_REPLACEMENT) > debian/$${package}.$${script}; \
 	    done; \
 	    rm debian/$${package}.modules; \
