@@ -548,8 +548,8 @@ remove-files-stamp:
 	  debian/tmp/etc/pear.conf
 	touch remove-files-stamp
 
-override_dh_prep: prepare-files-stamp
-	dh_prep
+override_dh_installdirs: prepare-files-stamp
+	dh_installdirs
 
 override_dh_install: rename-files-stamp remove-files-stamp
 	dh_install --fail-missing
