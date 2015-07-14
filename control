@@ -94,7 +94,7 @@ Package: php7.0-common
 Architecture: any
 Depends: ${misc:Depends},
 	 ${shlibs:Depends},
-	 php-common,
+	 php-common (>= 2~),
 	 sed (>= 4.1.1-1),
 	 psmisc (>= 22.15-1~),
 	 lsof [!kfreebsd-any !hurd-any],
