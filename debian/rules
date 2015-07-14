@@ -608,10 +608,10 @@ override_dh_apache2:
 	done
 	dh_apache2 --conditional=php_enable
 
-override_dh_installdoc-indep:
+override_dh_installdocs-indep:
 	dh_installdoc -p$(PHP_PHP) --link-doc=$(PHP_COMMON)
 
-override_dh_installdoc-arch:
+override_dh_installdocs-arch:
 
 	cat debian/modulelist | grep -v common | while read module extname dsoname priority; do \
 	    $(MODULE_PACKAGE) \
