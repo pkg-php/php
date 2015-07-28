@@ -1,10 +1,17 @@
-php7.0 (7.0.0~beta1-1) experimental; urgency=medium
+php7.0 (7.0.0~beta2-1) experimental; urgency=medium
 
   * Initial packaging of PHP 7.0 - DON'T USE IN PRODUCTION
+  * Imported Upstream version 7.0.0~beta2
+  * Rebased patches on top of 7.0.0~beta2
+  * Don't compile the PHP modules from this source package, but create
+    phpX.Y-modules-source (Thanks Adam Conrad for the idea) that could be
+    used to compiled modules from php-modules source package
+  * Move phpenmod, phpquery, php-maintscript-helper and sessionclean to php-common package
+  * Finish moving everything from /usr/share/php (save it just for PEAR)
   * Make the copyright machine readable (it might not be complete, but
     it's much better than we have now in src:php5)
   * Introduces complete rewrite of PHP packaging, so it might break horribly
   * Add d/NEWS with prominent experimental notices
   * Re-enable native JSON extension
 
- -- Ondřej Surý <ondrej@debian.org>  Mon, 13 Jul 2015 13:27:01 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 28 Jul 2015 14:42:46 +0200
