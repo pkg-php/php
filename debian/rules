@@ -168,6 +168,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-sysvshm \
 		--enable-sysvmsg \
 		--enable-bcmath \
+		--enable-mysqlnd \
 		--enable-json \
 		--with-bz2 \
 		--enable-ctype \
@@ -186,12 +187,16 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-wddx \
 		--with-libxml-dir=/usr \
 		--with-zlib \
+		--with-zlib-dir=/usr \
 		--with-kerberos=/usr \
 		--with-openssl=/usr \
 		--enable-soap \
 		--enable-zip \
+		--enable-pdo \
 		--with-mhash=yes \
 		--with-system-tzdata \
+		--without-sqlite3 \
+		--without-mm \
 		$(CONFIGURE_DTRACE_ARGS)
 
 apache2_config = \
@@ -199,41 +204,6 @@ apache2_config = \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2 \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2/conf.d \
 		$(COMMON_CONFIG) \
-		--without-mm \
-		--with-curl=shared,/usr \
-		--with-enchant=shared,/usr \
-		--with-zlib-dir=/usr \
-		--with-gd=shared,/usr --enable-gd-native-ttf \
-		--with-gmp=shared,/usr \
-		--with-jpeg-dir=shared,/usr \
-		--with-xpm-dir=shared,/usr/X11R6 \
-		--with-png-dir=shared,/usr \
-		--with-freetype-dir=shared,/usr \
-		--with-vpx-dir=shared,/usr \
-		--with-imap=shared,/usr \
-		--with-imap-ssl \
-		--enable-intl=shared \
-		--without-t1lib \
-		--with-ldap=shared,/usr \
-		--with-ldap-sasl=/usr \
-		--with-mcrypt=shared,/usr \
-		--with-mysqli=shared,/usr/bin/mysql_config \
-		--with-pspell=shared,/usr \
-		--with-unixODBC=shared,/usr \
-		--with-recode=shared,/usr \
-		--with-xsl=shared,/usr \
-		--with-snmp=shared,/usr \
-		--with-sqlite3=shared,/usr \
-		--with-tidy=shared,/usr \
-		--with-xmlrpc=shared \
-		--with-pgsql=shared,/usr PGSQL_INCLUDE=`pg_config --includedir` \
-		--enable-pdo=shared \
-		--without-pdo-dblib \
-		--with-pdo-mysql=shared,/usr \
-		--with-pdo-odbc=shared,unixODBC,/usr \
-		--with-pdo-pgsql=shared,/usr/bin/pg_config \
-		--with-pdo-sqlite=shared,/usr \
-		--with-pdo-dblib=shared,/usr \
 		$(CONFIGURE_APACHE_ARGS)
 
 cgi_config = \
@@ -241,16 +211,6 @@ cgi_config = \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/cgi \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cgi/conf.d \
 		$(COMMON_CONFIG) \
-		--without-mm \
-		--enable-pdo=shared \
-		--enable-mysqlnd=shared \
-		--with-mysql=shared,mysqlnd \
-		--with-mysqli=shared,mysqlnd \
-		--with-pdo-mysql=shared,mysqlnd \
-		--without-pdo-sqlite \
-		--without-sybase-ct \
-		--without-sqlite3 \
-		--disable-json \
 		--enable-pcntl
 
 cli_config = \
@@ -258,11 +218,7 @@ cli_config = \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/cli \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cli/conf.d \
 		$(COMMON_CONFIG) \
-		--without-mm \
-		--disable-pdo \
-		--disable-json \
-		--without-sybase-ct \
-		--without-sqlite3 --enable-pcntl \
+		--enable-pcntl \
 		--with-libedit=shared
 
 embed_config = \
@@ -271,10 +227,7 @@ embed_config = \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/embed/conf.d \
 		$(COMMON_CONFIG) \
 		--without-mm \
-		--disable-pdo \
-		--disable-json \
-		--without-sybase-ct \
-		--without-sqlite3 --enable-pcntl
+		--enable-pcntl
 
 fpm_config = \
 		--prefix=/usr --enable-fpm --disable-cgi \
@@ -283,11 +236,6 @@ fpm_config = \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/fpm/conf.d \
 		$(COMMON_CONFIG) \
 		--with-libevent-dir=/usr \
-		--without-mm \
-		--disable-pdo \
-		--disable-json \
-		--without-sybase-ct \
-		--without-sqlite3 \
 		$(CONFIGURE_SYSTEMD)
 
 phpdbg_config = \
@@ -295,11 +243,7 @@ phpdbg_config = \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/phpdbg \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/phpdbg/conf.d \
 		$(COMMON_CONFIG) \
-		--without-mm \
-		--disable-pdo \
-		--disable-json \
-		--without-sybase-ct \
-		--without-sqlite3 --enable-pcntl \
+		--enable-pcntl \
 		--with-libedit=shared
 
 export apache2_config apache2_filter_config cgi_config cli_config embed_config fpm_config phpdbg_config
