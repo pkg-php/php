@@ -29,7 +29,7 @@ index 5cf8347..42d48cf 100644
  /*
     +----------------------------------------------------------------------+
 diff --git a/configure.in b/configure.in
-index 79c44f0..502c395 100644
+index 56e44f2..a80c58a 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -136,6 +136,8 @@ AC_DEFUN([PHP_EXT_DIR],[ext/$1])dnl
@@ -93,7 +93,7 @@ index 6e63cc2..6be33d9 100644
  #include "php_zlib.h"
  #include "fopen_wrappers.h"
 diff --git a/main/php.h b/main/php.h
-index 1d2c2dc..f7329bb 100644
+index 3ebaa1a..bb870d2 100644
 --- a/main/php.h
 +++ b/main/php.h
 @@ -31,6 +31,7 @@
