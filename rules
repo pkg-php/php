@@ -196,6 +196,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--with-mhash=yes \
 		--with-system-tzdata \
 		--without-sqlite3 \
+		--without-pdo-sqlite \
 		--without-mm \
 		$(CONFIGURE_DTRACE_ARGS)
 
