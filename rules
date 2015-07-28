@@ -142,10 +142,10 @@ CFLAGS += -g
 # some other helpful (for readability at least) shorthand variables
 PHPIZE_BUILDDIR = debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
 
-ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-    MAKEFLAGS += -j$(NUMJOBS)
-endif
+#ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+#    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+#    MAKEFLAGS += -j$(NUMJOBS)
+#endif
 
 COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--host=$(DEB_HOST_GNU_TYPE) \
