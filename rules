@@ -615,7 +615,7 @@ override_dh_gencontrol-arch:
 	done
 	dh_gencontrol -a
 
-debian/control: debian/rules debian/control.in debian/changelog
+debian/control: debian/control.in debian/rules debian/changelog
 	sed -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
 
 .PHONY: prepared unprepared
