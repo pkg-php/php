@@ -281,8 +281,8 @@ Description: Files for PHP7.0 module development
  for web development and can be embedded into HTML.
 
 Package: php7.0-dbg
-Depends: libapache2-mod-php7.0 (= ${binary:Version}) | php7.0-cgi (= ${binary:Version}) | php7.0-cli (= ${binary:Version}) | php7.0-fpm (= ${binary:Version}) | libphp7.0-embed (= ${binary:Version}) | php7.0-curl (= ${binary:Version}) | php7.0-enchant (= ${binary:Version}) | php7.0-gd (= ${binary:Version}) | php7.0-gmp (= ${binary:Version}) | php7.0-imap (= ${binary:Version}) | php7.0-interbase (= ${binary:Version}) | php7.0-intl (= ${binary:Version}) | php7.0-ldap (= ${binary:Version}) | php7.0-mcrypt (= ${binary:Version}) | php7.0-readline (= ${binary:Version}) | php7.0-mysqlnd (= ${binary:Version}) | php7.0-odbc (= ${binary:Version}) | php7.0-pgsql (= ${binary:Version}) | php7.0-pspell (= ${binary:Version}) | php7.0-recode (= ${binary:Version}) | php7.0-snmp (= ${binary:Version}) | php7.0-sqlite (= ${binary:Version}) | php7.0-tidy (= ${binary:Version}) | php7.0-xmlrpc (= ${binary:Version}) | php7.0-xsl (= ${binary:Version}),
-         php7.0-common (= ${binary:Version}),
+Depends: libapache2-mod-php7.0 (= ${binary:Version}) | php7.0-cgi (= ${binary:Version}) | php7.0-cli (= ${binary:Version}) | php7.0-fpm (= ${binary:Version}) | libphp7.0-embed (= ${binary:Version}) | php7.0-phpdbg (= ${binary:Version}),
+	 php7.0-common (= ${binary:Version}),
          ${misc:Depends}
 Recommends: gdb
 Section: debug
