@@ -523,23 +523,18 @@ override_dh_apache2:
 	dh_apache2 --conditional=php_enable
 
 override_dh_installdocs-indep:
-	dh_installdocs -p$(PHP_PHP) --link-doc=$(PHP_COMMON)
-	dh_installdocs -p$(PHP_MODULES_SOURCE) --link-doc=$(PHP_COMMON)
+	dh_installdocs -i
 
 override_dh_installdocs-arch:
-
-	for sapi in $(TARGETS); do \
-	    $(SAPI_PACKAGE) \
-	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
-	done
-
-	dh_installdocs -a --remaining-packages
+	dh_installdocs -p$(PHP_COMMON)
+	dh_installdocs -a --remaining-packages --link-doc=$(PHP_COMMON)
 
 override_dh_compress:
 	dh_compress -Xphp.ini
 
 override_dh_installchangelogs:
 	dh_installchangelogs -p$(PHP_COMMON) NEWS
+	dh_installchangelogs --remaining-packages
 
 override_dh_fixperms:
 	dh_fixperms -X/var/lib/php/$(PHP_NAME_VERSION)
