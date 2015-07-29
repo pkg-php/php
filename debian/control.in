@@ -281,8 +281,8 @@ Description: Files for PHP@PHP_VERSION@ module development
  for web development and can be embedded into HTML.
 
 Package: php@PHP_VERSION@-dbg
-Depends: libapache2-mod-php@PHP_VERSION@ (= ${binary:Version}) | php@PHP_VERSION@-cgi (= ${binary:Version}) | php@PHP_VERSION@-cli (= ${binary:Version}) | php@PHP_VERSION@-fpm (= ${binary:Version}) | libphp@PHP_VERSION@-embed (= ${binary:Version}) | php@PHP_VERSION@-curl (= ${binary:Version}) | php@PHP_VERSION@-enchant (= ${binary:Version}) | php@PHP_VERSION@-gd (= ${binary:Version}) | php@PHP_VERSION@-gmp (= ${binary:Version}) | php@PHP_VERSION@-imap (= ${binary:Version}) | php@PHP_VERSION@-interbase (= ${binary:Version}) | php@PHP_VERSION@-intl (= ${binary:Version}) | php@PHP_VERSION@-ldap (= ${binary:Version}) | php@PHP_VERSION@-mcrypt (= ${binary:Version}) | php@PHP_VERSION@-readline (= ${binary:Version}) | php@PHP_VERSION@-mysqlnd (= ${binary:Version}) | php@PHP_VERSION@-odbc (= ${binary:Version}) | php@PHP_VERSION@-pgsql (= ${binary:Version}) | php@PHP_VERSION@-pspell (= ${binary:Version}) | php@PHP_VERSION@-recode (= ${binary:Version}) | php@PHP_VERSION@-snmp (= ${binary:Version}) | php@PHP_VERSION@-sqlite (= ${binary:Version}) | php@PHP_VERSION@-tidy (= ${binary:Version}) | php@PHP_VERSION@-xmlrpc (= ${binary:Version}) | php@PHP_VERSION@-xsl (= ${binary:Version}),
-         php@PHP_VERSION@-common (= ${binary:Version}),
+Depends: libapache2-mod-php@PHP_VERSION@ (= ${binary:Version}) | php@PHP_VERSION@-cgi (= ${binary:Version}) | php@PHP_VERSION@-cli (= ${binary:Version}) | php@PHP_VERSION@-fpm (= ${binary:Version}) | libphp@PHP_VERSION@-embed (= ${binary:Version}) | php@PHP_VERSION@-phpdbg (= ${binary:Version}),
+	 php@PHP_VERSION@-common (= ${binary:Version}),
          ${misc:Depends}
 Recommends: gdb
 Section: debug
