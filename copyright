@@ -48,10 +48,10 @@ Copyright: 1997-2002 Makoto Matsumoto and Takuji Nishimura,
 License: BSD-3-clause and PHP-3.01
 
 License: PHP-3.01
- -------------------------------------------------------------------- 
+ --------------------------------------------------------------------
                    The PHP License, version 3.01
  Copyright (c) 1999 - 2015 The PHP Group. All rights reserved.
- -------------------------------------------------------------------- 
+ --------------------------------------------------------------------
  .
  Redistribution and use in source and binary forms, with or without
  modification, is permitted provided that the following conditions
@@ -91,13 +91,13 @@ License: PHP-3.01
       "This product includes PHP software, freely available from
       <http://www.php.net/software/>".
  .
- THIS SOFTWARE IS PROVIDED BY THE PHP DEVELOPMENT TEAM ``AS IS'' AND 
+ THIS SOFTWARE IS PROVIDED BY THE PHP DEVELOPMENT TEAM ``AS IS'' AND
  ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE PHP
- DEVELOPMENT TEAM OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
- INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+ DEVELOPMENT TEAM OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -110,17 +110,17 @@ License: Zend-Engine-2.00
  are met:
  .
    1. Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer. 
+      notice, this list of conditions and the following disclaimer.
  .
-   2. Redistributions in binary form must reproduce the above 
-      copyright notice, this list of conditions and the following 
+   2. Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
       disclaimer in the documentation and/or other materials provided
       with the distribution.
  .
    3. The names "Zend" and "Zend Engine" must not be used to endorse
       or promote products derived from this software without prior
       permission from Zend Technologies Ltd. For written permission,
-      please contact license@zend.com. 
+      please contact license@zend.com.
  .
    4. Zend Technologies Ltd. may publish revised and/or new versions
       of the license from time to time. Each version will be given a
@@ -142,9 +142,9 @@ License: Zend-Engine-2.00
       software must display the following acknowledgment:
       "The Zend Engine is freely available at http://www.zend.com"
  .
- THIS SOFTWARE IS PROVIDED BY ZEND TECHNOLOGIES LTD. ``AS IS'' AND 
+ THIS SOFTWARE IS PROVIDED BY ZEND TECHNOLOGIES LTD. ``AS IS'' AND
  ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL ZEND
  TECHNOLOGIES LTD.  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT

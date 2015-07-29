@@ -401,37 +401,8 @@ prepare-files-stamp:
 	    if [ -x $${versionless} ]; then chmod +x $${package}; fi; \
 	done
 
-	# generate the config snippets for various php
-	# modules from the templates.
-	cat debian/modulelist debian/extramodulelist | while read module extname dsoname priority extension; do \
-	    $(MODULE_PACKAGE) \
-	    if [ -z "$${dsoname}" ]; then dsoname=$${module}; fi; \
-	    if [ -z "$${priority}" ]; then priority=20; fi; \
-	    if [ -z "$${extension}" ]; then extension=extension; fi; \
-	    mkdir -p debian/tmp/usr/share/$${package}/$(PHP_NAME_VERSION)/$${module}; \
-	    sed -e "s|@extname@|$${extname}|g" \
-	        -e "s/@dsoname@/$${dsoname}/g" \
-	        -e "s/@extension@/$${extension}/g" \
-	        -e "s/@priority@/$${priority}/g" \
-	      < debian/php-module.ini \
-	      > debian/tmp/usr/share/$${package}/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini; \
-	    echo "usr/lib/php/$(PHP_ZEND_VERSION)/$${dsoname}.so" >> debian/$${package}.install; \
-	    echo "usr/share/$${package}/$(PHP_NAME_VERSION)/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
-	    echo -n "$$dsoname " >> debian/$${package}.modules; \
-	done
-
-	# generate the maintscripts for various php
-	# modules from the templates.
-	cat debian/modulelist | while read module extname dsoname priority; do \
-	    $(MODULE_PACKAGE) \
-	    modules=$$(cat debian/$${package}.modules); \
-	    for script in postinst preinst postrm prerm bug-script bug-control triggers dirs; do \
-	        < debian/php-module.$${script} $(SED_REPLACEMENT) > debian/$${package}.$${script}; \
-	    done; \
-	    rm debian/$${package}.modules; \
-	done
-
-	# likewise, for the different sapi implementations
+	# generate config snippets and maintscripts for the different sapi implementations
+	# from the templates
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
 	    mkdir -p "debian/tmp/usr/lib/php/$(PHP_NAME_VERSION)/sapi/"; \
@@ -565,11 +536,6 @@ override_dh_installdocs-indep:
 
 override_dh_installdocs-arch:
 
-	cat debian/modulelist | grep -v common | while read module extname dsoname priority; do \
-	    $(MODULE_PACKAGE) \
-	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
-	done
-
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
 	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
@@ -602,11 +568,6 @@ override_dh_gencontrol-arch:
 	fi;
 
 	echo "php:Provides=phpapi-$${phpapi}" >> debian/$(PHP_COMMON).substvars;
-
-	cat debian/modulelist | while module package extname dsoname priority; do \
-	    $(MODULE_PACKAGE) \
-	    echo "php:Depends=phpapi-$${phpapi}" >> debian/$${package}.substvars; \
-	done
 
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \

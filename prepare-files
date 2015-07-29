@@ -26,3 +26,10 @@ php@PHP_VERSION@-dev.install
 php@PHP_VERSION@.bug-control
 php@PHP_VERSION@-modules-source.dirs
 php@PHP_VERSION@-modules-source.install
+php@PHP_VERSION@-common.dirs
+php@PHP_VERSION@-common.docs
+php@PHP_VERSION@-common.lintian-overrides
+php@PHP_VERSION@-common.postinst
+php@PHP_VERSION@-common.postrm
+php@PHP_VERSION@-common.preinst
+php@PHP_VERSION@-common.README.Debian
