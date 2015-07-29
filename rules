@@ -390,9 +390,10 @@ prepare-files-stamp:
 	# generate versioned files from versionless variants
 	for file in $(PREPARE_FILES); do \
 	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
-	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
-	    < $${versionless} $(SED_REPLACEMENT) > $${package}; \
-	    if [ -x $${versionless} ]; then chmod +x $${package}; fi; \
+	    versioned=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    package=$$(echo $$file | sed -e 's/\..*$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    < $${versionless} $(SED_REPLACEMENT) > $${versioned}; \
+	    if [ -x $${versionless} ]; then chmod +x $${versioned}; fi; \
 	done
 
 	# generate config snippets and maintscripts for the different sapi implementations
