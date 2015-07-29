@@ -163,7 +163,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--disable-sysvshm \
 		--disable-sysvmsg \
 		--disable-bcmath \
-		--disable-mysqlnd \
+		--enable-mysqlnd \
 		--disable-json \
 		--disable-dba \
 		--with-bz2 \
@@ -188,7 +188,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--with-openssl=/usr \
 		--disable-soap \
 		--disable-zip \
-		--disable-pdo \
+		--enable-pdo \
 		--with-mhash=yes \
 		--with-system-tzdata \
 		--without-sqlite3 \
