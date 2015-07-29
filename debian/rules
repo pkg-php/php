@@ -151,42 +151,44 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--localstatedir=/var \
 		--mandir=/usr/share/man \
 		--disable-debug \
+		--disable-opcache \
 		--with-regex=php \
 		--disable-rpath \
 		--disable-static \
 		--with-pic \
 		--with-layout=GNU \
 		--with-pear=/usr/share/php \
-		--enable-calendar \
-		--enable-sysvsem \
-		--enable-sysvshm \
-		--enable-sysvmsg \
-		--enable-bcmath \
-		--enable-mysqlnd \
-		--enable-json \
+		--disable-calendar \
+		--disable-sysvsem \
+		--disable-sysvshm \
+		--disable-sysvmsg \
+		--disable-bcmath \
+		--disable-mysqlnd \
+		--disable-json \
+		--disable-dba \
 		--with-bz2 \
-		--enable-ctype \
+		--disable-ctype \
 		--with-db4 \
 		--with-qdbm=/usr \
 		--without-gdbm \
 		--with-iconv \
-		--enable-exif \
-		--enable-ftp \
+		--disable-exif \
+		--disable-ftp \
 		--with-gettext \
-		--enable-mbstring \
+		--disable-mbstring \
 		--with-onig=/usr \
 		--with-pcre-regex=/usr \
-		--enable-shmop \
-		--enable-sockets \
-		--enable-wddx \
+		--disable-shmop \
+		--disable-sockets \
+		--disable-wddx \
 		--with-libxml-dir=/usr \
 		--with-zlib \
 		--with-zlib-dir=/usr \
 		--with-kerberos=/usr \
 		--with-openssl=/usr \
-		--enable-soap \
-		--enable-zip \
-		--enable-pdo \
+		--disable-soap \
+		--disable-zip \
+		--disable-pdo \
 		--with-mhash=yes \
 		--with-system-tzdata \
 		--without-sqlite3 \
