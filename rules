@@ -376,7 +376,7 @@ override_dh_auto_install: $(INSTALL_TARGETS)
 
 .NOTPARALLEL: override_dh_auto_install
 
-install-%-stamp: configure-%-stamp
+install-%-stamp: build-%-stamp
 	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
 	touch install-$*-stamp
 
