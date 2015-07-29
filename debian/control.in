@@ -300,7 +300,7 @@ Package: php@PHP_VERSION@-modules-source
 Architecture: all
 Depends: php@PHP_VERSION@-dev,
          ${misc:Depends}
-Description: PHP @PHP_VERSION modules source package
+Description: PHP @PHP_VERSION@ modules source package
  This package contains source for PHP @PHP_VERSION@ modules that can be
  built using phpize@PHP_VERSION@.  It is mainly used to generate packages
  with PHP modules built of of the main PHP package.

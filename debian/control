@@ -300,7 +300,7 @@ Package: php7.0-modules-source
 Architecture: all
 Depends: php7.0-dev,
          ${misc:Depends}
-Description: PHP @PHP_VERSION modules source package
+Description: PHP 7.0 modules source package
  This package contains source for PHP 7.0 modules that can be
  built using phpize7.0.  It is mainly used to generate packages
  with PHP modules built of of the main PHP package.
