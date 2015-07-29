@@ -246,7 +246,7 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			echo("php:Extensions=" . wordwrap($$s . ".\n", 75, "\$${Newline}"));
 
 %:
-	dh $@ $(DH_SYSTEMD) --with apache2 --parallel
+	dh $@ $(DH_SYSTEMD) --with apache2
 
 PREPARE_FILES := $(shell cat debian/prepare-files)
 
