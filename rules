@@ -88,12 +88,6 @@ ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),hurd-i386 mips mipsel ppc64 ppc
   RUN_TESTS = no
 endif
 
-ifneq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),hurd-i386 m68k hppa ppc64))
-  CONFIGURE_APACHE_ARGS = --with-interbase=shared,/usr --with-pdo-firebird=shared,/usr
-else
-  CONFIGURE_APACHE_ARGS = --without-interbase --without-pdo-firebird
-endif
-
 ifeq (yes,$(RUN_TESTS))
   MYSQL_PORT := $(shell for i in $$(seq 1025 3600 | sort -R); do nc -z localhost $$i || { echo $$i; exit; } ; done)
   MYSQL_DATA_DIR ?= $(shell readlink -f mysql_db)
@@ -198,14 +192,14 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--without-sqlite3 \
 		--without-pdo-sqlite \
 		--without-mm \
+		--without-interbase --without-pdo-firebird \
 		$(CONFIGURE_DTRACE_ARGS)
 
 apache2_config = \
 		--prefix=/usr --with-apxs2=/usr/bin/apxs2 \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2 \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2/conf.d \
-		$(COMMON_CONFIG) \
-		$(CONFIGURE_APACHE_ARGS)
+		$(COMMON_CONFIG)
 
 cgi_config = \
 		--prefix=/usr --enable-force-cgi-redirect --enable-fastcgi \

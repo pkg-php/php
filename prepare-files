@@ -31,5 +31,7 @@ php@PHP_VERSION@-common.docs
 php@PHP_VERSION@-common.lintian-overrides
 php@PHP_VERSION@-common.postinst
 php@PHP_VERSION@-common.postrm
+php@PHP_VERSION@-common.prerm
+php@PHP_VERSION@-common.install
 php@PHP_VERSION@-common.preinst
 php@PHP_VERSION@-common.README.Debian
