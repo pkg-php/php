@@ -250,7 +250,7 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 
 PREPARE_FILES := $(shell cat debian/prepare-files)
 
-prepared: prepared-stamp
+prepared: prepared-stamp debian/control debian/source.lintian-overrides
 prepared-stamp:
 	sed -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.in
 	./buildconf --force
@@ -560,7 +560,10 @@ override_dh_gencontrol-arch:
 	done; \
 	dh_gencontrol -a
 
-debian/control: debian/control.in debian/rules debian/changelog
+debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides
 	sed -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
 
-.PHONY: prepared unprepared
+debian/source.lintian-overrides: debian/source.lintian-overrides.in debian/rules debian/changelog
+	sed -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
+
+.PHONY: prepared unprepared debian/control debian/source.lintian-overrides
