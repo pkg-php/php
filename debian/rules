@@ -558,20 +558,18 @@ override_dh_makeshlibs-arch:
 
 override_dh_gencontrol-arch:
 	# Bail-out if PHPAPI has changed
-	phpapi=`./debian/$(PHP_DEV)/usr/bin/php-config$(PHP_NAME_VERSION) --phpapi`; \
-	stored=`cat debian/phpapi`; \
-	if [ "$${phpapi}" != "$${stored}" ]; then \
-	    echo "PHPAPI has changed from $${stored} to $${phpapi}, please modify debian/phpapi"; \
-	    exit 1; \
-	fi;
-
-	echo "php:Provides=phpapi-$${phpapi}" >> debian/$(PHP_COMMON).substvars;
-
+	stored=$$(cat debian/phpapi); \
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
 	    $${sapi}-build/sapi/cli/php -n -r '$(BUILTIN_EXTENSION_CHECK)' \
 	      >> debian/$${package}.substvars; \
-	done
+	    phpapi=$$(sh $${sapi}-build/scripts/php-config --phpapi); \
+	    if [ "$${phpapi}" != "$${stored}" ]; then \
+	        echo "PHPAPI has changed from $${stored} to $${phpapi}, please modify debian/phpapi"; \
+	        exit 1; \
+	    fi; \
+	    echo "php:Provides=phpapi-$${phpapi}" >> debian/$${package}.substvars; \
+	done; \
 	dh_gencontrol -a
 
 debian/control: debian/control.in debian/rules debian/changelog
