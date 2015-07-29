@@ -405,6 +405,7 @@ prepare-files-stamp:
 	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
 	        if [ -x debian/php-sapi.$${tmpl} ]; then chmod +x debian/$${package}.$${tmpl}; fi; \
 	    done; \
+	    < debian/php-sapi.lintian-overrides $(SED_REPLACEMENT) | grep -E "^$${package}" > debian/$${package}.lintian-overrides; \
 	done
 
 	# install extra CGI-BIN

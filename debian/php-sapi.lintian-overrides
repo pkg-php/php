@@ -11,7 +11,7 @@ libapache2-mod-php@PHP_VERSION@: non-standard-apache2-module-package-name libapa
 php@PHP_VERSION@-cgi: embedded-library usr/bin/php@PHP_VERSION@-cgi: file
 php@PHP_VERSION@-cgi: embedded-library usr/lib/cgi-bin/php@PHP_VERSION@: file
 php@PHP_VERSION@-cli: embedded-library usr/bin/php@PHP_VERSION@: file
-php@PHP_VERSION@-fpm: embedded-library usr/sbin/php@PHP_VERSION@-fpm: file
+php@PHP_VERSION@-fpm: embedded-library usr/sbin/php-fpm@PHP_VERSION@: file
 libphp@PHP_VERSION@-embed: embedded-library usr/lib/libphp@PHP_VERSION@.so: file
 libphp@PHP_VERSION@-embed: embedded-library usr/lib/php@PHP_VERSION@/libphp@PHP_VERSION@-*.so: file
 libphp@PHP_VERSION@-embed: package-name-doesnt-match-sonames libphp@PHP_VERSION@
