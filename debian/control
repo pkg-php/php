@@ -101,8 +101,6 @@ Depends: lsof [!kfreebsd-any !hurd-any],
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}
-Conflicts: php5-json
 Suggests: php7.0-user-cache
 Description: Common files for packages built from the PHP source
  This package contains the documentation and example files relevant to all
