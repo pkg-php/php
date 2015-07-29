@@ -1,3 +1,2 @@
-#!/usr/bin/dh-exec
 usr/lib/php/@PHP_VERSION@/sapi/@sapi@
 #EXTRA#
