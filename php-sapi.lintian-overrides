@@ -8,7 +8,7 @@
 libapache2-mod-php@PHP_VERSION@: embedded-library usr/lib/apache2/modules/libphp@PHP_VERSION@.so: file
 libapache2-mod-php@PHP_VERSION@: apache2-module-does-not-ship-load-file libphp@PHP_VERSION@
 libapache2-mod-php@PHP_VERSION@: non-standard-apache2-module-package-name libapache2-mod-php@PHP_VERSION@ != libapache2-libphp@PHP_VERSION@
-php@PHP_VERSION@-cgi: embedded-library usr/bin/php@PHP_VERSION@-cgi: file
+php@PHP_VERSION@-cgi: embedded-library usr/bin/php-cgi@PHP_VERSION@: file
 php@PHP_VERSION@-cgi: embedded-library usr/lib/cgi-bin/php@PHP_VERSION@: file
 php@PHP_VERSION@-cli: embedded-library usr/bin/php@PHP_VERSION@: file
 php@PHP_VERSION@-fpm: embedded-library usr/sbin/php-fpm@PHP_VERSION@: file
@@ -16,3 +16,5 @@ libphp@PHP_VERSION@-embed: embedded-library usr/lib/libphp@PHP_VERSION@.so: file
 libphp@PHP_VERSION@-embed: embedded-library usr/lib/php@PHP_VERSION@/libphp@PHP_VERSION@-*.so: file
 libphp@PHP_VERSION@-embed: package-name-doesnt-match-sonames libphp@PHP_VERSION@
 libphp@PHP_VERSION@-embed: shlib-without-versioned-soname usr/lib/libphp@PHP_VERSION@.so libphp@PHP_VERSION@.so
+php@PHP_VERSION@-phpdbg: embedded-library usr/bin/phpdbg@PHP_VERSION@: file
+
