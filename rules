@@ -136,11 +136,6 @@ CFLAGS += -g
 # some other helpful (for readability at least) shorthand variables
 PHPIZE_BUILDDIR = debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
 
-#ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-#    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-#    MAKEFLAGS += -j$(NUMJOBS)
-#endif
-
 COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--libdir=\$${prefix}/lib/php \
@@ -251,7 +246,7 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			echo("php:Extensions=" . wordwrap($$s . ".\n", 75, "\$${Newline}"));
 
 %:
-	dh $@ $(DH_SYSTEMD) --with apache2
+	dh $@ $(DH_SYSTEMD) --with apache2 --parallel
 
 PREPARE_FILES := $(shell cat debian/prepare-files)
 
@@ -308,11 +303,11 @@ endif
 override_dh_auto_build: $(BUILD_TARGETS) build-pear-stamp
 
 build-%-stamp: configure-%-stamp
-	dh_auto_build --builddirectory $*-build #TODO --parallel
+	dh_auto_build --builddirectory $*-build --parallel
 	touch build-$*-stamp
 
 build-cgi-stamp: configure-cgi-stamp
-	dh_auto_build --builddirectory cgi-build
+	dh_auto_build --builddirectory cgi-build --parallel
 	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION)
 
 	# Dirty hack to not rebuild everything twice
@@ -323,7 +318,7 @@ build-cgi-stamp: configure-cgi-stamp
 		touch ../../ext/standard/info.c && \
 		touch ../../sapi/cgi/cgi_main.c
 
-	dh_auto_build --builddirectory cgi-build
+	dh_auto_build --builddirectory cgi-build --parallel
 	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/usr.bin.$(PHP_CGI)
 
 	touch build-cgi-stamp
@@ -383,7 +378,6 @@ override_dh_auto_install: $(INSTALL_TARGETS)
 
 install-%-stamp: configure-%-stamp
 	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
-#	dh_auto_install --builddirectory $*-build -- INSTALL_ROOT=$(CURDIR)/debian/tmp
 	touch install-$*-stamp
 
 prepare-files-stamp:
