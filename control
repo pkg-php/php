@@ -110,7 +110,7 @@ Depends: apache2 (>= 2.4),
          libmagic1,
          mime-support,
          php7.0-cli,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -135,7 +135,7 @@ Architecture: any
 Depends: libmagic1,
          mime-support,
          php7.0-cli,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -159,7 +159,7 @@ Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
          mime-support,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -181,7 +181,7 @@ Package: php7.0-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -203,7 +203,7 @@ Architecture: any
 Depends: libmagic1,
          mime-support,
          php7.0-cli,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -226,7 +226,7 @@ Package: libphp7.0-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -255,7 +255,7 @@ Depends: autoconf (>= 2.63),
          libssl-dev,
          libtool (>= 2.2),
          php7.0-cli (>= ${binary:Version}),
-         php7.0-common (>= ${binary:Version}),
+         php7.0-common (>= ${source:Version}),
          shtool,
          ${misc:Depends},
          ${perl:Depends}
@@ -273,7 +273,6 @@ Description: Files for PHP7.0 module development
 
 Package: php7.0-dbg
 Depends: libapache2-mod-php7.0 (= ${binary:Version}) | php7.0-cgi (= ${binary:Version}) | php7.0-cli (= ${binary:Version}) | php7.0-fpm (= ${binary:Version}) | libphp7.0-embed (= ${binary:Version}) | php7.0-phpdbg (= ${binary:Version}),
-	 php7.0-common (= ${binary:Version}),
          ${misc:Depends}
 Recommends: gdb
 Section: debug
