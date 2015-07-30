@@ -7,10 +7,8 @@ Subject: expose_all_built_and_installed_apis
  scripts/php-config.in        | 5 ++++-
  2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/man1/php-config.1.in b/scripts/man1/php-config.1.in
-index ae2ee56..05e5e2d 100644
---- a/scripts/man1/php-config.1.in
-+++ b/scripts/man1/php-config.1.in
+--- php7.0.orig/scripts/man1/php-config.1.in
++++ php7.0/scripts/man1/php-config.1.in
 @@ -44,7 +44,7 @@ Full path to php CLI or CGI binary
  .TP
  .PD 0
@@ -20,10 +18,8 @@ index ae2ee56..05e5e2d 100644
  .TP
  .PD 0
  .B \-\-configure-options
-diff --git a/scripts/php-config.in b/scripts/php-config.in
-index 1f4bb4c..a6eebec 100644
---- a/scripts/php-config.in
-+++ b/scripts/php-config.in
+--- php7.0.orig/scripts/php-config.in
++++ php7.0/scripts/php-config.in
 @@ -18,9 +18,12 @@ exe_extension="@EXEEXT@"
  php_cli_binary=NONE
  php_cgi_binary=NONE
@@ -32,8 +28,8 @@ index 1f4bb4c..a6eebec 100644
 +#php_sapis="@PHP_INSTALLED_SAPIS@"
  phpapi="@DEBIAN_PHP_API@"
  
-+# Query the dpkg database for available PHP5 sapis
-+php_sapis=$(dpkg-query -W -f='${binary:Package} ' libapache2-mod-php5 libapache2-mod-php5filter php5-cgi php5-cli php5-fpm libphp5-embed 2>/dev/null | sed -e 's|libapache2-mod-php5|apache2handler|;s|libapache2-mod-php5filter|apache2filter|;s|php5-cgi|cgi|;s|php5-cli|cli|;s|php5-fpm|fpm|;s|libphp5-embed|embed|;')
++# Query the dpkg database for available PHP sapis
++php_sapis=$(dpkg-query -W -f='${binary:Package} ' libapache2-mod-php${program_suffix} php${program_suffix}-cgi php${program_suffix}-cli php${program_suffix}-fpm libphp${program_suffix}-embed php${program_suffix}-phpdbg 2>/dev/null | sed -e 's|libapache2-mod-php${program_suffix}|apache2handler|;s|php${program_suffix}-cgi|cgi|;s|php${program_suffix}-cli|cli|;s|php${program_suffix}-fpm|fpm|;s|libphp${program_suffix}-embed|embed|;s|php${program_suffix}-phpdbg|phpdbg|;')
 +
  # Set php_cli_binary and php_cgi_binary if available
  for sapi in $php_sapis; do

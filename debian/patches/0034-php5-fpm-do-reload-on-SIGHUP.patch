@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sat, 2 May 2015 10:26:56 +0200
-Subject: php5-fpm-do-reload-on-SIGHUP
+Subject: php-fpm-do-reload-on-SIGHUP
 
 ---
  sapi/fpm/fpm/fpm_events.c  | 5 +++++
