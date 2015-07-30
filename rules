@@ -28,7 +28,7 @@ ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION)
 endif
 
-TARGETS              := apache2 cli phpdbg embed fpm cgi
+TARGETS              := apache2 phpdbg embed fpm cgi cli
 CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
 BUILD_TARGETS        := $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
 INSTALL_TARGETS      := $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
