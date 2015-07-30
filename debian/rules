@@ -470,9 +470,6 @@ override_dh_installdirs: prepare-files-stamp
 override_dh_install: rename-files-stamp remove-files-stamp create-modules-source-stamp
 	dh_install --fail-missing
 
-	mkdir -p debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
-	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/$(PHP_NAME_VERSION)/sessions/
-
 	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
 	# sanitize php.ini file
 	cat php.ini-production | tr "\t" " " | \
