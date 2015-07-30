@@ -19,7 +19,8 @@ php7.0 (7.0.0~beta2-1) experimental; urgency=medium
   * Use parallel just for build targets
   * Fix binNMUability after switching phpX.Y-common to arch:all
   * Update lintian overrides for libphpX.Y-embed
-  * Strip down the Build-Depends after removing the modules from main PHP package
-  * Tweak the dirs in d/patches to include 7.0 instead of 5 <- needs to be set from d/rules (FIXME)
+  * Strip down the Build-Depends needed to build modules before
+  * Tweak the dirs in d/patches to include 7.0 instead of 5 <- needs to be
+    set from d/rules (FIXME)
 
- -- Ondřej Surý <ondrej@debian.org>  Thu, 30 Jul 2015 11:25:02 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 30 Jul 2015 11:39:57 +0200
