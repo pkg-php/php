@@ -1,1 +1,1 @@
-php@PHP_VERSION@-dev: script-not-executable usr/lib/php/@PHP_VERSION@/build/run-tests.php
+php@PHP_VERSION@-dev: script-not-executable usr/lib/php/@PHP_API@/build/run-tests.php
