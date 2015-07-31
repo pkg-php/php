@@ -17,6 +17,7 @@ php@PHP_VERSION@-fpm.init
 php@PHP_VERSION@-fpm.logrotate
 php@PHP_VERSION@-fpm-reopenlogs
 php@PHP_VERSION@-fpm.service
+php@PHP_VERSION@-fpm.tmpfile
 php@PHP_VERSION@-helper
 php@PHP_VERSION@.load
 php@PHP_VERSION@-phpdbg.links

@@ -193,20 +193,21 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		$(CONFIGURE_DTRACE_ARGS)
 
 apache2_config = \
-		--prefix=/usr --with-apxs2=/usr/bin/apxs2 \
+		--prefix=/usr --with-apxs2=/usr/bin/apxs2 --disable-cli --disable-cgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2 \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2/conf.d \
 		$(COMMON_CONFIG)
 
 cgi_config = \
-		--prefix=/usr --enable-force-cgi-redirect --enable-fastcgi \
+		--prefix=/usr --enable-cgi --disable-cli \
+		--enable-force-cgi-redirect --enable-fastcgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/cgi \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cgi/conf.d \
 		$(COMMON_CONFIG) \
 		--enable-pcntl
 
 cli_config = \
-		--prefix=/usr --disable-cgi \
+		--prefix=/usr --enable-cli --disable-cgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/cli \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cli/conf.d \
 		$(COMMON_CONFIG) \
@@ -214,7 +215,7 @@ cli_config = \
 		--with-libedit=shared
 
 embed_config = \
-		--prefix=/usr --enable-embed --disable-cgi \
+		--prefix=/usr --enable-embed --disable-cli --disable-cgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/embed \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/embed/conf.d \
 		$(COMMON_CONFIG) \
@@ -222,7 +223,7 @@ embed_config = \
 		--enable-pcntl
 
 fpm_config = \
-		--prefix=/usr --enable-fpm --disable-cgi \
+		--prefix=/usr --enable-fpm --disable-cli --disable-cgi \
 		--with-fpm-user=www-data --with-fpm-group=www-data \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/fpm \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/fpm/conf.d \
@@ -231,7 +232,7 @@ fpm_config = \
 		$(CONFIGURE_SYSTEMD)
 
 phpdbg_config = \
-		--prefix=/usr --disable-cgi --enable-phpdbg \
+		--prefix=/usr --enable-phpdbg --disable-cli --disable-cgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/phpdbg \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/phpdbg/conf.d \
 		$(COMMON_CONFIG) \
@@ -432,7 +433,7 @@ remove-files-stamp:
 
 	# get rid of extra PHP-FPM configuration files
 	rm -f debian/tmp/etc/php-fpm.conf.default \
-              debian/tmp/etc/php-fpm.d/www.conf.default
+              debian/tmp/etc/pool.d/www.conf.default
 
 	rm -rf \
 	  debian/tmp/.filemap \
@@ -493,12 +494,15 @@ ifeq (yes,$(RUN_TESTS))
 endif
 # install the FPM configuration files to respective locations and customize them for Debian
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/
-	sed -e's,pid = /var/run/$(PHP_FPM).pid,pid = /run/php/$(PHP_FPM).pid,' \
+	sed -e's,^pid = .*,pid = /run/php/$(PHP_FPM).pid,' \
+	    -e's,^error_log = .*,error_log = /var/log/$(PHP_FPM).log,' \
+	    -e's,^include = .*,include=etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/*.conf,' \
 	    < fpm-build/sapi/fpm/php-fpm.conf \
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/php-fpm.conf
 
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/
-	sed -e's{^;listen\.owner{listen.owner{;' \
+	sed -e's,^listen = .*,listen = /run/php/$(PHP_FPM).sock,' \
+	    -e's{^;listen\.owner{listen.owner{;' \
             -e's{^;listen\.group{listen.group{;' \
 	    < fpm-build/sapi/fpm/php-fpm.conf
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/www.conf
