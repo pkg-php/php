@@ -145,51 +145,17 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
 		--mandir=/usr/share/man \
+		--disable-all \
 		--disable-debug \
-		--disable-opcache \
-		--with-regex=php \
 		--disable-rpath \
 		--disable-static \
 		--with-pic \
 		--with-layout=GNU \
 		--with-pear=/usr/share/php \
-		--disable-calendar \
-		--disable-sysvsem \
-		--disable-sysvshm \
-		--disable-sysvmsg \
-		--disable-bcmath \
 		--enable-mysqlnd \
-		--disable-json \
-		--disable-dba \
-		--with-bz2 \
-		--disable-ctype \
-		--with-db4 \
-		--with-qdbm=/usr \
-		--without-gdbm \
-		--with-iconv \
-		--disable-exif \
-		--disable-ftp \
-		--with-gettext \
-		--disable-mbstring \
-		--with-onig=/usr \
-		--with-pcre-regex=/usr \
-		--disable-shmop \
-		--disable-sockets \
-		--disable-wddx \
-		--with-libxml-dir=/usr \
-		--with-zlib \
-		--with-zlib-dir=/usr \
-		--with-kerberos=/usr \
-		--with-openssl=/usr \
-		--disable-soap \
-		--disable-zip \
 		--enable-pdo \
 		--with-mhash=yes \
 		--with-system-tzdata \
-		--without-sqlite3 \
-		--without-pdo-sqlite \
-		--without-mm \
-		--without-interbase --without-pdo-firebird \
 		$(CONFIGURE_DTRACE_ARGS)
 
 apache2_config = \
@@ -224,6 +190,7 @@ embed_config = \
 
 fpm_config = \
 		--prefix=/usr --enable-fpm --disable-cli --disable-cgi \
+		--sysconfdir=/etc/php/$(PHP_NAME_VERSION)/fpm \
 		--with-fpm-user=www-data --with-fpm-group=www-data \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/fpm \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/fpm/conf.d \
