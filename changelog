@@ -1,3 +1,12 @@
+php7.0 (7.0.0~beta2-2) experimental; urgency=medium
+
+  * Properly install new FPM www.conf to pool.d
+  * Make use of tmpfiles (and add naive parser to phpX.Y-fpm.init)
+  * Disable all extensions with --disable-all and remove the various
+    configure options related to disabling the extensions
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 31 Jul 2015 14:08:17 +0200
+
 php7.0 (7.0.0~beta2-1) experimental; urgency=medium
 
   * Initial packaging of PHP 7.0 - DON'T USE IN PRODUCTION
