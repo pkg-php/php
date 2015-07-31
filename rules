@@ -400,7 +400,7 @@ remove-files-stamp:
 
 	# get rid of extra PHP-FPM configuration files
 	rm -f debian/tmp/etc/php-fpm.conf.default \
-              debian/tmp/etc/pool.d/www.conf.default
+	      debian/tmp/etc/php-fpm.d/www.conf.default
 
 	rm -rf \
 	  debian/tmp/.filemap \
