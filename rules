@@ -491,19 +491,19 @@ override_dh_install: rename-files-stamp remove-files-stamp create-modules-source
 ifeq (yes,$(RUN_TESTS))
 	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
 endif
-
+# install the FPM configuration files to respective locations and customize them for Debian
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/
-	# we don't want the FPM pool definitions on the main file itself:
-	sed -r '/('"'"'|\[)www('"'"'|\])/Q' < fpm-build/sapi/fpm/php-fpm.conf | \
 	sed -e's,pid = /var/run/$(PHP_FPM).pid,pid = /run/php/$(PHP_FPM).pid,' \
+	    < fpm-build/sapi/fpm/php-fpm.conf \
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/php-fpm.conf
-	# extract the first pool, called "www," from the config file:
+
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/
-	sed -nr '/('"'"'|\[)www('"'"'|\])/{h;p;d};x;/www/{x;p}' < fpm-build/sapi/fpm/php-fpm.conf | \
 	sed -e's{^;listen\.owner{listen.owner{;' \
             -e's{^;listen\.group{listen.group{;' \
+	    < fpm-build/sapi/fpm/php-fpm.conf
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/www.conf
-	# install a helper script for checking PHP FPM configuration
+
+# install a helper script for checking PHP FPM configuration
 	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
 
