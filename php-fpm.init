@@ -34,11 +34,6 @@ SCRIPTNAME=/etc/init.d/$NAME
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
 . /lib/lsb/init-functions
 
-# Don't run if we are running upstart
-if init_is_upstart; then
-    exit 1
-fi
-
 #
 # Function to check the correctness of the config file
 #
@@ -106,9 +101,28 @@ do_reload() {
 	return 0
 }
 
+do_tmpfiles() {
+    local type path mode user group
+
+    [ "$1" != no ] && V=-v
+    
+    TMPFILES=/usr/lib/tmpfiles.d/php@PHP_VERSION@-fpm.conf
+
+    if [ -r "$TMPFILES" ]; then
+	while read type path mode user group; do
+	    if [ "$type" = "d" ]; then
+		mkdir $V -p "$path"
+		chmod $V "$mode" "$path"
+		chown $V "$user:$group" "$path"
+	    fi
+	done
+    fi
+}
+
 case "$1" in
     start)
 	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+	do_tmpfiles $VERBOSE
 	do_check $VERBOSE
 	case "$?" in
 	    0)
