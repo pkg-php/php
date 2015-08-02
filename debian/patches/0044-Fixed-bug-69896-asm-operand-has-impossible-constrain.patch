@@ -1,0 +1,32 @@
+From: Anatol Belski <ab@php.net>
+Date: Sun, 2 Aug 2015 09:25:24 +0200
+Subject: Fixed bug #69896 'asm' operand has impossible constraints
+
+Given it's an issue with 32-bit gcc-4.8, asm is disabled for the
+breaking parts.
+---
+ Zend/zend_operators.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Zend/zend_operators.h b/Zend/zend_operators.h
+index 21bf9dd..96241bf 100644
+--- a/Zend/zend_operators.h
++++ b/Zend/zend_operators.h
+@@ -564,7 +564,7 @@ static zend_always_inline void fast_long_decrement_function(zval *op1)
+ 
+ static zend_always_inline void fast_long_add_function(zval *result, zval *op1, zval *op2)
+ {
+-#if defined(__GNUC__) && defined(__i386__)
++#if defined(__GNUC__) && defined(__i386__) && !(4 == __GNUC__ && 8 == __GNUC_MINOR__)
+ 	__asm__(
+ 		"movl	(%1), %%eax\n\t"
+ 		"addl   (%2), %%eax\n\t"
+@@ -680,7 +680,7 @@ static zend_always_inline int fast_add_function(zval *result, zval *op1, zval *o
+ 
+ static zend_always_inline void fast_long_sub_function(zval *result, zval *op1, zval *op2)
+ {
+-#if defined(__GNUC__) && defined(__i386__)
++#if defined(__GNUC__) && defined(__i386__) && !(4 == __GNUC__ && 8 == __GNUC_MINOR__)
+ 	__asm__(
+ 		"movl	(%1), %%eax\n\t"
+ 		"subl   (%2), %%eax\n\t"
