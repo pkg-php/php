@@ -433,29 +433,6 @@ override_dh_installdirs: prepare-files-stamp
 	dh_installdirs
 
 override_dh_install: rename-files-stamp remove-files-stamp create-modules-source-stamp
-	dh_install --fail-missing
-
-	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
-	# sanitize php.ini file
-	cat php.ini-production | tr "\t" " " | \
-	sed -e'/session.gc_probability =/ s/1/0/g;' \
-	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
-	    -e'/expose_php =/ s/On/Off/g;' \
-	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-production
-
-	cat php.ini-production | tr "\t" " " | \
-	sed -e'/memory_limit =/ s/128M/-1/g;' \
-	    -e'/session.gc_probability =/ s/1/0/g' \
-	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-production.cli
-
-	cat php.ini-development | tr "\t" " " | \
-	sed -e'/session.gc_probability =/ s/1/0/g;' \
-	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
-	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-development
-
-ifeq (yes,$(RUN_TESTS))
-	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
-endif
 # install the FPM configuration files to respective locations and customize them for Debian
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/
 	sed -e's,^pid[[:space:]]*=[[:space:]].*,pid = /run/php/$(PHP_FPM).pid,' \
@@ -476,9 +453,34 @@ endif
 	    debian/tmp/etc/php-fpm.conf.default \
 	    debian/tmp/etc/php-fpm.d/www.conf.default
 
+	# sanitize php.ini files
+	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
+	cat php.ini-production | tr "\t" " " | \
+	sed -e'/session.gc_probability =/ s/1/0/g;' \
+	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
+	    -e'/expose_php =/ s/On/Off/g;' \
+	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-production
+
+	cat php.ini-production | tr "\t" " " | \
+	sed -e'/memory_limit =/ s/128M/-1/g;' \
+	    -e'/session.gc_probability =/ s/1/0/g' \
+	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-production.cli
+
+	cat php.ini-development | tr "\t" " " | \
+	sed -e'/session.gc_probability =/ s/1/0/g;' \
+	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
+	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-development
+
 # install a helper script for checking PHP FPM configuration
+	mkdir -p debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
+
+	dh_install --fail-missing
+
+ifeq (yes,$(RUN_TESTS))
+	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
+endif
 
 # shipping duplicate files from other packages is hell for security audits
 	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
