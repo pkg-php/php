@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
-errors=$(/usr/sbin/php@PHP_VERSION@-fpm --fpm-config /etc/php/@PHP_VERSION@/fpm/php-fpm.conf -t 2>&1 | grep "\[ERROR\]" || true);
+CONFFILE=${1:-/etc/php/@PHP_VERSION@/fpm/php-fpm.conf}
+errors=$(/usr/sbin/php-fpm@PHP_VERSION@ --fpm-config "$CONFFILE" -t 2>&1 | grep "\[ERROR\]" || true);
 if [ -n "$errors" ]; then
     echo "Please fix your configuration file..."
     echo $errors
