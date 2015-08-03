@@ -461,9 +461,9 @@ ifeq (yes,$(RUN_TESTS))
 endif
 # install the FPM configuration files to respective locations and customize them for Debian
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/
-	sed -e's,^pid = .*,pid = /run/php/$(PHP_FPM).pid,' \
-	    -e's,^error_log = .*,error_log = /var/log/$(PHP_FPM).log,' \
-	    -e's,^include = .*,include=etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/*.conf,' \
+	sed -e's,^pid[[:space:]]*=[[:space:]].*,pid = /run/php/$(PHP_FPM).pid,' \
+	    -e's,^error_log[[:space:]]*=[[:space:]].*,error_log = /var/log/$(PHP_FPM).log,' \
+	    -e's,^include[[:space:]]*=[[:space:]]*.*,include=/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/*.conf,' \
 	    < fpm-build/sapi/fpm/php-fpm.conf \
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/php-fpm.conf
 
