@@ -13,10 +13,11 @@
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="PHP @PHP_VERSION@ FastCGI Process Manager"
-NAME=php@PHP_VERSION@-fpm
+NAME=php-fpm@PHP_VERSION@
+CONFFILE=/etc/php/@PHP_VERSION@/fpm/php-fpm.conf
 DAEMON=/usr/sbin/$NAME
-DAEMON_ARGS="--daemonize --fpm-config /etc/php/@PHP_VERSION@/fpm/php-fpm.conf"
-CONF_PIDFILE=$(sed -n 's/^pid[ =]*//p' /etc/php/@PHP_VERSION@/fpm/php-fpm.conf)
+DAEMON_ARGS="--daemonize --fpm-config $CONFFILE"
+CONF_PIDFILE=$(sed -n 's/^pid[ =]*//p' $CONFFILE)
 PIDFILE=${CONF_PIDFILE:-/run/php/php@PHP_VERSION@-fpm.pid}
 TIMEOUT=30
 SCRIPTNAME=/etc/init.d/$NAME
