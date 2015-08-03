@@ -152,8 +152,9 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--with-pic \
 		--with-layout=GNU \
 		--without-pear \
-		--enable-mysqlnd \
 		--enable-pdo \
+		--enable-mysqlnd \
+		--enable-libxml \
 		--with-mhash=yes \
 		--with-system-tzdata \
 		$(CONFIGURE_DTRACE_ARGS)
