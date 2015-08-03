@@ -398,10 +398,6 @@ remove-files-stamp:
 	# get rid of readline.so
 	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/readline.so
 
-	# get rid of extra PHP-FPM configuration files
-	rm -f debian/tmp/etc/php-fpm.conf.default \
-	      debian/tmp/etc/php-fpm.d/www.conf.default
-
 	rm -rf \
 	  debian/tmp/.filemap \
 	  debian/tmp/.channels \
@@ -464,15 +460,20 @@ endif
 	sed -e's,^pid[[:space:]]*=[[:space:]].*,pid = /run/php/$(PHP_FPM).pid,' \
 	    -e's,^error_log[[:space:]]*=[[:space:]].*,error_log = /var/log/$(PHP_FPM).log,' \
 	    -e's,^include[[:space:]]*=[[:space:]]*.*,include=/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/*.conf,' \
-	    < fpm-build/sapi/fpm/php-fpm.conf \
+	    < debian/tmp/etc/php-fpm.conf.default \
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/php-fpm.conf
 
 	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/
 	sed -e's,^listen = .*,listen = /run/php/$(PHP_FPM).sock,' \
 	    -e's{^;listen\.owner{listen.owner{;' \
             -e's{^;listen\.group{listen.group{;' \
-	    < fpm-build/sapi/fpm/php-fpm.conf
+	    < debian/tmp/etc/php-fpm.d/www.conf.default \
 	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/www.conf
+
+# get rid of extra PHP-FPM configuration files after mangling them
+	rm -f  \
+	    debian/tmp/etc/php-fpm.conf.default \
+	    debian/tmp/etc/php-fpm.d/www.conf.default
 
 # install a helper script for checking PHP FPM configuration
 	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
