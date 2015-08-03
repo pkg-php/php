@@ -1,3 +1,9 @@
+php7.0 (7.0.0~beta2-6) experimental; urgency=medium
+
+  * Enable libxml support since php-modules require php_libxml.h headers
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 03 Aug 2015 08:57:49 +0200
+
 php7.0 (7.0.0~beta2-5) experimental; urgency=medium
 
   * The include path in php-fpm was missing spaces around =
