@@ -1,3 +1,9 @@
+php7.0 (7.0.0~beta2-4) experimental; urgency=medium
+
+  * Use proper name for php-fpm process, it's php-fpm@PHP_VERSION@
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 03 Aug 2015 08:22:34 +0200
+
 php7.0 (7.0.0~beta2-3) experimental; urgency=medium
 
   * Disable PEAR building (that removes phar.phar as well)
