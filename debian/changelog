@@ -1,3 +1,10 @@
+php7.0 (7.0.0~beta2-7) experimental; urgency=medium
+
+  * Reorder overriden rules in dh_install so .default files are mangled
+    and removed before dh_install run
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 03 Aug 2015 09:02:36 +0200
+
 php7.0 (7.0.0~beta2-6) experimental; urgency=medium
 
   * Enable libxml support since php-modules require php_libxml.h headers
