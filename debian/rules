@@ -436,6 +436,8 @@ remove-files-stamp:
 	find debian/tmp/ -name '*.la' -delete
 	# get rid of static versions of PHP modules (WTF?)
 	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/*.a
+	# get rid of readline.so
+	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/readline.so
 
 	rm -rf \
 	  debian/tmp/.filemap \
