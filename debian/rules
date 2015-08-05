@@ -188,9 +188,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-tokenizer \
 		--enable-xml \
 		--enable-xmlreader \
-		--enable-xmlrpc \
 		--enable-xmlwriter \
-		--with-xmlrpc=/usr \
 		--with-xsl=/usr \
 		--with-mhash=yes \
 		--enable-sysvmsg \
