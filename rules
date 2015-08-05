@@ -152,10 +152,52 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--with-pic \
 		--with-layout=GNU \
 		--without-pear \
+		--enable-bcmath \
+		--enable-calendar \
+		--enable-ctype \
+		--enable-dba \
+		  --with-gdbm=/usr \
+		  --with-db4=/usr \
+		  --enable-inifile \
+		  --enable-flatfile \
+		--enable-dom \
+		--with-enchant=/usr \
+		--enable-exif \
+		--with-gmp=/usr \
+		--enable-fileinfo \
+		--enable-filter \
+		--enable-ftp \
+		--enable-hash \
+		--enable-json \
 		--enable-pdo \
+		--enable-mbregex \
+		--enable-mbregex-backtrack \
+		--enable-mbstring \
+		--disable-opcache \
+		--enable-phar \
+		--enable-posix \
+		--with-mcrypt=/usr \
 		--enable-mysqlnd \
+		  --enable-mysqlnd-compression-support \
+		  --with-zlib-dir=/usr \
+		--with-libedit=/usr \
 		--enable-libxml \
+		--enable-session \
+		--enable-simplexml \
+		--enable-soap \
+		--enable-tokenizer \
+		--enable-xml \
+		--enable-xmlreader \
+		--enable-xmlrpc \
+		--enable-xmlwriter \
+		--with-xmlrpc=/usr \
+		--with-xsl=/usr \
 		--with-mhash=yes \
+		--enable-sysvmsg \
+		--enable-sysvsem \
+		--enable-sysvshm \
+		--enable-zip \
+		--with-libzip=/usr \
 		--with-system-tzdata \
 		$(CONFIGURE_DTRACE_ARGS)
 
@@ -396,8 +438,6 @@ remove-files-stamp:
 	find debian/tmp/ -name '*.la' -delete
 	# get rid of static versions of PHP modules (WTF?)
 	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/*.a
-	# get rid of readline.so
-	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/readline.so
 
 	rm -rf \
 	  debian/tmp/.filemap \
