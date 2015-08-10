@@ -156,8 +156,9 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-calendar \
 		--enable-ctype \
 		--enable-dba \
-		  --with-gdbm=/usr \
 		  --with-db4=/usr \
+		  --with-gdbm=/usr \
+		  --with-qdbm=/usr \
 		  --enable-inifile \
 		  --enable-flatfile \
 		--enable-dom \
