@@ -196,7 +196,6 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-sysvsem \
 		--enable-sysvshm \
 		--enable-zip \
-		--with-libzip=/usr \
 		--with-system-tzdata \
 		$(CONFIGURE_DTRACE_ARGS)
 
