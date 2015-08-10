@@ -1,3 +1,14 @@
+php7.0 (7.0.0~beta3-1) experimental; urgency=medium
+
+  * Fix source package name in d/NEWS
+  * Re-enable various base extensions back into core SAPIs
+  * Disable xmlrpc as the build is broken
+  * Install phar.phar (FIXME - add versioned phar.phar instead of single one)
+  * Imported Upstream version 7.0.0~beta3
+  * Refresh patches for PHP 7.0.0~beta3
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 10 Aug 2015 13:01:34 +0200
+
 php7.0 (7.0.0~beta2-7) experimental; urgency=medium
 
   * Reorder overriden rules in dh_install so .default files are mangled
