@@ -25,13 +25,13 @@ PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)
 PHP_ZEND_VERSION     := $(shell sed -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)
 
 ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
-$(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION)
+$(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
 endif
 
 TARGETS              := apache2 phpdbg embed fpm cgi cli
-CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
-BUILD_TARGETS        := $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
-INSTALL_TARGETS      := $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
+CONFIGURE_TARGETS    = $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
+BUILD_TARGETS        = $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
+INSTALL_TARGETS      = $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
 
 # Special package names
 PHP_PHP = php$(PHP_NAME_VERSION)
@@ -62,8 +62,6 @@ SED_VARIABLES = \
 	-e "s,@PHP_API@,$(PHP_ZEND_VERSION),g"
 
 SED_REPLACEMENT = sed -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | sed $(SED_VARIABLES) | sed -e '/\#EXTRA\#/ d'
-
-PHP_APACHE2 = libapache2-mod-php$(PHP_NAME_VERSION)
 
 SAPI_PACKAGE = \
 	case $${sapi} in \
@@ -257,6 +255,8 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			foreach($$e as $$i) { $$s .= " $$i"; } \
 			echo("php:Extensions=" . wordwrap($$s . ".\n", 75, "\$${Newline}"));
 
+include $(CURDIR)/debian/rules.d/*
+
 %:
 	dh $@ $(DH_SYSTEMD) --with apache2
 
@@ -354,14 +354,12 @@ override_dh_auto_clean: unprepared
 	rm -f configure-embed-stamp build-embed-stamp
 	rm -f configure-fpm-stamp build-fpm-stamp
 	rm -f build-pear-stamp
-	rm -f install-stamp
 	rm -rf apache2-build
 	rm -rf cgi-build
 	rm -rf cli-build
 	rm -rf phpdbg-build
 	rm -rf embed-build
 	rm -rf fpm-build
-	rm -rf pear-build pear-build-download
 	# just in case the build tests failed, kill the running mysqld
 	$(SHELL) debian/setup-mysql.sh $(MYSQL_PORT) $(MYSQL_DATA_DIR) stop > /dev/null 2>&1 || exit 0
 	rm -rf test-results.txt $(MYSQL_DATA_DIR)
@@ -559,7 +557,7 @@ override_dh_strip:
 	dh_strip --dbg-package=$(PHP_DBG)
 
 override_dh_makeshlibs-arch:
-	dh_makeshlibs -a -p$(PHP_LIBEMBED) -V '$(PHP_LIBEMBED) (>= $(PHP_MAJOR).$(PHP_MINOR))'
+	dh_makeshlibs -a -p$(PHP_LIBEMBED) -V '$(PHP_LIBEMBED) (>= $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION))'
 
 override_dh_gencontrol-arch:
 	# Bail-out if PHPAPI has changed
