@@ -157,7 +157,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-ctype \
 		--enable-dba \
 		  --with-db4=/usr \
-		  --with-gdbm=/usr \
+		  --without-gdbm \
 		  --with-qdbm=/usr \
 		  --enable-inifile \
 		  --enable-flatfile \
