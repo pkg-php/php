@@ -1,3 +1,11 @@
+php7.0 (7.0.0~beta3-2) experimental; urgency=medium
+
+  * QDBM cannot be combined with GDBM
+  * Disable system libzip (perhaps it will fix compilation issue on trusty)
+  * Enable gettext, openssl and sockets extensions
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 13 Aug 2015 09:59:44 +0200
+
 php7.0 (7.0.0~beta3-1) experimental; urgency=medium
 
   * Fix source package name in d/NEWS
