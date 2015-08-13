@@ -164,6 +164,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-dom \
 		--with-enchant=/usr \
 		--enable-exif \
+		--with-gettext=/usr \
 		--with-gmp=/usr \
 		--enable-fileinfo \
 		--enable-filter \
@@ -181,11 +182,13 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-mysqlnd \
 		  --enable-mysqlnd-compression-support \
 		  --with-zlib-dir=/usr \
+		--with-openssl=/usr \
 		--with-libedit=/usr \
 		--enable-libxml \
 		--enable-session \
 		--enable-simplexml \
 		--enable-soap \
+		--enable-sockets \
 		--enable-tokenizer \
 		--enable-xml \
 		--enable-xmlreader \
