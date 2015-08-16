@@ -1,3 +1,9 @@
+php7.0 (7.0.0~beta3-3) experimental; urgency=medium
+
+  * Add missing stdin redirection that got php-fpm init script stuck
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 16 Aug 2015 10:16:58 +0200
+
 php7.0 (7.0.0~beta3-2) experimental; urgency=medium
 
   * QDBM cannot be combined with GDBM
