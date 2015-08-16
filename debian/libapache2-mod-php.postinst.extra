@@ -1,7 +1,7 @@
 if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
     . /usr/share/apache2/apache2-maintscript-helper
 
-    php@PHP_MAJOR@_@PHP_MINOR@_enable() {
+    php_enable() {
 	mpm=$(a2query -M)
 	case "$(a2query -M)" in
 	    prefork|itk) return 0;;
@@ -14,7 +14,7 @@ if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
 else
     echo "Warning: Could not load Apache 2.4 maintainer script helper."
 
-    php@PHP_MAJOR@_@PHP_MINOR@_enable() {
+    php_enable() {
         return 1;
     }
 
