@@ -1,3 +1,9 @@
+php7.0 (7.0.0~beta3-4) experimental; urgency=medium
+
+  * Fix the Apache2 module load script
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 16 Aug 2015 10:20:20 +0200
+
 php7.0 (7.0.0~beta3-3) experimental; urgency=medium
 
   * Add missing stdin redirection that got php-fpm init script stuck
