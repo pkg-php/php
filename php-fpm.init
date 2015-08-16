@@ -116,7 +116,7 @@ do_tmpfiles() {
 		chmod $V "$mode" "$path"
 		chown $V "$user:$group" "$path"
 	    fi
-	done
+	done < "$TMPFILES"
     fi
 }
 
