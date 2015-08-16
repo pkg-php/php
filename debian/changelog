@@ -1,3 +1,10 @@
+php7.0 (7.0.0~beta3-5) experimental; urgency=medium
+
+  * s/PHP_MAJOR_VERSION/PHP_MAJOR/ in apache2 .load file
+  * The apache2-maintscript-helper function is called just as php_enable()
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 16 Aug 2015 14:42:02 +0200
+
 php7.0 (7.0.0~beta3-4) experimental; urgency=medium
 
   * Fix the Apache2 module load script
