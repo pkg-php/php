@@ -17,7 +17,7 @@ Subject: debian_quirks
  create mode 100644 ext/ext_skel.in
 
 diff --git a/configure.in b/configure.in
-index d4ae4db..9a03487 100644
+index b09998e..01379b6 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1088,7 +1088,7 @@ if test "$PHP_CLI" = "no"; then
