@@ -1,3 +1,14 @@
+php7.0 (7.0.0~rc1-1) experimental; urgency=medium
+
+  [ Murukesh Mohanan ]
+  * changes for common debian/; some minor fixes
+
+  [ Ondřej Surý ]
+  * Imported Upstream version 7.0.0~rc1
+  * Refresh patches on top of 7.0.0~rc1 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 25 Aug 2015 14:19:59 +0200
+
 php7.0 (7.0.0~beta3-5) experimental; urgency=medium
 
   * s/PHP_MAJOR_VERSION/PHP_MAJOR/ in apache2 .load file
