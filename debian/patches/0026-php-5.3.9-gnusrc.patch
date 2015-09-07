@@ -16,7 +16,7 @@ Subject: php-5.3.9-gnusrc
  10 files changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/Zend/zend_language_parser.c b/Zend/zend_language_parser.c
-index 5cf8347..42d48cf 100644
+index 08545fd..9b11801 100644
 --- a/Zend/zend_language_parser.c
 +++ b/Zend/zend_language_parser.c
 @@ -69,6 +69,8 @@
@@ -29,11 +29,11 @@ index 5cf8347..42d48cf 100644
  /*
     +----------------------------------------------------------------------+
 diff --git a/configure.in b/configure.in
-index 3f8f390..e537197 100644
+index d145e7e..fb77c7d 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -136,6 +136,8 @@ AC_DEFUN([PHP_EXT_DIR],[ext/$1])dnl
- AC_DEFUN([PHP_EXT_SRCDIR],[$abs_srcdir/ext/$1])dnl
+@@ -136,6 +136,8 @@ AC_DEFUN([PHP_EXT_DIR],[$config_m4_dir])dnl
+ AC_DEFUN([PHP_EXT_SRCDIR],[$abs_srcdir/$config_m4_dir])dnl
  AC_DEFUN([PHP_ALWAYS_SHARED],[])dnl
  
 +AC_DEFINE([_GNU_SOURCE], 1, [Define to enable GNU C Library extensions])
@@ -93,7 +93,7 @@ index 6e63cc2..6be33d9 100644
  #include "php_zlib.h"
  #include "fopen_wrappers.h"
 diff --git a/main/php.h b/main/php.h
-index 3ebaa1a..bb870d2 100644
+index 2a46137..780faf6 100644
 --- a/main/php.h
 +++ b/main/php.h
 @@ -31,6 +31,7 @@

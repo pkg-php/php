@@ -51,10 +51,10 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index 3de902a..ed93370 100644
+index e76da2a..29333f0 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
-@@ -2213,9 +2213,9 @@ consult the installation file that came with this distribution, or visit \n\
+@@ -2217,9 +2217,9 @@ consult the installation file that came with this distribution, or visit \n\
  								SG(request_info).no_headers = 1;
  							}
  #if ZEND_DEBUG
@@ -67,7 +67,7 @@ index 3de902a..ed93370 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index 3b2bed8..49f7140 100644
+index 94d5b84..611d8c1 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -682,8 +682,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
@@ -82,10 +82,10 @@ index 3b2bed8..49f7140 100644
  					"(DEBUG GCOV)",
  #elif ZEND_DEBUG
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index e836c7a..3c54ae5 100644
+index 7b02d33..3705aea 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
-@@ -1730,9 +1730,9 @@ int main(int argc, char *argv[])
+@@ -1734,9 +1734,9 @@ int main(int argc, char *argv[])
  				SG(request_info).no_headers = 1;
  
  #if ZEND_DEBUG
@@ -98,7 +98,7 @@ index e836c7a..3c54ae5 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index f5f7d39..8a5ed19 100644
+index e58587d..e8c25b6 100644
 --- a/sapi/litespeed/lsapi_main.c
 +++ b/sapi/litespeed/lsapi_main.c
 @@ -807,9 +807,9 @@ static int cli_main( int argc, char * argv[] )
@@ -114,10 +114,10 @@ index f5f7d39..8a5ed19 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 831d4fc..2d19fcd 100644
+index a824784..efa1cd6 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1481,10 +1481,8 @@ phpdbg_main:
+@@ -1505,10 +1505,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(
