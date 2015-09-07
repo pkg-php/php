@@ -1,3 +1,12 @@
+php7.0 (7.0.0~rc2-1) experimental; urgency=medium
+
+  * Explicitly enable iconv extension
+  * Imported Upstream version 7.0.0~rc2
+  * Rebase patches on top of 7.0.0~rc2 release
+  * Fix compiled-in include_path (gh#112)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Sep 2015 12:40:17 +0200
+
 php7.0 (7.0.0~rc1-1) experimental; urgency=medium
 
   [ Murukesh Mohanan ]
