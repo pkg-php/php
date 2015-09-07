@@ -1,0 +1,19 @@
+From: =?utf-8?q?Ond=C5=99ej_Sur=C3=BD?= <ondrej@sury.org>
+Date: Mon, 7 Sep 2015 13:20:58 +0200
+Subject: Include local config.h in gd_compat.c to make gd_compat.c work
+ properly when built outside of PHP tree (gh#111)
+
+---
+ ext/gd/gd_compat.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- php-7.0.orig/ext/gd/gd_compat.c
++++ php-7.0/ext/gd/gd_compat.c
+@@ -1,4 +1,6 @@
+-#include "php_config.h"
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
+ 
+ #ifdef HAVE_GD_PNG
+ /* needs to be first */
