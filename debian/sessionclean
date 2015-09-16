@@ -4,8 +4,8 @@ SAPIS="apache2:apache2\napache2filter:apache2\ncgi:php5\nfpm:php5-fpm\n"
 
 # Iterate through all web SAPIs
 (
+printf "$SAPIS" | { \
 proc_names=""
-printf "$SAPIS" | \
 while IFS=: read -r conf_dir proc_name; do
     if [ -e /etc/php5/${conf_dir}/php.ini ]; then
         # Get all session variables once so we don't need to start PHP to get each config option
@@ -24,7 +24,7 @@ done
 for pid in $(pidof $proc_names); do
     find "/proc/$pid/fd" -ignore_readdir_race -lname "$save_path/sess_\*" -exec touch -c {} \;
 done
-) | sort -rn -t: -k2,2 | sort -u -t: -k 1,1 | while IFS=: read -r save_path gc_maxlifetime; do
+} ) | sort -rn -t: -k2,2 | sort -u -t: -k 1,1 | while IFS=: read -r save_path gc_maxlifetime; do
     # find all files older then maxlifetime and delete them
     find -O3 "$save_path/" -depth -ignore_readdir_race -mindepth 1 -name 'sess_*' -type f -cmin "+$gc_maxlifetime" -delete
 done
