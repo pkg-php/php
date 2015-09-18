@@ -4,8 +4,8 @@ Subject: libtool_fixes
 
 ---
  TSRM/configure.in | 3 ---
- configure.in      | 3 ---
- 2 files changed, 6 deletions(-)
+ configure.in      | 2 --
+ 2 files changed, 5 deletions(-)
 
 diff --git a/TSRM/configure.in b/TSRM/configure.in
 index 6f10f5a..2bcff8d 100644
@@ -22,16 +22,15 @@ index 6f10f5a..2bcff8d 100644
  dnl TSRM_PTHREAD
  
 diff --git a/configure.in b/configure.in
-index 5764727..e9fc9cb 100644
+index dea9733..32fe4c9 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1416,9 +1416,6 @@ AC_PROVIDE_IFELSE([PHP_REQUIRE_CXX], [], [
+@@ -1420,8 +1420,6 @@ AC_PROVIDE_IFELSE([PHP_REQUIRE_CXX], [], [
  ])
  AC_PROG_LIBTOOL
  
--if test "$enable_debug" != "yes"; then
--  PHP_SET_LIBTOOL_VARIABLE([--silent])
--fi
- 
+-PHP_SET_LIBTOOL_VARIABLE([--silent])
+-
  dnl libtool 1.4.3 needs this.
  PHP_SET_LIBTOOL_VARIABLE([--preserve-dup-deps])
+ 
