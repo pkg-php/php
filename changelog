@@ -1,3 +1,10 @@
+php7.0 (7.0.0~rc3-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.0.0~rc3
+  * Rebase patches on top of 7.0.0~rc3 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 18 Sep 2015 09:52:29 +0200
+
 php7.0 (7.0.0~rc2-2) experimental; urgency=medium
 
   * Include local config.h in gd_compat.c to make gd_compat.c work
