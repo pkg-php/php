@@ -8,6 +8,14 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+ifeq ($(DH_VERBOSE),1)
+PARALLEL=
+DEB_BUILD_OPTIONS=
+else
+PARALLEL=--parallel
+DEB_BUILD_OPTIONS=parallel=4
+endif
+
 # enable dpkg build flags
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
@@ -316,11 +324,11 @@ endif
 override_dh_auto_build: $(BUILD_TARGETS) build-pear-stamp
 
 build-%-stamp: configure-%-stamp
-	dh_auto_build --builddirectory $*-build --parallel
+	dh_auto_build --builddirectory $*-build $(PARALLEL)
 	touch build-$*-stamp
 
 build-cgi-stamp: configure-cgi-stamp
-	dh_auto_build --builddirectory cgi-build --parallel
+	dh_auto_build --builddirectory cgi-build $(PARALLEL)
 	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION)
 
 	# Dirty hack to not rebuild everything twice
@@ -331,7 +339,7 @@ build-cgi-stamp: configure-cgi-stamp
 		touch ../../ext/standard/info.c && \
 		touch ../../sapi/cgi/cgi_main.c
 
-	dh_auto_build --builddirectory cgi-build --parallel
+	dh_auto_build --builddirectory cgi-build $(PARALLEL)
 	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/usr.bin.$(PHP_CGI)
 
 	touch build-cgi-stamp
