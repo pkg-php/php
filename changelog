@@ -2,6 +2,8 @@ php7.0 (7.0.0~rc3-1) experimental; urgency=medium
 
   * Imported Upstream version 7.0.0~rc3
   * Rebase patches on top of 7.0.0~rc3 release
+  * Fix a wrong order of php and version in php7.0-cgi.postinst
+    (Closes: #799424)
 
  -- Ondřej Surý <ondrej@debian.org>  Fri, 18 Sep 2015 09:52:29 +0200
 
