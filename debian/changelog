@@ -1,3 +1,11 @@
+php7.0 (7.0.0~rc3-2) experimental; urgency=medium
+
+  * Declare Conflict on old *php5* binary packages as appropriate
+    (Closes: #799711)
+  * Make phar binaries and manpages versioned again
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 23 Sep 2015 10:16:27 +0200
+
 php7.0 (7.0.0~rc3-1) experimental; urgency=medium
 
   * Imported Upstream version 7.0.0~rc3
