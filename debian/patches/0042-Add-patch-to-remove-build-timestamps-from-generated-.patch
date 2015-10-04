@@ -51,7 +51,7 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index e76da2a..29333f0 100644
+index 6293470..135ef82 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
 @@ -2217,9 +2217,9 @@ consult the installation file that came with this distribution, or visit \n\
@@ -82,10 +82,10 @@ index 94d5b84..611d8c1 100644
  					"(DEBUG GCOV)",
  #elif ZEND_DEBUG
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 7b02d33..3705aea 100644
+index 4501e91..772d795 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
-@@ -1734,9 +1734,9 @@ int main(int argc, char *argv[])
+@@ -1733,9 +1733,9 @@ int main(int argc, char *argv[])
  				SG(request_info).no_headers = 1;
  
  #if ZEND_DEBUG
@@ -98,10 +98,10 @@ index 7b02d33..3705aea 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index e58587d..e8c25b6 100644
+index 13bca0c..043ec3d 100644
 --- a/sapi/litespeed/lsapi_main.c
 +++ b/sapi/litespeed/lsapi_main.c
-@@ -807,9 +807,9 @@ static int cli_main( int argc, char * argv[] )
+@@ -808,9 +808,9 @@ static int cli_main( int argc, char * argv[] )
              case 'v':
                  if (php_request_startup() != FAILURE) {
  #if ZEND_DEBUG
@@ -114,10 +114,10 @@ index e58587d..e8c25b6 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index a824784..efa1cd6 100644
+index c3f0cc6..c755ad6 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1505,10 +1505,8 @@ phpdbg_main:
+@@ -1515,10 +1515,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(
