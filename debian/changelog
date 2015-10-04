@@ -1,3 +1,14 @@
+php5 (5.5.29+dfsg-2) unstable; urgency=high
+
+  * Imported Upstream version 5.5.30+dfsg
+   - Phar:
+    . Fixed bug #69720 (Null pointer dereference in phar_get_fp_offset()).
+    . Fixed bug #70433 (Uninitialized pointer in phar_make_dirstream when
+      zip entry filename is "/").
+  * Rebase patches on top of PHP 5.5.30+dfsg
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 04 Oct 2015 17:35:08 +0200
+
 php5 (5.5.29+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.5.29+dfsg
