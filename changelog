@@ -1,3 +1,11 @@
+php7.0 (7.0.0~rc4-1) experimental; urgency=medium
+
+  * Fix reading group from tmpfiles configuration
+  * Imported Upstream version 7.0.0~rc4
+  * Rebase patches on top of PHP 7.0.0~rc5
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 04 Oct 2015 16:24:14 +0200
+
 php7.0 (7.0.0~rc3-3) experimental; urgency=medium
 
   * phar is just a symlink to phar.phar, so it needs special handling
