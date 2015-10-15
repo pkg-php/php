@@ -264,7 +264,7 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			foreach($$e as $$i) { $$s .= " $$i"; } \
 			echo("php:Extensions=" . wordwrap($$s . ".\n", 75, "\$${Newline}"));
 
-include $(CURDIR)/debian/rules.d/*
+include $(CURDIR)/debian/rules.d/*.mk
 
 %:
 	dh $@ $(DH_SYSTEMD) --with apache2
@@ -323,33 +323,20 @@ endif
 
 override_dh_auto_build: $(BUILD_TARGETS) build-pear-stamp
 
-build-%-stamp: configure-%-stamp
-	dh_auto_build --builddirectory $*-build $(PARALLEL)
-	touch build-$*-stamp
-
-build-cgi-stamp: configure-cgi-stamp
-	dh_auto_build --builddirectory cgi-build $(PARALLEL)
-	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION)
-
-	# Dirty hack to not rebuild everything twice
-	cd cgi-build/main && \
-		sed -i -e 's/FORCE_CGI_REDIRECT 1/FORCE_CGI_REDIRECT 0/' \
-		       -e 's/DISCARD_PATH 0/DISCARD_PATH 1/' php_config.h && \
-		sed -i -e 's/--enable-force-cgi-redirect/--enable-discard-path/' build-defs.h && \
-		touch ../../ext/standard/info.c && \
-		touch ../../sapi/cgi/cgi_main.c
-
-	dh_auto_build --builddirectory cgi-build $(PARALLEL)
-	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/usr.bin.$(PHP_CGI)
-
-	touch build-cgi-stamp
-
-override_dh_auto_configure: debian/control prepared-stamp $(CONFIGURE_TARGETS)
-
 configure-%-stamp:
 	echo ${$*_config}
 	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
 	touch configure-$*-stamp
+
+build-%-stamp: configure-%-stamp
+	dh_auto_build --builddirectory $*-build $(PARALLEL)
+	touch build-$*-stamp
+
+install-%-stamp: build-%-stamp
+	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
+	touch install-$*-stamp
+
+override_dh_auto_configure: debian/control prepared-stamp $(CONFIGURE_TARGETS)
 
 override_dh_auto_clean: unprepared
 	for file in $(PREPARE_FILES); do \
@@ -395,10 +382,6 @@ override_dh_auto_install: $(INSTALL_TARGETS)
 
 .NOTPARALLEL: override_dh_auto_install
 
-install-%-stamp: build-%-stamp
-	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
-	touch install-$*-stamp
-
 prepare-files-stamp:
 	# Do this first so we don't overwrite any debhelper-generated files
 	#
@@ -407,6 +390,7 @@ prepare-files-stamp:
 	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
 	    versioned=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    package=$$(echo $$file | sed -e 's/\..*$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    echo "'$(SED_REPLACEMENT)'"; \
 	    < $${versionless} $(SED_REPLACEMENT) > $${versioned}; \
 	    if [ -x $${versionless} ]; then chmod +x $${versioned}; fi; \
 	done
