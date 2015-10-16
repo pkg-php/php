@@ -3,15 +3,16 @@ Date: Sat, 2 May 2015 10:26:51 +0200
 Subject: debian_quirks
 
 ---
- configure.in          | 10 +++++-----
- ext/ext_skel          |  2 +-
- php.ini-development   |  2 +-
- php.ini-production    | 44 +-------------------------------------------
- sapi/cli/php.1.in     | 11 ++++++-----
- scripts/Makefile.frag |  4 ++--
- scripts/php-config.in |  6 +++---
- scripts/phpize.in     |  4 ++--
- 8 files changed, 21 insertions(+), 62 deletions(-)
+ configure.in                  | 10 +++++-----
+ ext/ext_skel                  |  2 +-
+ php.ini-development           |  2 +-
+ php.ini-production            | 44 +------------------------------------------
+ sapi/apache2handler/config.m4 |  2 +-
+ sapi/cli/php.1.in             | 11 ++++++-----
+ scripts/Makefile.frag         |  4 ++--
+ scripts/php-config.in         |  6 +++---
+ scripts/phpize.in             |  4 ++--
+ 9 files changed, 22 insertions(+), 63 deletions(-)
 
 diff --git a/configure.in b/configure.in
 index e9fc9cb..1afc98c 100644
@@ -147,6 +148,19 @@ index 4ee3310..9be92fb 100644
  
  ;;;;;;;;;;;;;;;;;;;
  ; Module Settings ;
+diff --git a/sapi/apache2handler/config.m4 b/sapi/apache2handler/config.m4
+index 02f8a0b..d267b40 100644
+--- a/sapi/apache2handler/config.m4
++++ b/sapi/apache2handler/config.m4
+@@ -77,7 +77,7 @@ if test "$PHP_APXS2" != "no"; then
+                 \$(mkinstalldirs) '$APXS_SYSCONFDIR' && \
+                  $APXS -S LIBEXECDIR='$APXS_LIBEXECDIR' \
+                        -S SYSCONFDIR='$APXS_SYSCONFDIR' \
+-                       -i -a -n php5"
++                       -i -n php5"
+   fi
+ 
+   case $host_alias in
 diff --git a/sapi/cli/php.1.in b/sapi/cli/php.1.in
 index c062f3d..414a249 100644
 --- a/sapi/cli/php.1.in
