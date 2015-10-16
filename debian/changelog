@@ -1,3 +1,10 @@
+php7.0 (7.0.0~rc5-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.0.0~rc5
+  * Refresh patches on top of PHP 7.0.0~rc5
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 16 Oct 2015 16:51:39 +0200
+
 php7.0 (7.0.0~rc4-1) experimental; urgency=medium
 
   * Fix reading group from tmpfiles configuration
