@@ -67,20 +67,20 @@ index 6293470..135ef82 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index 94d5b84..611d8c1 100644
+index b4288b8..e27d76c 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -682,8 +682,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
  				goto out;
  
  			case 'v': /* show php version & quit */
--				php_printf("PHP %s (%s) (built: %s %s) %s\nCopyright (c) 1997-2015 The PHP Group\n%s",
+-				php_printf("PHP %s (%s) (built: %s %s) ( %s)\nCopyright (c) 1997-2015 The PHP Group\n%s",
 -					PHP_VERSION, cli_sapi_module.name, __DATE__, __TIME__,
-+				php_printf("PHP %s (%s) %s\nCopyright (c) 1997-2015 The PHP Group\n%s",
++				php_printf("PHP %s (%s) ( %s)\nCopyright (c) 1997-2015 The PHP Group\n%s",
 +					PHP_VERSION, cli_sapi_module.name,
- #if ZEND_DEBUG && defined(HAVE_GCOV)
- 					"(DEBUG GCOV)",
- #elif ZEND_DEBUG
+ #if ZTS
+ 					"ZTS "
+ #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
 index 4501e91..772d795 100644
 --- a/sapi/fpm/fpm/fpm_main.c
@@ -114,10 +114,10 @@ index 13bca0c..043ec3d 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index c3f0cc6..c755ad6 100644
+index 7a96f0b..0c06936 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1515,10 +1515,8 @@ phpdbg_main:
+@@ -1519,10 +1519,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(
