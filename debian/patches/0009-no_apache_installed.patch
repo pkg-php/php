@@ -46,7 +46,7 @@ index b6524fd..1ddb3d0 100644
    if test -z `$APXS -q SYSCONFDIR`; then
      INSTALL_IT="\$(mkinstalldirs) '$APXS_LIBEXECDIR' && \
 diff --git a/sapi/apache2handler/config.m4 b/sapi/apache2handler/config.m4
-index d267b40..3b280dd 100644
+index 02f8a0b..f170ea9 100644
 --- a/sapi/apache2handler/config.m4
 +++ b/sapi/apache2handler/config.m4
 @@ -58,14 +58,6 @@ if test "$PHP_APXS2" != "no"; then

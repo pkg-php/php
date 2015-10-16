@@ -7,14 +7,14 @@ Subject: libtool2.2
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index b7a548c..40c1770 100644
+index 9bd3b9a..31a2370 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -6,10 +6,16 @@ datarootdir='@datarootdir@'
  exec_prefix="`eval echo @exec_prefix@`"
- phpdir="$prefix/lib/php/5.6/build"
- includedir="$prefix/include/php/5.6"
-+aclocaldir="$prefix/share/aclocal"
+ phpdir="$prefix/lib/php/@DEBIAN_PHP_API@/build"
+ includedir="$prefix/include/php/@DEBIAN_PHP_API@"
+++aclocaldir="$prefix/share/aclocal"
  builddir="`pwd`"
  SED="@SED@"
  

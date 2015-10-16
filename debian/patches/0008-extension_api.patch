@@ -8,12 +8,12 @@ Subject: extension_api
  2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/configure.in b/configure.in
-index 1afc98c..17a1b45 100644
+index 78da16d..acb3abb 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1194,8 +1194,10 @@ dnl Build extension directory path
+@@ -1196,8 +1196,10 @@ ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modul
  
- ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modules.h|$SED 's/#define ZEND_MODULE_API_NO //'`
+ AC_SUBST(ZEND_MODULE_API_NO)
  
 +DEBIAN_PHP_API=$ZEND_MODULE_API_NO
 +
@@ -23,7 +23,7 @@ index 1afc98c..17a1b45 100644
    if test "$oldstyleextdir" = "yes"; then
      if test "$PHP_DEBUG" = "1"; then
        part1=debug
-@@ -1338,6 +1340,7 @@ PHP_SUBST(CXX)
+@@ -1340,6 +1342,7 @@ PHP_SUBST(CXX)
  PHP_SUBST(CXXFLAGS)
  PHP_SUBST(CXXFLAGS_CLEAN)
  PHP_SUBST_OLD(DEBUG_CFLAGS)
@@ -32,7 +32,7 @@ index 1afc98c..17a1b45 100644
  PHP_SUBST_OLD(EXTRA_LDFLAGS)
  PHP_SUBST_OLD(EXTRA_LDFLAGS_PROGRAM)
 diff --git a/scripts/php-config.in b/scripts/php-config.in
-index 39423c2..6c2be0c 100644
+index 754876a..1f4bb4c 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
 @@ -19,6 +19,7 @@ php_cli_binary=NONE

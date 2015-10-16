@@ -8,10 +8,10 @@ Make generated php_config.h constant across rebuilds.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index a4dc06b..9890e73 100644
+index 7a66422..69ec160 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1279,7 +1279,7 @@ fi
+@@ -1281,7 +1281,7 @@ fi
  EXTRA_LDFLAGS="$EXTRA_LDFLAGS $PHP_LDFLAGS"
  EXTRA_LDFLAGS_PROGRAM="$EXTRA_LDFLAGS_PROGRAM $PHP_LDFLAGS"
  
@@ -20,7 +20,7 @@ index a4dc06b..9890e73 100644
  AC_DEFINE_UNQUOTED(PHP_BUILD_DATE,"$PHP_BUILD_DATE",[PHP build date])
  
  case $host_alias in
-@@ -1290,7 +1290,7 @@ case $host_alias in
+@@ -1292,7 +1292,7 @@ case $host_alias in
    AC_DEFINE_UNQUOTED(PHP_UNAME,"$PHP_UNAME",[hardcode for each of the cross compiler host])
    ;;
  *)
