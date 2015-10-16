@@ -466,27 +466,7 @@ create-modules-source-stamp:
 override_dh_installdirs: prepare-files-stamp
 	dh_installdirs
 
-override_dh_install: rename-files-stamp remove-files-stamp create-modules-source-stamp
-# install the FPM configuration files to respective locations and customize them for Debian
-	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/
-	sed -e's,^pid[[:space:]]*=[[:space:]].*,pid = /run/php/$(PHP_FPM).pid,' \
-	    -e's,^error_log[[:space:]]*=[[:space:]].*,error_log = /var/log/$(PHP_FPM).log,' \
-	    -e's,^include[[:space:]]*=[[:space:]]*.*,include=/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/*.conf,' \
-	    < debian/tmp/etc/php-fpm.conf.default \
-	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/php-fpm.conf
-
-	mkdir -p debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/
-	sed -e's,^listen = .*,listen = /run/php/$(PHP_FPM).sock,' \
-	    -e's{^;listen\.owner{listen.owner{;' \
-            -e's{^;listen\.group{listen.group{;' \
-	    < debian/tmp/etc/php-fpm.d/www.conf.default \
-	    > debian/$(PHP_FPM)/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/www.conf
-
-# get rid of extra PHP-FPM configuration files after mangling them
-	rm -f  \
-	    debian/tmp/etc/php-fpm.conf.default \
-	    debian/tmp/etc/php-fpm.d/www.conf.default
-
+override_dh_install: rename-files-stamp remove-files-stamp create-modules-source-stamp prepare-fpm-pools
 	# sanitize php.ini files
 	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
 	cat php.ini-production | tr "\t" " " | \
