@@ -48,3 +48,4 @@
 0048-Add-patch-to-remove-build-timestamps-from-generated-.patch
 0049-Remove-warning-about-mysql-library-minor-version-mis.patch
 0050-Disable-apxs2-module-activation-on-sapi-install.patch
+0051-Remove-W3C-validation-icon-to-not-expose-the-reader-.patch
