@@ -22,7 +22,7 @@ index eca1ddb..1aab55e 100644
  	PHP_INI_ENTRY("session.save_handler",           "files",     PHP_INI_ALL, OnUpdateSaveHandler)
  	STD_PHP_INI_BOOLEAN("session.auto_start",       "0",         PHP_INI_PERDIR, OnUpdateBool,   auto_start,         php_ps_globals,    ps_globals)
 diff --git a/php.ini-development b/php.ini-development
-index 569f80e..889504c 100644
+index 1ff2acb..738279e 100644
 --- a/php.ini-development
 +++ b/php.ini-development
 @@ -1419,7 +1419,7 @@ session.save_handler = files
