@@ -8,7 +8,7 @@ Subject: Include local config.h in gd_compat.c to make gd_compat.c work
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/ext/gd/gd_compat.c b/ext/gd/gd_compat.c
-index d6d8d0b..af55e42 100644
+index dc6a95a..a882efa 100644
 --- a/ext/gd/gd_compat.c
 +++ b/ext/gd/gd_compat.c
 @@ -1,4 +1,6 @@

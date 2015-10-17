@@ -72,7 +72,7 @@ index 5442bb1..1e8d51b 100644
  PHP_DBA_STD_RESULT(db4,Berkeley DB4)
  
 diff --git a/ext/dba/dba.c b/ext/dba/dba.c
-index 5b73c7d..9da9f94 100644
+index a7aca43..5810789 100644
 --- a/ext/dba/dba.c
 +++ b/ext/dba/dba.c
 @@ -52,6 +52,10 @@
@@ -86,7 +86,7 @@ index 5b73c7d..9da9f94 100644
  /* {{{ arginfo */
  ZEND_BEGIN_ARG_INFO_EX(arginfo_dba_popen, 0, 0, 2)
  	ZEND_ARG_INFO(0, path)
-@@ -545,6 +549,10 @@ PHP_MINFO_FUNCTION(dba)
+@@ -535,6 +539,10 @@ PHP_MINFO_FUNCTION(dba)
  
  	php_info_print_table_start();
   	php_info_print_table_row(2, "DBA support", "enabled");
@@ -94,6 +94,6 @@ index 5b73c7d..9da9f94 100644
 + 	php_info_print_table_row(2, "libdb header version", DB_VERSION_STRING);
 + 	php_info_print_table_row(2, "libdb library version", db_version(NULL, NULL, NULL));
 +#endif
- 	if (handlers.s) {
+ 	if (handlers.c) {
  		smart_str_0(&handlers);
- 		php_info_print_table_row(2, "Supported handlers", ZSTR_VAL(handlers.s));
+ 		php_info_print_table_row(2, "Supported handlers", handlers.c);

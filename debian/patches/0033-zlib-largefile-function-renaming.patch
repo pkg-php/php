@@ -7,12 +7,12 @@ Subject: zlib-largefile-function-renaming
  1 file changed, 12 insertions(+)
 
 diff --git a/ext/zlib/zlib.c b/ext/zlib/zlib.c
-index 7abd7cf..b6b0a46 100644
+index ec958e1..06deaef 100644
 --- a/ext/zlib/zlib.c
 +++ b/ext/zlib/zlib.c
-@@ -49,6 +49,18 @@
- int le_deflate;
- int le_inflate;
+@@ -46,6 +46,18 @@
+ #undef gzseek
+ #undef gztell
  
 +/*
 + * zlib include files can define the following preprocessor defines which rename

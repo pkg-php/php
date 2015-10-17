@@ -7,10 +7,10 @@ Subject: Fix ZEND_MM_ALIGNMENT on m64k
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Zend/Zend.m4 b/Zend/Zend.m4
-index bdeac67..2942131 100644
+index 945409e..9a7d38e 100644
 --- a/Zend/Zend.m4
 +++ b/Zend/Zend.m4
-@@ -239,7 +239,7 @@ typedef union _mm_align_test {
+@@ -263,7 +263,7 @@ typedef union _mm_align_test {
  
  int main()
  {
@@ -19,7 +19,7 @@ index bdeac67..2942131 100644
    int zeros = 0;
    FILE *fp;
  
-@@ -249,7 +249,7 @@ int main()
+@@ -273,7 +273,7 @@ int main()
    }
  
    fp = fopen("conftest.zend", "w");

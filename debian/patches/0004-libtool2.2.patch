@@ -3,25 +3,32 @@ Date: Sat, 2 May 2015 10:26:51 +0200
 Subject: libtool2.2
 
 ---
- scripts/phpize.in | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ scripts/phpize.in | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 9bd3b9a..7a0e599 100644
+index 9bd3b9a..31a2370 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
-@@ -9,7 +9,9 @@ includedir="$prefix/include/php/@DEBIAN_PHP_API@"
+@@ -6,10 +6,16 @@ datarootdir='@datarootdir@'
+ exec_prefix="`eval echo @exec_prefix@`"
+ phpdir="$prefix/lib/php/@DEBIAN_PHP_API@/build"
+ includedir="$prefix/include/php/@DEBIAN_PHP_API@"
+++aclocaldir="$prefix/share/aclocal"
  builddir="`pwd`"
  SED="@SED@"
  
 -FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4"
-+aclocaldir="$prefix/share/aclocal"
 +FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool"
-+LIBTOOL_FILES="libtool.m4 ltoptions.m4 ltsugar.m4 ltversion.m4 lt~obsolete.m4"
++if [ -f "$aclocaldir/ltsugar.m4" ]; then
++    LIBTOOL_FILES="libtool.m4 ltoptions.m4 ltsugar.m4 ltversion.m4 lt~obsolete.m4"
++else
++    LIBTOOL_FILES="libtool.m4"
++fi
  FILES="acinclude.m4 Makefile.global config.sub config.guess ltmain.sh run-tests*.php"
  CLEAN_FILES="$FILES *.o *.lo *.la .deps .libs/ build/ modules/ install-sh \
  	mkinstalldirs missing config.nice config.sub config.guess configure configure.in \
-@@ -145,8 +147,9 @@ phpize_copy_files()
+@@ -145,8 +151,9 @@ phpize_copy_files()
    test -d build || mkdir build
   
    (cd "$phpdir" && cp $FILES_BUILD "$builddir"/build)
