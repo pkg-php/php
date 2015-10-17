@@ -1,5 +1,5 @@
 build-cgi-stamp: configure-cgi-stamp
-	dh_auto_build --builddirectory cgi-build --parallel
+	dh_auto_build --builddirectory cgi-build $(PARALLEL)
 	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION)
 
 	# Dirty hack to not rebuild everything twice
@@ -10,7 +10,7 @@ build-cgi-stamp: configure-cgi-stamp
 		touch ../../ext/standard/info.c && \
 		touch ../../sapi/cgi/cgi_main.c
 
-	dh_auto_build --builddirectory cgi-build --parallel
+	dh_auto_build --builddirectory cgi-build $(PARALLEL)
 	mv cgi-build/sapi/cgi/php-cgi cgi-build/sapi/cgi/usr.bin.$(PHP_CGI)
 
 	touch build-cgi-stamp
