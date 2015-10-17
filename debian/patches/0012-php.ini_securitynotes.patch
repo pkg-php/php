@@ -6,10 +6,8 @@ Subject: php.ini_securitynotes
  php.ini-development | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/php.ini-development b/php.ini-development
-index a4be218..569f80e 100644
---- a/php.ini-development
-+++ b/php.ini-development
+--- php-5.6.orig/php.ini-development
++++ php-5.6/php.ini-development
 @@ -295,6 +295,12 @@ serialize_precision = 17
  ; and below.  This directive makes most sense if used in a per-directory
  ; or per-virtualhost web server configuration file.
@@ -18,7 +16,7 @@ index a4be218..569f80e 100644
 +; NOTE: this is considered a "broken" security measure.
 +;       Applications relying on this feature will not receive full
 +;       support by the security team.  For more information please
-+;       see /usr/share/doc/php5.6-common/README.Debian.security
++;       see /usr/share/doc/php-common/README.Debian.security
 +;
  ;open_basedir =
  
