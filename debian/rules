@@ -273,6 +273,7 @@ PREPARE_FILES := $(shell cat debian/prepare-files)
 
 prepared: prepared-stamp debian/control debian/source.lintian-overrides
 prepared-stamp:
+	[ -f ext/ext_skel ] && mv ext/ext_skel ext/ext_skel.in
 	sed -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.in
 	./buildconf --force
 	touch prepared-stamp
@@ -280,6 +281,7 @@ prepared-stamp:
 unprepared:
 	dh_testdir
 	sed -i -e 's/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/EXTRA_VERSION=""/' configure.in
+	-[ -f ext/ext_skel.in ] && mv ext/ext_skel.in ext/ext_skel
 	rm -f prepared-stamp
 
 override_dh_auto_test: test-results.txt
