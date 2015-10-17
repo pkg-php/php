@@ -42,3 +42,9 @@
 0042-Add-patch-to-remove-build-timestamps-from-generated-.patch
 0043-Remove-W3C-validation-icon-to-not-expose-the-reader-.patch
 0044-Include-local-config.h-in-gd_compat.c-to-make-gd_com.patch
+0045-strtod_arm_fix.patch
+0046-sybase-alias.patch
+0047-use_embedded_timezonedb_fixes.patch
+0048-php-5.4.0-dlopen.patch
+0049-Disable-apxs2-module-activation-on-sapi-install.patch
+0050-Remove-warning-about-mysql-library-minor-version-mis.patch
