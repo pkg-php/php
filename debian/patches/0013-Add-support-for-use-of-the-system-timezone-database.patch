@@ -615,7 +615,7 @@ index 20d7eea..2ad1758 100644
 +			 * if possible. */
 +
 +			if ((li = find_zone_info(system_location_table, timezone)) != NULL) {
-+				tmp->location.comments = strdup(li->comment);
++				tmp->location.comments = timelib_strdup(li->comment);
 +				strncpy(tmp->location.country_code, li->code, 2);
 +				tmp->location.longitude = li->longitude;
 +				tmp->location.latitude = li->latitude;
