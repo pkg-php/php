@@ -1,3 +1,9 @@
+php7.0 (7.0.0~rc5-5) experimental; urgency=medium
+
+  * Apply patch from @nikic to revert the patch back to Joe's version
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 13:07:43 +0200
+
 php7.0 (7.0.0~rc5-4) experimental; urgency=medium
 
   * Copyright of ext/date/lib/ has changed to MIT/Expat
