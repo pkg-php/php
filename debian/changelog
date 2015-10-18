@@ -1,3 +1,9 @@
+php7.0 (7.0.0~rc5-6) experimental; urgency=medium
+
+  * tmp->location.comments in ext/date/lib/ needs timelib_strdup allocator
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 16:49:28 +0200
+
 php7.0 (7.0.0~rc5-5) experimental; urgency=medium
 
   * Apply patch from @nikic to revert the patch back to Joe's version
