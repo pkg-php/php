@@ -1,31 +1,8 @@
-php7.0 (7.0.0~rc5-6) experimental; urgency=medium
-
-  * tmp->location.comments in ext/date/lib/ needs timelib_strdup allocator
-
- -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 16:49:28 +0200
-
-php7.0 (7.0.0~rc5-5) experimental; urgency=medium
-
-  * Apply patch from @nikic to revert the patch back to Joe's version
-
- -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 13:07:43 +0200
-
-php7.0 (7.0.0~rc5-4) experimental; urgency=medium
-
-  * Copyright of ext/date/lib/ has changed to MIT/Expat
-  * Results from php_scandir needs normal free
-
- -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 11:57:40 +0200
-
-php7.0 (7.0.0~rc5-3) experimental; urgency=medium
-
-  * Use timelib memory management functions in systzdata patch
-
- -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 10:21:08 +0200
-
 php7.0 (7.0.0~rc5-2) experimental; urgency=medium
 
-  * Pull v12 version of systzdata patch from Redhat
+  * Pull v12 version of systzdata patch from Redhat and merge the
+    changes by Nikita Popov to stop the heap corruption
+  * Copyright of ext/date/lib/ has changed to MIT/Expat
 
  -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 02:17:02 +0200
 
