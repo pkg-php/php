@@ -10,7 +10,7 @@
 0010-proc_open.patch
 0011-php.ini_securitynotes.patch
 0012-php-5.4.7-libdb.patch
-0013-use_embedded_timezonedb.patch
+0013-Add-support-for-use-of-the-system-timezone-database.patch
 0014-force_libmysqlclient_r.patch
 0015-strcmp_null-OnUpdateErrorLog.patch
 0016-dont-gitclean-in-build.patch
