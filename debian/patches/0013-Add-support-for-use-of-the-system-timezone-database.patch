@@ -616,7 +616,7 @@ index 20d7eea..2ad1758 100644
 +
 +			if ((li = find_zone_info(system_location_table, timezone)) != NULL) {
 +				tmp->location.comments = strdup(li->comment);
-+                                strncpy(tmp->location.country_code, li->code, 2);
++				strncpy(tmp->location.country_code, li->code, 2);
 +				tmp->location.longitude = li->longitude;
 +				tmp->location.latitude = li->latitude;
 +				tmp->bc = 1;
@@ -624,7 +624,7 @@ index 20d7eea..2ad1758 100644
 +			else {
 +				strncpy(tmp->location.country_code, "??", 2);
 +				tmp->bc = 0;
-+				tmp->location.comments = strdup("");
++				tmp->location.comments = timelib_strdup("");
 +			}
 +
 +			/* Now done with the mmap segment - discard it. */
