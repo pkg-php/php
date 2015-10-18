@@ -1,3 +1,9 @@
+php7.0 (7.0.0~rc5-3) experimental; urgency=medium
+
+  * Use timelib memory management functions in systzdata patch
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 10:21:08 +0200
+
 php7.0 (7.0.0~rc5-2) experimental; urgency=medium
 
   * Pull v12 version of systzdata patch from Redhat
