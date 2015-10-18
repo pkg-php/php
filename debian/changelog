@@ -1,3 +1,10 @@
+php7.0 (7.0.0~rc5-4) experimental; urgency=medium
+
+  * Copyright of ext/date/lib/ has changed to MIT/Expat
+  * Results from php_scandir needs normal free
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Oct 2015 11:57:40 +0200
+
 php7.0 (7.0.0~rc5-3) experimental; urgency=medium
 
   * Use timelib memory management functions in systzdata patch
