@@ -28,7 +28,7 @@ ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
 endif
 
-TARGETS              := apache2 phpdbg embed fpm cgi cli
+TARGETS              := ext #apache2 phpdbg embed fpm cgi cli
 CONFIGURE_TARGETS    = $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
 BUILD_TARGETS        = $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
 INSTALL_TARGETS      = $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
@@ -181,7 +181,7 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-mysqlnd \
 		  --enable-mysqlnd-compression-support \
 		  --with-zlib-dir=/usr \
-		--with-openssl=/usr \
+		--with-openssl=yes \
 		--with-libedit=/usr \
 		--enable-libxml \
 		--enable-session \
@@ -200,6 +200,13 @@ COMMON_CONFIG=  --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-zip \
 		--with-system-tzdata \
 		$(CONFIGURE_DTRACE_ARGS)
+
+# disable all SAPIs in extension build
+ext_config = \
+		--prefix=/usr --disable-cli --disable-cgi \
+		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2 \
+		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2/conf.d \
+		$(COMMON_CONFIG)
 
 apache2_config = \
 		--prefix=/usr --with-apxs2=/usr/bin/apxs2 --disable-cli --disable-cgi \
@@ -249,7 +256,7 @@ phpdbg_config = \
 		--enable-pcntl \
 		--with-libedit=shared
 
-export apache2_config apache2_filter_config cgi_config cli_config embed_config fpm_config phpdbg_config
+export apache2_config apache2_filter_config cgi_config cli_config embed_config fpm_config phpdbg_config ext_config
 
 BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			$$s="The following extensions are built in:"; \
@@ -257,6 +264,16 @@ BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			echo("php:Extensions=" . wordwrap($$s . ".\n", 75, "\$${Newline}"));
 
 include $(CURDIR)/debian/rules.d/*.mk
+
+#extensions
+
+ext_DEBS = $(addprefix php$(PHP_NAME_VERSION)-,$(ext_PACKAGES))
+ext_EXTENSIONS := $(foreach ext_package,$(ext_PACKAGES),$($(ext_package)_EXTENSIONS))
+ext_config += $(foreach ext_ext,$(ext_EXTENSIONS),$($(ext_ext)_config))
+
+$(warning Enabled packages $(ext_DEBS))
+$(warning Enabled extensions $(ext_EXTENSIONS))
+$(warning Enabled config $(ext_config))
 
 %:
 	dh $@ $(DH_SYSTEMD) --with apache2
@@ -305,9 +322,9 @@ override_dh_auto_clean: unprepared
 		done; \
 	done
 
-override_dh_auto_configure: debian/control prepared-stamp $(CONFIGURE_TARGETS)
+override_dh_auto_configure: $(CONFIGURE_TARGETS)
 
-configure-%-stamp:
+configure-%-stamp: debian/control prepared-stamp
 	echo ${$*_config}
 	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
 	touch configure-$*-stamp
@@ -330,7 +347,7 @@ PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h sed -ne "/^PHP_FUNCTION/ s/PH
 
 override_dh_auto_test: test-results.txt
 
-test-results.txt: build-apache2-stamp build-cli-stamp build-cgi-stamp build-phpdbg-stamp
+test-results.txt: $(BUILD_TARGETS)
 ifeq (yes,$(RUN_TESTS))
 	mkdir -p temp_session_store
 	# start our own mysql server for the tests
