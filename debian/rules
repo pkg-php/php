@@ -61,8 +61,6 @@ SED_VARIABLES = \
 	-e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"			\
 	-e "s,@PHP_API@,$(PHP_ZEND_VERSION),g"
 
-$(error SED_VARIABLES $(SED_VARIABLES))
-
 SED_REPLACEMENT = sed -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | sed $(SED_VARIABLES) | sed -e '/\#EXTRA\#/ d'
 
 SAPI_PACKAGE = \
@@ -391,7 +389,7 @@ prepare-files-stamp:
 	#
 	# generate versioned files from versionless variants
 	for file in $(PREPARE_FILES); do \
-	    echo $(SED_REPLACEMENT); \
+	    echo $(SED_VARIABLES); \
 	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
 	    versioned=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    package=$$(echo $$file | sed -e 's/\..*$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
@@ -403,7 +401,7 @@ prepare-files-stamp:
 	# from the templates
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
-	    echo $(SED_REPLACEMENT); \
+	    echo $(SED_VARIABLES); \
 	    mkdir -p "debian/tmp/usr/lib/php/$(PHP_NAME_VERSION)/sapi/"; \
 	    touch "debian/tmp/usr/lib/php/$(PHP_NAME_VERSION)/sapi/$${sapi}"; \
 	    for tmpl in postrm prerm postinst dirs install triggers bug-script bug-control; do \
