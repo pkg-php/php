@@ -1,3 +1,10 @@
+php7.0 (7.0.0~rc6-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.0.0~rc6
+  * Build extensions as a part of the main PHP build tree
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 10 Nov 2015 15:45:44 +0100
+
 php7.0 (7.0.0~rc5-2) experimental; urgency=medium
 
   * Pull v12 version of systzdata patch from Redhat and merge the
