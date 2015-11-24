@@ -3,8 +3,6 @@
 # Uncomment this to turn on verbose mode. 
 export DH_VERBOSE=1
 
-SHELL := /bin/sh -x
-
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
@@ -346,6 +344,13 @@ install-%-stamp: build-%-stamp
 	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
 	touch install-$*-stamp
 
+# install extra CGI-BIN
+install-cgi-stamp:
+	dh_auto_install --builddirectory cgi-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
+	mkdir -p debian/tmp/usr/lib/cgi-bin/
+	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
+	touch install-cgi-stamp
+
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
 override_dh_auto_test: test-results.txt
@@ -410,10 +415,6 @@ prepare-files-stamp:
 	    done; \
 	    < debian/php-sapi.lintian-overrides $(SED_REPLACEMENT) | grep -E "^$${package}" > debian/$${package}.lintian-overrides; \
 	done
-
-	# install extra CGI-BIN
-	mkdir -p debian/tmp/usr/lib/cgi-bin/
-	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
 
 	touch prepare-files-stamp
 
