@@ -8,6 +8,10 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+# Enable this for debugging the sed scripts
+#SED=$(CURDIR)/debian/sedsed
+SED=sed
+
 # enable dpkg build flags
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
@@ -16,13 +20,13 @@ include /usr/share/dpkg/pkg-info.mk
 export DEB_HOST_MULTIARCH
 PHP_SOURCE_VERSION   := $(DEB_VERSION)
 PHP_UPSTREAM_VERSION := $(DEB_VERSION_UPSTREAM)
-PHP_DEBIAN_REVISION  := $(shell echo $(PHP_SOURCE_VERSION) | sed -e 's/.*-//')
-PHP_DFSG_VERSION     := $(shell echo $(PHP_UPSTREAM_VERSION) | sed 's/+.*//')
+PHP_DEBIAN_REVISION  := $(shell echo $(PHP_SOURCE_VERSION) | $(SED) -e 's/.*-//')
+PHP_DFSG_VERSION     := $(shell echo $(PHP_UPSTREAM_VERSION) | $(SED) -e 's/+.*//')
 PHP_MAJOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$1}')
 PHP_MINOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$2}')
 PHP_RELEASE_VERSION  := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$3}')
 PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)
-PHP_ZEND_VERSION     := $(shell sed -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)
+PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)
 
 ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
@@ -49,19 +53,19 @@ PHP_MODULES_SOURCE = php$(PHP_NAME_VERSION)-modules-source
 # Generic commands
 
 SED_VARIABLES = \
-	-e "s,@sapi@,$${sapi},g"					\
-	-e "s,@package@,$${package},g"					\
-	-e "s,@modules@,$${modules},g"					\
-	-e "s,@module@,$${module},g"					\
-	-e "s,@extdir@,$${extdir},g"					\
-	-e "s,@priority@,$${priority},g"				\
-	-e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"			\
-	-e "s,@PHP_MAJOR@,$(PHP_MAJOR_VERSION),g"			\
-	-e "s,@PHP_MINOR@,$(PHP_MINOR_VERSION),g"			\
-	-e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"			\
-	-e "s,@PHP_API@,$(PHP_ZEND_VERSION),g"
+	$(SED) -e "s,@sapi@,$${sapi},g"				|\
+	$(SED) -e "s,@package@,$${package},g"			|\
+	$(SED) -e "s,@modules@,$${modules},g"			|\
+	$(SED) -e "s,@module@,$${module},g"			|\
+	$(SED) -e "s,@extdir@,$${extdir},g"			|\
+	$(SED) -e "s,@priority@,$${priority},g"			|\
+	$(SED) -e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"	|\
+	$(SED) -e "s,@PHP_MAJOR@,$(PHP_MAJOR_VERSION),g"	|\
+	$(SED) -e "s,@PHP_MINOR@,$(PHP_MINOR_VERSION),g"	|\
+	$(SED) -e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"	|\
+	$(SED) -e "s,@PHP_API@,$(PHP_ZEND_VERSION),g"
 
-SED_REPLACEMENT = sed -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | sed $(SED_VARIABLES) | sed -e '/\#EXTRA\#/ d'
+SED_REPLACEMENT = $(SED) -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | $(SED_VARIABLES) | $(SED) -e '/\#EXTRA\#/ d'
 
 SAPI_PACKAGE = \
 	case $${sapi} in \
@@ -69,11 +73,11 @@ SAPI_PACKAGE = \
 	  apache2)       package=$(PHP_APACHE2); source=libapache2-mod-php ;; \
 	  *)             package=php$(PHP_NAME_VERSION)-$${sapi}; source=php-$${sapi} ;; \
 	esac; \
-	versionless=$$(echo $${package} | sed -e 's/$(PHP_NAME_VERSION)//g');
+	versionless=$$(echo $${package} | $(SED) -e 's/$(PHP_NAME_VERSION)//g');
 
 MODULE_PACKAGE = \
 	package=php$(PHP_NAME_VERSION)-$${module}; \
-	versionless=$$(echo $${package} | sed -e 's/$(PHP_NAME_VERSION)//g');
+	versionless=$$(echo $${package} | $(SED) -e 's/$(PHP_NAME_VERSION)//g');
 
 # Disable the test now
 RUN_TESTS = no
@@ -283,19 +287,19 @@ PREPARE_FILES := $(shell cat debian/prepare-files)
 prepared: prepared-stamp debian/control debian/source.lintian-overrides
 prepared-stamp:
 	[ -f ext/ext_skel ] && mv ext/ext_skel ext/ext_skel.in
-	sed -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.in
+	$(SED) -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.in
 	./buildconf --force
 	touch prepared-stamp
 
 unprepared:
 	dh_testdir
-	sed -i -e 's/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/EXTRA_VERSION=""/' configure.in
+	$(SED) -i -e 's/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/EXTRA_VERSION=""/' configure.in
 	-[ -f ext/ext_skel.in ] && mv ext/ext_skel.in ext/ext_skel
 	rm -f prepared-stamp
 
 override_dh_auto_clean: unprepared
 	for file in $(PREPARE_FILES); do \
-	    package=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/'); \
+	    package=debian/$$(echo $$file | $(SED) -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/'); \
 	    rm -f $${package}; \
 	done
 	rm -f $(CONFIGURE_TARGETS)
@@ -343,7 +347,7 @@ install-%-stamp: build-%-stamp
 	dh_auto_install --builddirectory $*-build -- install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/tmp
 	touch install-$*-stamp
 
-PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h sed -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
+PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
 override_dh_auto_test: test-results.txt
 
@@ -389,10 +393,9 @@ prepare-files-stamp:
 	#
 	# generate versioned files from versionless variants
 	for file in $(PREPARE_FILES); do \
-	    echo $(SED_VARIABLES); \
-	    versionless=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@//g'); \
-	    versioned=debian/$$(echo $$file | sed -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
-	    package=$$(echo $$file | sed -e 's/\..*$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    versionless=debian/$$(echo $$file | $(SED) -e 's/@PHP_VERSION@//g'); \
+	    versioned=debian/$$(echo $$file | $(SED) -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    package=$$(echo $$file | $(SED) -e 's/\..*$$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    < $${versionless} $(SED_REPLACEMENT) > $${versioned}; \
 	    if [ -x $${versionless} ]; then chmod +x $${versioned}; fi; \
 	done
@@ -401,7 +404,6 @@ prepare-files-stamp:
 	# from the templates
 	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
-	    echo $(SED_VARIABLES); \
 	    mkdir -p "debian/tmp/usr/lib/php/$(PHP_NAME_VERSION)/sapi/"; \
 	    touch "debian/tmp/usr/lib/php/$(PHP_NAME_VERSION)/sapi/$${sapi}"; \
 	    for tmpl in postrm prerm postinst dirs install triggers bug-script bug-control; do \
@@ -467,18 +469,18 @@ override_dh_install: rename-files-stamp remove-files-stamp create-modules-source
 	# sanitize php.ini files
 	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
 	cat php.ini-production | tr "\t" " " | \
-	sed -e'/session.gc_probability =/ s/1/0/g;' \
+	$(SED) -e'/session.gc_probability =/ s/1/0/g;' \
 	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
 	    -e'/expose_php =/ s/On/Off/g;' \
 	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-production
 
 	cat php.ini-production | tr "\t" " " | \
-	sed -e'/memory_limit =/ s/128M/-1/g;' \
+	$(SED) -e'/memory_limit =/ s/128M/-1/g;' \
 	    -e'/session.gc_probability =/ s/1/0/g' \
 	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-production.cli
 
 	cat php.ini-development | tr "\t" " " | \
-	sed -e'/session.gc_probability =/ s/1/0/g;' \
+	$(SED) -e'/session.gc_probability =/ s/1/0/g;' \
 	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
 	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-development
 
@@ -546,9 +548,9 @@ override_dh_gencontrol-arch:
 	dh_gencontrol -a
 
 debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides
-	sed -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
+	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
 
 debian/source.lintian-overrides: debian/source.lintian-overrides.in debian/rules debian/changelog
-	sed -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
+	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
 
 .PHONY: prepared unprepared debian/control debian/source.lintian-overrides
