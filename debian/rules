@@ -29,7 +29,7 @@ PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Z
 ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
 endif
-REAL_TARGETS         := #apache2 phpdbg embed fpm cgi cli
+REAL_TARGETS         := apache2 phpdbg embed fpm cgi cli
 EXTRA_TARGETS        := ext
 TARGETS              := $(REAL_TARGETS) $(EXTRA_TARGETS)
 CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
