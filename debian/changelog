@@ -1,3 +1,11 @@
+php7.0 (7.0.0~rc8-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.0.0~rc8
+  * Remove GD patch as we build the gd extension inside the source tree now
+  * Build extensions as a part of the main PHP X.Y build tree
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 25 Nov 2015 11:13:16 +0100
+
 php7.0 (7.0.0~rc6-1) experimental; urgency=medium
 
   * Imported Upstream version 7.0.0~rc6
