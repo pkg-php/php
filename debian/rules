@@ -271,13 +271,13 @@ include $(CURDIR)/debian/rules.d/*.mk
 
 #extensions
 
-ext_DEBS = $(addprefix php$(PHP_NAME_VERSION)-,$(ext_PACKAGES))
+ext_DEBS       := $(addprefix php$(PHP_NAME_VERSION)-,$(ext_PACKAGES))
 ext_EXTENSIONS := $(foreach ext_package,$(ext_PACKAGES),$($(ext_package)_EXTENSIONS))
-ext_config += $(foreach ext_ext,$(ext_EXTENSIONS),$($(ext_ext)_config))
+ext_config     += $(foreach ext_ext,$(ext_EXTENSIONS),$($(ext_ext)_config))
 
-$(warning Enabled packages $(ext_DEBS))
-$(warning Enabled extensions $(ext_EXTENSIONS))
-$(warning Enabled config $(ext_config))
+$(info Enabled packages $(ext_DEBS))
+$(info Enabled extensions $(ext_EXTENSIONS))
+$(info Enabled config $(ext_config))
 
 %:
 	dh $@ $(DH_SYSTEMD) --with apache2
@@ -302,6 +302,7 @@ override_dh_auto_clean: unprepared
 	rm -f $(CONFIGURE_TARGETS)
 	rm -f $(BUILD_TARGETS)
 	rm -f $(INSTALL_TARGETS)
+	rm -f $(ext_CONTROL)
 
 	# just in case the build tests failed, kill the running mysqld
 	$(SHELL) debian/setup-mysql.sh $(MYSQL_PORT) $(MYSQL_DATA_DIR) stop > /dev/null 2>&1 || exit 0
@@ -416,6 +417,36 @@ prepare-files-stamp:
 	    < debian/php-sapi.lintian-overrides $(SED_REPLACEMENT) | grep -E "^$${package}" > debian/$${package}.lintian-overrides; \
 	done
 
+	for module in $(ext_PACKAGES); do \
+	  package=php$(PHP_NAME_VERSION)-$${module}; \
+	  modules=$$(eval echo \$${$${module}_EXTENSIONS}); \
+	  description=$$(eval echo \$${$${module}_DESCRIPTION}); \
+	  for dsoname in $${modules}; do \
+	    priority=$$(eval echo \$${$${module}_PRIORITY}); \
+	    if [ -z "$${priority}" ]; then priority=20; fi; \
+	    extension=$$(eval echo \$${$${module}_EXTENSION}); \
+	    if [ -z "$${extension}" ]; then extension=extension; fi; \
+	    $(SED) -e "s,@extname@,$${module}," \
+	           -e "s,@dsoname@,$${dsoname}," \
+	           -e "s,@extension@,$${extension}," \
+	           -e "s,@priority@,$${priority}," \
+	      < debian/php-module.ini.in \
+	      > debian/tmp/usr/share/$${package}/$${module}/$${dsoname}.ini; \
+	    echo "usr/lib/php/*/$${dsoname}.so" >> debian/$${package}.install; \
+	    echo "usr/share/$${package}/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
+	  done
+	  for tmpl in postinst postrm prerm bug-script bug-control triggers dirs; do \
+	    $(SED) -e "s,@package@,$${package},g"		\
+	           -e "s,@modules@,$${modules},g"		\
+	           -e "s,@module@,$${module},g"		\
+	           -e "s,@priority@,$${priority},g"	\
+	           -e "s,@description@,$${description},g"	\
+	           -e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"	\
+	           -e "s,@PHP_API@,$${phpapi},g" \
+	      < debian/php-module.${tmpl} \
+	      > debian/$${package}.${tmpl}.in
+	  done
+	done
 	touch prepare-files-stamp
 
 rename-files-stamp: rename-phar-stamp
@@ -546,8 +577,13 @@ override_dh_gencontrol-arch:
 	done; \
 	dh_gencontrol -a
 
-debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides
-	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
+debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides debian/rules.d/* debian/php-module.control.in
+	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" -e "s/@BUILT_USING@/$(BUILT_USING)/g" >$@ <$<
+	for ext in $(ext_PACKAGES); do \
+	  package=php$(PHP_NAME_VERSION)-$${ext}; \
+	  echo >>$@; \
+	  $(SED) -e "s,@package@,$${package}," -e "s,@description@,$$(eval echo \$${$${package}_DESCRIPTION})," >>$@ <debian/php-module.control.in; \
+	done
 
 debian/source.lintian-overrides: debian/source.lintian-overrides.in debian/rules debian/changelog
 	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<

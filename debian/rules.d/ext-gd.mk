@@ -9,3 +9,4 @@ gd_config := --with-gd=shared,/usr \
 	     --with-freetype-dir=shared,/usr \
 	     --with-vpx-dir=shared,/usr
 export gd_EXTENSIONS
+export gd_DESCRIPTION
