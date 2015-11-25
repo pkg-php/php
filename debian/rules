@@ -426,6 +426,7 @@ prepare-files-stamp:
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
 	    extension=$$(eval echo \$${$${module}_EXTENSION}); \
 	    if [ -z "$${extension}" ]; then extension=extension; fi; \
+	    mkdir -p debian/tmp/usr/share/$${package}/$${module}/; \
 	    $(SED) -e "s,@extname@,$${module}," \
 	           -e "s,@dsoname@,$${dsoname}," \
 	           -e "s,@extension@,$${extension}," \
