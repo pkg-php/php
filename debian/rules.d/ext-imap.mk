@@ -4,3 +4,4 @@ imap_EXTENSIONS := imap
 imap_config := --with-imap=shared,/usr \
 	       --with-kerberos \
 	       --with-imap-ssl=yes
+export imap_EXTENSIONS
