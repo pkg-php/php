@@ -96,7 +96,8 @@ Description: server-side, HTML-embedded scripting language (metapackage)
 
 Package: php@PHP_VERSION@-common
 Architecture: all
-Depends: php-common
+Depends: php-common,
+	 ${misc:Depends}
 Suggests: php-user-cache
 Conflicts: php5-common
 Description: Common files for packages built from the PHP source
