@@ -1,3 +1,9 @@
+php7.0 (7.0.0~rc8-2) experimental; urgency=medium
+
+  * Enable CLI for all SAPIs to fix php-config
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 27 Nov 2015 10:50:57 +0100
+
 php7.0 (7.0.0~rc8-1) experimental; urgency=medium
 
   * Imported Upstream version 7.0.0~rc8
