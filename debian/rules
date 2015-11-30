@@ -178,7 +178,6 @@ COMMON_CONFIG := \
 		--enable-mbregex \
 		--enable-mbregex-backtrack \
 		--enable-mbstring \
-		--disable-opcache \
 		--enable-phar \
 		--enable-posix \
 		--with-mcrypt=/usr \
