@@ -174,7 +174,6 @@ COMMON_CONFIG := \
 		--enable-ftp \
 		--enable-hash \
 		--with-iconv \
-		--enable-json \
 		--enable-pdo \
 		--enable-mbregex \
 		--enable-mbregex-backtrack \
