@@ -1,3 +1,10 @@
+php7.0 (7.0.0~rc8-3) experimental; urgency=medium
+
+  * Move JSON ext to separate mk file and a separate package again
+  * Re-enable Zend OpCache again and into a separate package
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 30 Nov 2015 09:27:58 +0100
+
 php7.0 (7.0.0~rc8-2) experimental; urgency=medium
 
   * Enable CLI for all SAPIs to fix php-config
