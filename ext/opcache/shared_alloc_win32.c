@@ -205,14 +205,19 @@ static int create_segments(size_t requested_size, zend_shared_segment ***shared_
 		err = GetLastError();
 		if (ret == ALLOC_FAIL_MAPPING) {
 			/* Mapping failed, wait for mapping object to get freed and retry */
-            CloseHandle(memfile);
+			CloseHandle(memfile);
 			memfile = NULL;
+			if (++map_retries >= MAX_MAP_RETRIES) {
+				break;
+			}
+			zend_shared_alloc_unlock_win32();
 			Sleep(1000 * (map_retries + 1));
+			zend_shared_alloc_lock_win32();
 		} else {
 			zend_shared_alloc_unlock_win32();
 			return ret;
 		}
-	} while (++map_retries < MAX_MAP_RETRIES);
+	} while (1);
 
 	if (map_retries == MAX_MAP_RETRIES) {
 		zend_shared_alloc_unlock_win32();
@@ -266,7 +271,7 @@ static int create_segments(size_t requested_size, zend_shared_segment ***shared_
 			GetSystemInfo(&si);
 
 			/* Are we running Vista ? */
-			if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion == 6) {
+			if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 6) {
 				wanted_mapping_base = vista_mapping_base_set;
 			}
 		} while (0);

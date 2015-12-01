@@ -3472,10 +3472,7 @@ static char * zend_get_function_declaration(zend_function *fptr TSRMLS_DC) /* {{
 					if (precv && precv->opcode == ZEND_RECV_INIT && precv->op2_type != IS_UNUSED) {
 						zval *zv, zv_copy;
 						int use_copy;
-						ALLOC_ZVAL(zv);
-						*zv = *precv->op2.zv;
-						zval_copy_ctor(zv);
-						INIT_PZVAL(zv);
+						zv = precv->op2.zv;
 						if ((Z_TYPE_P(zv) & IS_CONSTANT_TYPE_MASK) == IS_CONSTANT) {
 							REALLOC_BUF_IF_EXCEED(buf, offset, length, Z_STRLEN_P(zv));
 							memcpy(offset, Z_STRVAL_P(zv), Z_STRLEN_P(zv));
@@ -3517,7 +3514,6 @@ static char * zend_get_function_declaration(zend_function *fptr TSRMLS_DC) /* {{
 								zval_dtor(&zv_copy);
 							}
 						}
-						zval_ptr_dtor(&zv);
 					}
 				} else {
 					memcpy(offset, "NULL", 4);
@@ -5808,7 +5804,7 @@ void zend_do_fetch_constant(znode *result, znode *constant_container, znode *con
 				opline->op2.constant = zend_add_const_name_literal(CG(active_op_array), &constant_name->u.constant, 0 TSRMLS_CC);
 			} else {
 				opline->extended_value = IS_CONSTANT_UNQUALIFIED;
-				if (CG(current_namespace)) {
+				if (check_namespace && CG(current_namespace)) {
 					opline->extended_value |= IS_CONSTANT_IN_NAMESPACE;
 					opline->op2.constant = zend_add_const_name_literal(CG(active_op_array), &constant_name->u.constant, 1 TSRMLS_CC);
 				} else {

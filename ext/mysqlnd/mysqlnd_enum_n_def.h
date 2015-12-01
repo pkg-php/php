@@ -101,6 +101,10 @@
 #define CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA	(1UL << 21) /* Enable authentication response packet to be larger than 255 bytes. */
 #define CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS		(1UL << 22) /* Don't close the connection for a connection with expired password. */
 #define CLIENT_SESSION_TRACK					(1UL << 23) /* Extended OK */
+/*
+  This is a mysqlnd extension. CLIENT_ODBC is not used anyway. We will reuse it for our case and translate it to not using SSL peer verification
+*/
+#define CLIENT_SSL_DONT_VERIFY_SERVER_CERT	CLIENT_ODBC
 #define CLIENT_SSL_VERIFY_SERVER_CERT	(1UL << 30)
 #define CLIENT_REMEMBER_OPTIONS			(1UL << 31)
 
@@ -233,6 +237,7 @@ typedef enum mysqlnd_field_types
 	MYSQL_TYPE_NEWDATE	= 14,
 	MYSQL_TYPE_VARCHAR	= 15,
 	MYSQL_TYPE_BIT		= 16,
+	MYSQL_TYPE_JSON=245,
 	MYSQL_TYPE_NEWDECIMAL=246,
 	MYSQL_TYPE_ENUM=247,
 	MYSQL_TYPE_SET=248,
@@ -274,6 +279,7 @@ typedef enum mysqlnd_server_option
 #define FIELD_TYPE_NEWDATE		MYSQL_TYPE_NEWDATE
 #define FIELD_TYPE_ENUM			MYSQL_TYPE_ENUM
 #define FIELD_TYPE_SET			MYSQL_TYPE_SET
+#define FIELD_TYPE_JSON 		MYSQL_TYPE_JSON
 #define FIELD_TYPE_TINY_BLOB	MYSQL_TYPE_TINY_BLOB
 #define FIELD_TYPE_MEDIUM_BLOB	MYSQL_TYPE_MEDIUM_BLOB
 #define FIELD_TYPE_LONG_BLOB	MYSQL_TYPE_LONG_BLOB
@@ -478,6 +484,7 @@ typedef enum mysqlnd_collected_stats
 	STAT_TEXT_TYPE_FETCHED_DATETIME,
 	STAT_TEXT_TYPE_FETCHED_TIMESTAMP,
 	STAT_TEXT_TYPE_FETCHED_STRING,
+	STAT_TEXT_TYPE_FETCHED_JSON,
 	STAT_TEXT_TYPE_FETCHED_BLOB,
 	STAT_TEXT_TYPE_FETCHED_ENUM,
 	STAT_TEXT_TYPE_FETCHED_SET,
