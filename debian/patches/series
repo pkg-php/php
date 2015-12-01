@@ -48,3 +48,4 @@
 0048-php-5.4.0-dlopen.patch
 0049-Disable-apxs2-module-activation-on-sapi-install.patch
 0050-Remove-warning-about-mysql-library-minor-version-mis.patch
+0051-Include-php_config.h-if-we-don-t-have-config.h-to-ge.patch
