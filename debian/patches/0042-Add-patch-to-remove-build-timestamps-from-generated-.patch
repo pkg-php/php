@@ -25,10 +25,10 @@ index 65294e5..3bac3b6 100644
  		php_info_print_table_row(2, "Compiler", COMPILER);
  #endif
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index de1be31..3e20a09 100644
+index 1c0b489..3e2c617 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
-@@ -2231,9 +2231,9 @@ consult the installation file that came with this distribution, or visit \n\
+@@ -2232,9 +2232,9 @@ consult the installation file that came with this distribution, or visit \n\
  								SG(request_info).no_headers = 1;
  							}
  #if ZEND_DEBUG
