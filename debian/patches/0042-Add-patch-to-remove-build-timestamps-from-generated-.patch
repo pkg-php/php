@@ -51,10 +51,10 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index 6293470..135ef82 100644
+index 63f7dfc..03c9c50 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
-@@ -2217,9 +2217,9 @@ consult the installation file that came with this distribution, or visit \n\
+@@ -2216,9 +2216,9 @@ consult the installation file that came with this distribution, or visit \n\
  								SG(request_info).no_headers = 1;
  							}
  #if ZEND_DEBUG
