@@ -1,3 +1,9 @@
+php7.0 (7.0.0-2) unstable; urgency=medium
+
+  * Don't put $(INSTALL_ROOT) into phar.phar exec stanza (Closes: #807028)
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 04 Dec 2015 15:54:10 +0100
+
 php7.0 (7.0.0-1) unstable; urgency=medium
 
   * Update d/watch to match 7.0.*
