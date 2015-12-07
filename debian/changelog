@@ -1,3 +1,12 @@
+php7.0 (7.0.0-3) unstable; urgency=medium
+
+  * Correctly set permissions on /var/lib/php/sessions (Closes: #807164)
+  * Fix fpm service reload via systemd (Closes: #807163)
+  * Update B-D to depend on libsystemd-dev | libsystemd-daemon-dev on
+    linux (Closes: #807266)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Dec 2015 10:12:17 +0100
+
 php7.0 (7.0.0-2) unstable; urgency=medium
 
   * Don't put $(INSTALL_ROOT) into phar.phar exec stanza (Closes: #807028)
