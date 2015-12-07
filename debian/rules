@@ -279,7 +279,7 @@ $(info Enabled extensions $(ext_EXTENSIONS))
 $(info Enabled config $(ext_config))
 
 %:
-	dh $@ $(DH_SYSTEMD) --with apache2
+	dh $@ $(DH_SYSTEMD) --with apache2 --parallel
 
 PREPARE_FILES := $(addprefix debian/,$(shell cat debian/prepare-files))
 
