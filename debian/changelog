@@ -1,3 +1,9 @@
+php7.0 (7.0.0-4) unstable; urgency=medium
+
+  * Add Replaces: php5-cli to php7.0-cli (Closes: #799711)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Dec 2015 11:58:02 +0100
+
 php7.0 (7.0.0-3) unstable; urgency=medium
 
   * Correctly set permissions on /var/lib/php/sessions (Closes: #807164)
