@@ -52,7 +52,7 @@ Build-Depends: apache2-dev (>= 2.4),
                libsnmp-dev,
                libsqlite3-dev,
                libssl-dev,
-               libsystemd-dev [linux-any] | libsystemd-daemon-dev [linux-any],
+               libsystemd-daemon-dev [linux-any],
                libtidy-dev,
                libtool (>= 2.2),
                libvpx-dev,
@@ -190,7 +190,8 @@ Depends: libedit2 (>= 2.11-20080614-4),
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: ${php:Provides}
-Conflicts: php5-cli
+Breaks: php5-cli
+Replaces: php5-cli
 Recommends: php-readline
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
