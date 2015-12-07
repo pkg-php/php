@@ -555,8 +555,10 @@ override_dh_compress:
 override_dh_installchangelogs:
 	dh_installchangelogs -p$(PHP_COMMON) NEWS
 
-override_dh_fixperms:
-	dh_fixperms -X/var/lib/php/$(PHP_NAME_VERSION)
+override_dh_fixperms-indep:
+	chmod 01733 debian/php$(PHP_NAME_VERSION)-common/var/lib/php/sessions/
+	dh_fixperms -i  -p$(PHP_COMMON) -X/var/lib/php
+	dh_fixperms -i --remaining-packages
 
 override_dh_strip:
 	dh_strip --dbg-package=$(PHP_DBG)
