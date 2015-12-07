@@ -1,3 +1,10 @@
+php7.0 (7.0.0-5) unstable; urgency=medium
+
+  * Re-enable mcrypt extension
+  * Enable parallel builds in d/rules
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Dec 2015 18:09:46 +0100
+
 php7.0 (7.0.0-4) unstable; urgency=medium
 
   * Add Replaces: php5-cli to php7.0-cli (Closes: #799711)
