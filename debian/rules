@@ -185,7 +185,6 @@ COMMON_CONFIG := \
 		  --enable-mysqlnd-compression-support \
 		  --with-zlib-dir=/usr \
 		--with-openssl=yes \
-		--with-libedit=/usr \
 		--enable-libxml \
 		--enable-session \
 		--enable-simplexml \
@@ -231,7 +230,7 @@ cli_config = \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cli/conf.d \
 		$(COMMON_CONFIG) \
 		--enable-pcntl \
-		--with-libedit=shared
+		--with-libedit=shared,/usr
 
 embed_config = \
 		--prefix=/usr --enable-embed --enable-cli --disable-cgi \
@@ -257,7 +256,7 @@ phpdbg_config = \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/phpdbg/conf.d \
 		$(COMMON_CONFIG) \
 		--enable-pcntl \
-		--with-libedit=shared
+		--with-libedit=shared,/usr
 
 export apache2_config apache2_filter_config cgi_config cli_config embed_config fpm_config phpdbg_config ext_config
 
@@ -458,8 +457,6 @@ remove-files-stamp:
 	find debian/tmp/ -name '*.la' -delete
 	# get rid of static versions of PHP modules (WTF?)
 	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/*.a
-	# get rid of readline.so
-	rm -f debian/tmp/usr/lib/php/$(PHP_ZEND_VERSION)/readline.so
 
 	rm -rf \
 	  debian/tmp/.filemap \
