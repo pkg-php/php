@@ -14,7 +14,7 @@ index 9bd3b9a..31a2370 100644
  exec_prefix="`eval echo @exec_prefix@`"
  phpdir="$prefix/lib/php/@DEBIAN_PHP_API@/build"
  includedir="$prefix/include/php/@DEBIAN_PHP_API@"
-++aclocaldir="$prefix/share/aclocal"
++aclocaldir="$prefix/share/aclocal"
  builddir="`pwd`"
  SED="@SED@"
  
