@@ -1,3 +1,9 @@
+php5.6 (5.6.16+dfsg-3) unstable; urgency=medium
+
+  * Remove extra + from phpize that caused any phpize calls to fail
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 09 Dec 2015 11:48:40 +0100
+
 php5.6 (5.6.16+dfsg-2) unstable; urgency=medium
 
   * php5.6-cli cannot depend on php5.6-json to unbreak bootstrap loop
