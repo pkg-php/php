@@ -1,3 +1,18 @@
+php5.6 (5.6.16+dfsg-4) unstable; urgency=medium
+
+  * Merge PHP 7.0 packaging changes
+   + Only one sysvrc script can provide php-fpm
+   + Put both (5.x and 7.0) rules for FPM pools to one file with conditional
+   + Enable bz2 extension
+   + Re-enable mcrypt, readline and odbc extension
+   + Enable parallel builds in d/rules
+   + Correctly set permissions on /var/lib/php/sessions (Closes: #807164)
+   + Fix fpm service reload via systemd (Closes: #807163)
+   + Update B-D to depend on libsystemd-dev | libsystemd-daemon-dev on
+     linux (Closes: #807266)
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 16 Dec 2015 14:55:52 +0100
+
 php5.6 (5.6.16+dfsg-3) unstable; urgency=medium
 
   * Remove extra + from phpize that caused any phpize calls to fail
