@@ -1,3 +1,11 @@
+php7.0 (7.0.0-6) unstable; urgency=medium
+
+  * Only one sysvrc script can provide php-fpm
+  * Put both (5.x and 7.0) rules for FPM pools to one file with conditional
+  * Enable bz2 extension
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 16 Dec 2015 13:04:46 +0100
+
 php7.0 (7.0.0-5) unstable; urgency=medium
 
   * Re-enable mcrypt, readline and odbc extension
