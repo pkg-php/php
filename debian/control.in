@@ -183,13 +183,15 @@ Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
          mime-support,
          php@PHP_VERSION@-common (>= ${source:Version}),
+         php@PHP_VERSION@-json,
          php@PHP_VERSION@-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: ${php:Provides}
-Conflicts: php5-cli
+Breaks: php5-cli
+Replaces: php5-cli
 Recommends: php-readline
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
