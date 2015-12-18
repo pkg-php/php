@@ -7,7 +7,7 @@ Subject: libtool2.2
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 9bd3b9a..31a2370 100644
+index 9bd3b9a..4bf2811 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -6,10 +6,16 @@ datarootdir='@datarootdir@'
