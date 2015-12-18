@@ -1,3 +1,9 @@
+php5.6 (5.6.16+dfsg-6) unstable; urgency=medium
+
+  * Remove phpX.Y-modules-source as it's not needed anymore
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 18 Dec 2015 15:18:43 +0100
+
 php5.6 (5.6.16+dfsg-5) unstable; urgency=medium
 
   * Merge PHP 7.0 packaging changes:
