@@ -50,3 +50,4 @@
 0050-Remove-warning-about-mysql-library-minor-version-mis.patch
 0051-Include-php_config.h-if-we-don-t-have-config.h-to-ge.patch
 0052-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
+0053-Don-t-put-INSTALL_ROOT-into-phar.phar-exec-stanza.patch
