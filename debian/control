@@ -285,18 +285,6 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-modules-source
-Architecture: all
-Depends: php5.6-dev,
-         ${misc:Depends}
-Description: PHP 5.6 modules source package
- This package contains source for PHP 5.6 modules that can be
- built using phpize5.6.  It is mainly used to generate packages
- with PHP modules built from the main PHP package.
- .
- You probably don't want to install this package unless you want to
- build specific PHP module that is not distributed with Debian itself.
-
 Package: php5.6-phpdbg
 Architecture: any
 Depends: libmagic1,
