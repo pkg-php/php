@@ -58,7 +58,7 @@ Build-Depends: apache2-dev (>= 2.4),
                libvpx-dev,
                libwrap0-dev,
                libxml2-dev,
-               libxmlrpc-core-c3-dev,
+               libxmlrpc-epi-dev,
                libxmltok1-dev,
                libxslt1-dev (>= 1.0.18),
                libzip-dev,
@@ -71,7 +71,8 @@ Build-Depends: apache2-dev (>= 2.4),
                tzdata,
                unixodbc-dev,
                zlib1g-dev
-Build-Conflicts: bind-dev
+Build-Conflicts: bind-dev,
+                 libxmlrpc-core-c3-dev
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-php/php.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
