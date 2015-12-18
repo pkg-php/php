@@ -114,10 +114,10 @@ index 13bca0c..043ec3d 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 7a96f0b..0c06936 100644
+index af1bfc7..4668660 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1519,10 +1519,8 @@ phpdbg_main:
+@@ -1520,10 +1520,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(
