@@ -1,3 +1,12 @@
+php7.0 (7.0.1-2) unstable; urgency=medium
+
+  * Remove phpX.Y-modules-source as it's not needed anymore  
+  * Put back libsystemd-dev [linux-any] | libsystemd-daemon-dev
+    [linux-any] into Build-Depends
+  * Move sessiondir handling to php-common package from src:php-defaults
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 21 Dec 2015 11:08:53 +0100
+
 php7.0 (7.0.1-1) unstable; urgency=medium
 
   * Enable XMLRPC-EPI extension
