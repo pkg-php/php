@@ -173,6 +173,7 @@ COMMON_CONFIG := \
 		--enable-ftp \
 		--enable-hash \
 		--with-iconv \
+		--with-pcre-regex=/usr \
 		--enable-pdo \
 		--enable-mbregex \
 		--enable-mbregex-backtrack \
