@@ -207,7 +207,7 @@ Description: command-line interpreter for the PHP scripting language
 
 Package: php7.0-common
 Architecture: all
-Depends: php-common,
+Depends: php-common (>= 18~),
          ${misc:Depends}
 Suggests: php-user-cache
 Conflicts: php5-common
