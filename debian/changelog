@@ -1,3 +1,10 @@
+php5.6 (5.6.16+dfsg-8) unstable; urgency=medium
+
+  * Don't conflict with src:php5 transitional dummy packages
+  * Compile with system PCRE library
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 29 Dec 2015 09:52:22 +0100
+
 php5.6 (5.6.16+dfsg-7) unstable; urgency=medium
 
   * Move sessiondir handling to php-common package from src:php-defaults
