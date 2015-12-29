@@ -164,10 +164,8 @@ COMMON_CONFIG := \
 		  --enable-inifile \
 		  --enable-flatfile \
 		--enable-dom \
-		--with-enchant=/usr \
 		--enable-exif \
 		--with-gettext=/usr \
-		--with-gmp=/usr \
 		--enable-fileinfo \
 		--enable-filter \
 		--enable-ftp \
@@ -180,7 +178,6 @@ COMMON_CONFIG := \
 		--enable-mbstring \
 		--enable-phar \
 		--enable-posix \
-		--with-mcrypt=/usr \
 		--enable-mysqlnd \
 		  --enable-mysqlnd-compression-support \
 		  --with-zlib-dir=/usr \
@@ -194,7 +191,6 @@ COMMON_CONFIG := \
 		--enable-xml \
 		--enable-xmlreader \
 		--enable-xmlwriter \
-		--with-xsl=/usr \
 		--with-mhash=yes \
 		--enable-sysvmsg \
 		--enable-sysvsem \
