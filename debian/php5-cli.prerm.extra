@@ -1,3 +1,4 @@
 if [ "$1" = "remove" -o "$1" = "deconfigure" ]; then
     update-alternatives --remove php /usr/bin/php5
+    update-alternatives --remove phar /usr/bin/phar5
 fi
