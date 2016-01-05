@@ -1,11 +1,4 @@
-php5 (5.5.29+dfsg-3) unstable; urgency=medium
-
-  * Make phar command versioned and use update-alternatives for 'phar'
-    name to make php5 coinstallable with PHP 7.0
-
- -- Ondřej Surý <ondrej@debian.org>  Tue, 05 Jan 2016 16:47:11 +0100
-
-php5 (5.5.29+dfsg-2) unstable; urgency=high
+php5 (5.5.30+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.5.30+dfsg
    - Phar:
@@ -13,8 +6,11 @@ php5 (5.5.29+dfsg-2) unstable; urgency=high
     . Fixed bug #70433 (Uninitialized pointer in phar_make_dirstream when
       zip entry filename is "/").
   * Rebase patches on top of PHP 5.5.30+dfsg
+  * Make phar command versioned and use update-alternatives for 'phar'
+    name to make php5 coinstallable with PHP 7.0
+  * Fix changelog
 
- -- Ondřej Surý <ondrej@debian.org>  Sun, 04 Oct 2015 17:35:08 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 05 Jan 2016 16:47:11 +0100
 
 php5 (5.5.29+dfsg-1) unstable; urgency=medium
 
