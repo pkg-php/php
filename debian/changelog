@@ -1,3 +1,10 @@
+php5 (5.5.29+dfsg-3) unstable; urgency=medium
+
+  * Make phar command versioned and use update-alternatives for 'phar'
+    name to make php5 coinstallable with PHP 7.0
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 05 Jan 2016 16:47:11 +0100
+
 php5 (5.5.29+dfsg-2) unstable; urgency=high
 
   * Imported Upstream version 5.5.30+dfsg
