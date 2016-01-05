@@ -1,8 +1,9 @@
 php7.0 (7.0.1-5) unstable; urgency=medium
 
   * Prepare for src:php5 and src:php7.0 coinstallation
+  * Add empty php_enable to php-cgi postinst, so it's never enabled by default (Closes: #809967)
 
- -- Ondřej Surý <ondrej@debian.org>  Mon, 04 Jan 2016 13:43:14 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 05 Jan 2016 11:16:20 +0100
 
 php7.0 (7.0.1-4) unstable; urgency=medium
 
