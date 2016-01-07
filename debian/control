@@ -43,7 +43,7 @@ Build-Depends: apache2-dev (>= 2.4),
                libonig-dev,
                libpam0g-dev,
                libpcre3-dev (>= 6.6),
-               libpng-dev | libpng12-dev,
+               libpng-dev,
                libpq-dev,
                libpspell-dev,
                libqdbm-dev,
@@ -419,7 +419,7 @@ Description: GD module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-mcrypt
+Package: php5.6-gmp
 Architecture: any
 Depends: php-common,
          ucf,
@@ -428,8 +428,8 @@ Depends: php-common,
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Description: libmcrypt module for PHP
- This package provides a libmcrypt module for PHP.
+Description: GMP module for PHP
+ This package provides a GMP module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -499,7 +499,7 @@ Description: Internationalisation module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-enchant
+Package: php5.6-mcrypt
 Architecture: any
 Depends: php-common,
          ucf,
@@ -508,8 +508,8 @@ Depends: php-common,
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Description: Enchant module for PHP
- This package provides a Enchant module for PHP.
+Description: libmcrypt module for PHP
+ This package provides a libmcrypt module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -547,6 +547,22 @@ Description: PostgreSQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php5.6-enchant
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: Enchant module for PHP
+ This package provides a Enchant module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.6-opcache
 Architecture: any
 Depends: php-common,
@@ -574,22 +590,6 @@ Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Description: IMAP module for PHP
  This package provides a IMAP module for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php5.6-gmp
-Architecture: any
-Depends: php-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Description: GMP module for PHP
- This package provides a GMP module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
