@@ -2,8 +2,9 @@ php7.0 (7.0.1-6) unstable; urgency=medium
 
   * Add Conflicts: php5 stanza to php7.0.conf to hint a2enmod to not
     enable both PHP 5 and PHP 7 modules (Closes: #810117)
+  * Build-Depend just on libpng-dev
 
- -- Ondřej Surý <ondrej@debian.org>  Thu, 07 Jan 2016 09:52:27 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 07 Jan 2016 10:46:12 +0100
 
 php7.0 (7.0.1-5) unstable; urgency=medium
 
