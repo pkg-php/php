@@ -8,7 +8,7 @@ Subject: extension_api
  2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/configure.in b/configure.in
-index bbb5c3a..f19ebc3 100644
+index 9c98767..6d00828 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1205,8 +1205,10 @@ ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modul

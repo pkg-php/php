@@ -98,10 +98,10 @@ index 4501e91..772d795 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index 13bca0c..043ec3d 100644
+index bbdc13d..82ef0c5 100644
 --- a/sapi/litespeed/lsapi_main.c
 +++ b/sapi/litespeed/lsapi_main.c
-@@ -808,9 +808,9 @@ static int cli_main( int argc, char * argv[] )
+@@ -810,9 +810,9 @@ static int cli_main( int argc, char * argv[] )
              case 'v':
                  if (php_request_startup() != FAILURE) {
  #if ZEND_DEBUG
@@ -114,7 +114,7 @@ index 13bca0c..043ec3d 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index af1bfc7..4668660 100644
+index 39279c4..3fecd76 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
 @@ -1520,10 +1520,8 @@ phpdbg_main:
