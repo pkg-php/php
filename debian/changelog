@@ -1,3 +1,11 @@
+php7.0-zts (7.0.3-1+zts) unstable; urgency=medium
+
+  * Create ZTS-enabled build
+  * Regenerated d/control
+  * Update gbp.conf for ZTS build
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 07 Jan 2016 08:55:20 +0100
+
 php7.0 (7.0.3-1) unstable; urgency=medium
 
   * dh-php is unversioned
