@@ -1,3 +1,10 @@
+php7.0 (7.0.2-1) unstable; urgency=medium
+
+  * Imported Upstream version 7.0.2
+  * Rebase patches on top of 7.0.2
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 07 Jan 2016 16:05:30 +0100
+
 php7.0 (7.0.1-6) unstable; urgency=medium
 
   * Add Conflicts: php5 stanza to php7.0.conf to hint a2enmod to not
