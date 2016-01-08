@@ -3,6 +3,7 @@ php5.6 (5.6.17+dfsg-1) unstable; urgency=medium
   * Build-Depend just on libpng-dev
   * Imported Upstream version 5.6.17+dfsg
   * Rebase patches on top of 5.6.17+dfsg release
+  * php5.6-cli cannot depend on php5.6-json to allow build of php5.6-json
 
  -- Ondřej Surý <ondrej@debian.org>  Fri, 08 Jan 2016 09:01:02 +0100
 
