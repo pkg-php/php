@@ -72,10 +72,10 @@ index 8b1503d..6f99365 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index 00f05ef..1e13293 100644
+index f943b81..f66e1e0 100644
 --- a/sapi/litespeed/lsapi_main.c
 +++ b/sapi/litespeed/lsapi_main.c
-@@ -840,9 +840,9 @@ static int cli_main( int argc, char * argv[] )
+@@ -842,9 +842,9 @@ static int cli_main( int argc, char * argv[] )
              case 'v':
                  if (php_request_startup(TSRMLS_C) != FAILURE) {
  #if ZEND_DEBUG
