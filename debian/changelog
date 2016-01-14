@@ -1,3 +1,12 @@
+php7.0 (7.0.2-2) unstable; urgency=medium
+
+  * Fix log path in logrotate script
+  * Merge patch for ODBC bug fix varchars returning with length zero
+  * Fix php-config showing the installed package names instead of the
+    SAPIs (Courtesy of Guillaume Plessis)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 14 Jan 2016 14:03:31 +0100
+
 php7.0 (7.0.2-1) unstable; urgency=medium
 
   * Imported Upstream version 7.0.2
