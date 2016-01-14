@@ -1,3 +1,12 @@
+php5 (5.5.31+dfsg-2) unstable; urgency=medium
+
+  * Revert PEAR version to last working version from PHP 5.6.14
+    (Closes: #805222)
+  * Disable tests on armhf as they take a long time
+  * Merge patch for ODBC bug fix varchars returning with length zero
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 14 Jan 2016 16:23:10 +0100
+
 php5 (5.5.31+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.5.31+dfsg
