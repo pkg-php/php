@@ -1,3 +1,12 @@
+php5.6 (5.6.17+dfsg-2) unstable; urgency=medium
+
+  * Fix log path in logrotate script
+  * Merge patch for ODBC bug fix varchars returning with length zero
+  * Fix php-config showing the installed package names instead of the
+    SAPIs (Courtesy of Guillaume Plessis)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 14 Jan 2016 14:04:32 +0100
+
 php5.6 (5.6.17+dfsg-1) unstable; urgency=medium
 
   * Build-Depend just on libpng-dev
