@@ -40,3 +40,4 @@
 0040-revert-f07b8f36ae8099e29d19fbe8806bc07b21dcd4ac.patch
 0041-Remove-warning-about-mysql-library-minor-version-mis.patch
 0042-Revert-PEAR-version-to-last-working-version-from-PHP.patch
+0043-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
