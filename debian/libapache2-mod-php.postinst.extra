@@ -3,7 +3,7 @@ if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
 
     php_enable() {
 	PHP_MODULE=$(a2query -m | sed -n 's/^\(php[\.0-9]*\) (enabled.*)/\1/p')
-        if [ -n "$PHP_MODULE" && "$PHP_MODULE" != "php@PHP_VERSION@" ]; then
+        if [ -n "$PHP_MODULE" -a "$PHP_MODULE" != "php@PHP_VERSION@" ]; then
 	    apache2_msg err "ERROR: $PHP_MODULE module already enabled, not enabling PHP @PHP_VERSION@"
 	    return 1
 	fi
