@@ -95,7 +95,7 @@ Depends: apache2 (>= 2.4),
          ${shlibs:Depends}
 Conflicts: libapache2-mod-php5 (<< 5.6.16+dfsg-4~),
            libapache2-mod-php5filter (<< 5.6.16+dfsg-4~)
-Provides: ${php:Provides}
+Provides: ${php:Provides}, libapache2-mod-php
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
  This package provides the PHP module for the Apache 2 webserver (as
@@ -117,7 +117,7 @@ Depends: libmagic1,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}
+Provides: ${php:Provides}, libphp-embed
 Suggests: php-pear
 Conflicts: libphp5-embed (<< 5.6.16+dfsg-4~)
 Priority: optional
@@ -141,6 +141,7 @@ Depends: libapache2-mod-php5.6 (>= ${source:Version}~) | php5.6-cgi (>= ${source
          php5.6-common (>= ${source:Version}~),
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
+Provides: php
 Description: server-side, HTML-embedded scripting language (metapackage)
  This package is a metapackage that, when installed, guarantees that you
  have at least one of the four server-side versions of the PHP interpreter
@@ -163,7 +164,7 @@ Depends: libmagic1,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}
+Provides: ${php:Provides}, php-cgi
 Conflicts: php5-cgi (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (CGI binary)
@@ -185,14 +186,14 @@ Depends: libedit2 (>= 2.11-20080614-4),
          mime-support,
          php5.6-common (>= ${source:Version}),
          php5.6-opcache,
+         php5.6-readline,
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}
+Provides: ${php:Provides}, php-cli
 Breaks: php5-cli (<< 5.6.16+dfsg-4~)
 Replaces: php5-cli (<< 5.6.16+dfsg-4~)
-Recommends: php-readline
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
  This package provides the /usr/bin/php5.6 command interpreter, useful for
@@ -269,7 +270,7 @@ Depends: libmagic1,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}
+Provides: ${php:Provides}, php-fpm
 Suggests: php-pear
 Pre-Depends: ${misc:Pre-Depends}
 Conflicts: php5-fpm (<< 5.6.16+dfsg-4~)
@@ -293,7 +294,7 @@ Depends: libmagic1,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}
+Provides: ${php:Provides}, php-phpdbg
 Conflicts: php5-phpdbg (<< 5.6.16+dfsg-4~)
 Recommends: php-readline
 Description: server-side, HTML-embedded scripting language (PHPDBG binary)
@@ -418,7 +419,7 @@ Description: GD module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-mcrypt
+Package: php5.6-gmp
 Architecture: any
 Depends: php-common,
          ucf,
@@ -427,8 +428,8 @@ Depends: php-common,
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Description: libmcrypt module for PHP
- This package provides a libmcrypt module for PHP.
+Description: GMP module for PHP
+ This package provides a GMP module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -498,7 +499,7 @@ Description: Internationalisation module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-enchant
+Package: php5.6-mcrypt
 Architecture: any
 Depends: php-common,
          ucf,
@@ -507,8 +508,8 @@ Depends: php-common,
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Description: Enchant module for PHP
- This package provides a Enchant module for PHP.
+Description: libmcrypt module for PHP
+ This package provides a libmcrypt module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -546,6 +547,22 @@ Description: PostgreSQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php5.6-enchant
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: Enchant module for PHP
+ This package provides a Enchant module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.6-opcache
 Architecture: any
 Depends: php-common,
@@ -573,22 +590,6 @@ Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Description: IMAP module for PHP
  This package provides a IMAP module for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php5.6-gmp
-Architecture: any
-Depends: php-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Description: GMP module for PHP
- This package provides a GMP module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
