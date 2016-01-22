@@ -31,7 +31,7 @@ if [ "$1" = "purge" ]; then
 	if [ -e /usr/lib/php/php-maintscript-helper ] ; then
 	    . /usr/lib/php/php-maintscript-helper
 		
-	    php_invoke dismod ALL ALL ${dsoname}
+	    php_invoke dismod @PHP_VERSION@ ALL ${dsoname}
 	fi
     done
 fi
