@@ -186,6 +186,7 @@ Depends: libedit2 (>= 2.11-20080614-4),
          php@PHP_VERSION@-common (>= ${source:Version}),
          php@PHP_VERSION@-json,
          php@PHP_VERSION@-opcache,
+         php@PHP_VERSION@-readline,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -193,7 +194,6 @@ Depends: libedit2 (>= 2.11-20080614-4),
 Provides: ${php:Provides}
 Breaks: php5-cli (<< 5.6.16+dfsg-4~)
 Replaces: php5-cli (<< 5.6.16+dfsg-4~)
-Recommends: php-readline
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
  This package provides the /usr/bin/php@PHP_VERSION@ command interpreter, useful for
