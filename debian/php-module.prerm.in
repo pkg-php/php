@@ -9,7 +9,7 @@ if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
 	. /usr/lib/php/php-maintscript-helper
 
 	for dsoname in @modules@; do
-	    php_invoke dismod ALL ALL ${dsoname}
+	    php_invoke dismod @PHP_VERSION@ ALL ${dsoname}
 	done
     fi
 fi
