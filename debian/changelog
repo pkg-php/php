@@ -1,3 +1,15 @@
+php7.0 (7.0.2-4) unstable; urgency=medium
+
+  * Unroll the update-alternatives loop in maintainer scripts
+  * Add versioned Depends on php@PHP_VERSION@-readline instead of
+    suggesting generic php-readline
+  * For versioned modules invoke versioned call to php(en|dis)mod from
+    maintainer scripts
+  * Each phpX.Y-<sapi> now Provides php-<sapi> to make php-pear
+    installable with src:php5.6
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 22 Jan 2016 11:05:23 +0100
+
 php7.0 (7.0.2-3) unstable; urgency=medium
 
   * Fail gracefully when other PHP module is enabled in Apache2 (Closes: #811005)
