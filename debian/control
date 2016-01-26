@@ -249,7 +249,7 @@ Depends: autoconf (>= 2.63),
 Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
            ${libtool:Conflicts}
 Architecture: any
-Recommends: dh-php7.0,
+Recommends: dh-php,
             pkg-php-tools
 Description: Files for PHP7.0 module development
  This package provides the files from the PHP7.0 source needed for compiling
