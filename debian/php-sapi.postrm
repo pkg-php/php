@@ -31,6 +31,13 @@ if [ -e /usr/lib/php/php-maintscript-helper ]; then
     for mod in $mods; do
 	php_invoke dismod @PHP_VERSION@ @sapi@ $mod
     done
+else
+    for mod in /etc/php/@PHP_VERSION@/conf.d/*.ini; do 
+	rm -f $mod
+	for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist;  do
+	    rm -f $mod$ext
+	done
+    done
 fi
 
 #DEBHELPER#
