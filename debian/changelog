@@ -1,3 +1,10 @@
+php7.0 (7.0.2-5) unstable; urgency=medium
+
+  * Cleanup enabled modules even if php maintscript helpers are no longer
+    installed (Closes: #807652, #810690)
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 26 Jan 2016 10:19:20 +0100
+
 php7.0 (7.0.2-4) unstable; urgency=medium
 
   * Unroll the update-alternatives loop in maintainer scripts
