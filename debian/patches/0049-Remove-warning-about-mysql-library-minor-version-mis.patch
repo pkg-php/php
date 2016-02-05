@@ -9,7 +9,7 @@ Subject: Remove warning about mysql library minor version mismatch to help
  2 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/ext/mysql/php_mysql.c b/ext/mysql/php_mysql.c
-index 90ffb40..e34aa33 100644
+index 2d3ba60..679d417 100644
 --- a/ext/mysql/php_mysql.c
 +++ b/ext/mysql/php_mysql.c
 @@ -735,13 +735,13 @@ static void php_mysql_do_connect(INTERNAL_FUNCTION_PARAMETERS, int persistent)
@@ -34,7 +34,7 @@ index 90ffb40..e34aa33 100644
  	connect_timeout = MySG(connect_timeout);
  
 diff --git a/ext/mysqli/mysqli_nonapi.c b/ext/mysqli/mysqli_nonapi.c
-index 859d122..6ccca93 100644
+index f1e805c..9ebdca1 100644
 --- a/ext/mysqli/mysqli_nonapi.c
 +++ b/ext/mysqli/mysqli_nonapi.c
 @@ -74,13 +74,13 @@ void mysqli_common_connect(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_real_conne

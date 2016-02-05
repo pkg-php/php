@@ -53,7 +53,7 @@ index c5d0692..9fae650 100644
  	    0 > sigaction(SIGQUIT,  &act,      0)) {
  
 diff --git a/sapi/fpm/php-fpm.8.in b/sapi/fpm/php-fpm.8.in
-index 7c8817d..149e745 100644
+index 794f508..b1bcf08 100644
 --- a/sapi/fpm/php-fpm.8.in
 +++ b/sapi/fpm/php-fpm.8.in
 @@ -150,7 +150,7 @@ Once started, php-fpm then responds to several POSIX signals:

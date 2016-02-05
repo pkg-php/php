@@ -7,7 +7,7 @@ Subject: php.ini_securitynotes
  1 file changed, 6 insertions(+)
 
 diff --git a/php.ini-development b/php.ini-development
-index a4be218..1ff2acb 100644
+index f819ff7..2cd34e7 100644
 --- a/php.ini-development
 +++ b/php.ini-development
 @@ -295,6 +295,12 @@ serialize_precision = 17

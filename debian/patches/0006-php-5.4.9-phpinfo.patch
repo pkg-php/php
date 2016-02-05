@@ -11,7 +11,7 @@ The available extensions are not related to this command.
  2 files changed, 4 deletions(-)
 
 diff --git a/ext/standard/info.c b/ext/standard/info.c
-index f4c6c54..65294e5 100644
+index f145850..e39eb37 100644
 --- a/ext/standard/info.c
 +++ b/ext/standard/info.c
 @@ -949,9 +949,6 @@ PHPAPI void php_print_info(int flag TSRMLS_DC)
