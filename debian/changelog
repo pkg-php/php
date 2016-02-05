@@ -1,3 +1,11 @@
+php5.6 (5.6.18+dfsg-1) unstable; urgency=medium
+
+  * dh-php is unversioned
+  * Imported Upstream version 5.6.18+dfsg
+  * Rebase patches on top of 5.6.18 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 05 Feb 2016 10:42:57 +0100
+
 php5.6 (5.6.17+dfsg-5) unstable; urgency=medium
 
   * Cleanup enabled modules even if php maintscript helpers are no longer
