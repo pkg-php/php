@@ -1,3 +1,27 @@
+php5 (5.5.32+dfsg-1) unstable; urgency=medium
+
+  * Fail gracefully when other PHP module is enabled in Apache2
+  * Imported Upstream version 5.5.32+dfsg
+   - Core:
+    . Fixed bug #71039 (exec functions ignore length but look for NULL
+      termination).
+    . Fixed bug #71323 (Output of stream_get_meta_data can be falsified by
+      its input).
+    . Fixed bug #71459 (Integer overflow in iptcembed()).
+   - GD:
+    . Improved the fix for bug #70976.
+   - PCRE:
+    . Upgraded pcrelib to 8.38.
+   - Phar:
+    . Fixed bug #71354 (Heap corruption in tar/zip/phar parser).
+    . Fixed bug #71391 (NULL Pointer Dereference in
+      phar_tar_setupmetadata()).
+    . Fixed bug #71488 (Stack overflow when decompressing tar archives).
+   - WDDX:
+    . Fixed bug #71335 (Type Confusion in WDDX Packet Deserialization).
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 05 Feb 2016 10:32:02 +0100
+
 php5 (5.5.31+dfsg-2) unstable; urgency=medium
 
   * Revert PEAR version to last working version from PHP 5.6.14
