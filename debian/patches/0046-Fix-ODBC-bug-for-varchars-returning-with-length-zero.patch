@@ -9,7 +9,7 @@ Subject: Fix ODBC bug for varchars returning with length zero
  create mode 100644 ext/pdo_odbc/tests/max_columns.phpt
 
 diff --git a/ext/pdo_odbc/odbc_stmt.c b/ext/pdo_odbc/odbc_stmt.c
-index 6421cb6..ab50575 100644
+index 6233e63..904c345 100644
 --- a/ext/pdo_odbc/odbc_stmt.c
 +++ b/ext/pdo_odbc/odbc_stmt.c
 @@ -574,6 +574,24 @@ static int odbc_stmt_describe(pdo_stmt_t *stmt, int colno)

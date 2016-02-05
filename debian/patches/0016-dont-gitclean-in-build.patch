@@ -7,7 +7,7 @@ Subject: dont-gitclean-in-build
  1 file changed, 1 deletion(-)
 
 diff --git a/build/build.mk b/build/build.mk
-index 007f081..f344430 100644
+index 9452984..b964def 100644
 --- a/build/build.mk
 +++ b/build/build.mk
 @@ -63,6 +63,5 @@ gitclean-work:

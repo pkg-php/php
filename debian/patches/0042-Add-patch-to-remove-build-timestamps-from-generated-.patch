@@ -1,5 +1,5 @@
 From: Thijs Kinkhorst <thijs@debian.org>
-Date: Mon, 15 Jun 2015 09:18:03 +0200
+Date: Wed, 15 Jun 2016 09:18:03 +0200
 Subject: Add patch to remove build timestamps from generated binaries.
 
 ---
@@ -13,7 +13,7 @@ Subject: Add patch to remove build timestamps from generated binaries.
  7 files changed, 12 insertions(+), 24 deletions(-)
 
 diff --git a/ext/standard/info.c b/ext/standard/info.c
-index 6bd9a4a..afa51c9 100644
+index e6eaac3..024e5c9 100644
 --- a/ext/standard/info.c
 +++ b/ext/standard/info.c
 @@ -863,7 +863,6 @@ PHPAPI void php_print_info(int flag)
@@ -51,78 +51,78 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index 63f7dfc..03c9c50 100644
+index c1cca1e..ec8c29a 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
 @@ -2216,9 +2216,9 @@ consult the installation file that came with this distribution, or visit \n\
  								SG(request_info).no_headers = 1;
  							}
  #if ZEND_DEBUG
--							php_printf("PHP %s (%s) (built: %s %s) (DEBUG)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
-+							php_printf("PHP %s (%s) (DEBUG)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
+-							php_printf("PHP %s (%s) (built: %s %s) (DEBUG)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
++							php_printf("PHP %s (%s) (DEBUG)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
  #else
--							php_printf("PHP %s (%s) (built: %s %s)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
-+							php_printf("PHP %s (%s)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
+-							php_printf("PHP %s (%s) (built: %s %s)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
++							php_printf("PHP %s (%s)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
  #endif
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index b4288b8..e27d76c 100644
+index a387059..d282022 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -682,8 +682,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
  				goto out;
  
  			case 'v': /* show php version & quit */
--				php_printf("PHP %s (%s) (built: %s %s) ( %s)\nCopyright (c) 1997-2015 The PHP Group\n%s",
+-				php_printf("PHP %s (%s) (built: %s %s) ( %s)\nCopyright (c) 1997-2016 The PHP Group\n%s",
 -					PHP_VERSION, cli_sapi_module.name, __DATE__, __TIME__,
-+				php_printf("PHP %s (%s) ( %s)\nCopyright (c) 1997-2015 The PHP Group\n%s",
++				php_printf("PHP %s (%s) ( %s)\nCopyright (c) 1997-2016 The PHP Group\n%s",
 +					PHP_VERSION, cli_sapi_module.name,
  #if ZTS
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 4501e91..772d795 100644
+index b9c7e0b..b76b707 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1733,9 +1733,9 @@ int main(int argc, char *argv[])
  				SG(request_info).no_headers = 1;
  
  #if ZEND_DEBUG
--				php_printf("PHP %s (%s) (built: %s %s) (DEBUG)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__,        __TIME__, get_zend_version());
-+				php_printf("PHP %s (%s) (DEBUG)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
+-				php_printf("PHP %s (%s) (built: %s %s) (DEBUG)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__,        __TIME__, get_zend_version());
++				php_printf("PHP %s (%s) (DEBUG)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
  #else
--				php_printf("PHP %s (%s) (built: %s %s)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__,      get_zend_version());
-+				php_printf("PHP %s (%s)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
+-				php_printf("PHP %s (%s) (built: %s %s)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__,      get_zend_version());
++				php_printf("PHP %s (%s)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
  #endif
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index bbdc13d..82ef0c5 100644
+index b0ea105..4feb8f3 100644
 --- a/sapi/litespeed/lsapi_main.c
 +++ b/sapi/litespeed/lsapi_main.c
-@@ -810,9 +810,9 @@ static int cli_main( int argc, char * argv[] )
+@@ -811,9 +811,9 @@ static int cli_main( int argc, char * argv[] )
              case 'v':
                  if (php_request_startup() != FAILURE) {
  #if ZEND_DEBUG
--                    php_printf("PHP %s (%s) (built: %s %s) (DEBUG)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
-+                    php_printf("PHP %s (%s) (DEBUG)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
+-                    php_printf("PHP %s (%s) (built: %s %s) (DEBUG)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
++                    php_printf("PHP %s (%s) (DEBUG)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
  #else
--                    php_printf("PHP %s (%s) (built: %s %s)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
-+                    php_printf("PHP %s (%s)\nCopyright (c) 1997-2015 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
+-                    php_printf("PHP %s (%s) (built: %s %s)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, __DATE__, __TIME__, get_zend_version());
++                    php_printf("PHP %s (%s)\nCopyright (c) 1997-2016 The PHP Group\n%s", PHP_VERSION, sapi_module.name, get_zend_version());
  #endif
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 39279c4..3fecd76 100644
+index 54e9a66..1c10f3f 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
 @@ -1520,10 +1520,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(
--					"phpdbg %s (built: %s %s)\nPHP %s, Copyright (c) 1997-2015 The PHP Group\n%s",
-+					"phpdbg %s\nPHP %s, Copyright (c) 1997-2015 The PHP Group\n%s",
+-					"phpdbg %s (built: %s %s)\nPHP %s, Copyright (c) 1997-2016 The PHP Group\n%s",
++					"phpdbg %s\nPHP %s, Copyright (c) 1997-2016 The PHP Group\n%s",
  					PHPDBG_VERSION,
 -					__DATE__,
 -					__TIME__,
