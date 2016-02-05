@@ -1,4 +1,4 @@
-Source: php7.0
+Source: php7.0-zts
 Section: php
 Priority: optional
 Maintainer: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
@@ -79,16 +79,16 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
 XS-Testsuite: autopkgtest
 
-Package: libapache2-mod-php7.0
+Package: libapache2-mod-php7.0-zts
 Section: httpd
 Architecture: any
 Depends: apache2 (>= 2.4),
          libmagic1,
          mime-support,
-         php7.0-cli,
-         php7.0-common (>= ${source:Version}),
-         php7.0-json,
-         php7.0-opcache,
+         php7.0-zts-cli,
+         php7.0-zts-common (>= ${source:Version}),
+         php7.0-zts-json,
+         php7.0-zts-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -108,11 +108,11 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: libphp7.0-embed
+Package: libphp7.0-zts-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php7.0-common (>= ${source:Version}),
+         php7.0-zts-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -122,7 +122,7 @@ Suggests: php-pear
 Conflicts: libphp5-embed (<< 5.6.16+dfsg-4~)
 Priority: optional
 Description: HTML-embedded scripting language (Embedded SAPI library)
- This package provides the library /usr/lib/libphp7.0.so which can
+ This package provides the library /usr/lib/libphp7.0-zts.so which can
  be used by application developers to embed PHP scripting functionality.
  .
  ${php:Extensions}
@@ -135,10 +135,10 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
  the API/ABI will be kept compatible even between minor releases.  You
  have been warned.
 
-Package: php7.0
+Package: php7.0-zts
 Architecture: all
-Depends: libapache2-mod-php7.0 (>= ${source:Version}~) | php7.0-cgi (>= ${source:Version}~) | php7.0-fpm (>= ${source:Version}~),
-         php7.0-common (>= ${source:Version}~),
+Depends: libapache2-mod-php7.0-zts (>= ${source:Version}~) | php7.0-zts-cgi (>= ${source:Version}~) | php7.0-zts-fpm (>= ${source:Version}~),
+         php7.0-zts-common (>= ${source:Version}~),
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
@@ -152,14 +152,14 @@ Description: server-side, HTML-embedded scripting language (metapackage)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-cgi
+Package: php7.0-zts-cgi
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php7.0-cli,
-         php7.0-common (>= ${source:Version}),
-         php7.0-json,
-         php7.0-opcache,
+         php7.0-zts-cli,
+         php7.0-zts-common (>= ${source:Version}),
+         php7.0-zts-json,
+         php7.0-zts-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -171,7 +171,7 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
  This package provides the /usr/lib/cgi-bin/php CGI interpreter built
  for use in Apache 2 with mod_actions, or any other CGI httpd that
  supports a similar mechanism.  Note that MOST users probably
- want the php7.0-fpm package.
+ want the php7.0-zts-fpm package.
  .
  ${php:Extensions}
  .
@@ -179,15 +179,15 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-cli
+Package: php7.0-zts-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
          mime-support,
-         php7.0-common (>= ${source:Version}),
-         php7.0-json,
-         php7.0-opcache,
-         php7.0-readline,
+         php7.0-zts-common (>= ${source:Version}),
+         php7.0-zts-json,
+         php7.0-zts-opcache,
+         php7.0-zts-readline,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -197,7 +197,7 @@ Breaks: php5-cli (<< 5.6.16+dfsg-4~)
 Replaces: php5-cli (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
- This package provides the /usr/bin/php7.0 command interpreter, useful for
+ This package provides the /usr/bin/php7.0-zts command interpreter, useful for
  testing PHP scripts from a shell or performing general shell scripting tasks.
  .
  ${php:Extensions}
@@ -206,7 +206,7 @@ Description: command-line interpreter for the PHP scripting language
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-common
+Package: php7.0-zts-common
 Architecture: all
 Depends: php-common (>= 18~),
          ${misc:Depends}
@@ -220,29 +220,29 @@ Description: Common files for packages built from the PHP source
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-dbg
-Depends: libapache2-mod-php7.0 (= ${binary:Version}) | php7.0-cgi (= ${binary:Version}) | php7.0-cli (= ${binary:Version}) | php7.0-fpm (= ${binary:Version}) | libphp7.0-embed (= ${binary:Version}) | php7.0-phpdbg (= ${binary:Version}),
+Package: php7.0-zts-dbg
+Depends: libapache2-mod-php7.0-zts (= ${binary:Version}) | php7.0-zts-cgi (= ${binary:Version}) | php7.0-zts-cli (= ${binary:Version}) | php7.0-zts-fpm (= ${binary:Version}) | libphp7.0-zts-embed (= ${binary:Version}) | php7.0-zts-phpdbg (= ${binary:Version}),
          ${misc:Depends}
 Recommends: gdb
 Section: debug
 Priority: extra
 Architecture: any
-Description: Debug symbols for PHP7.0
- This package provides the debug symbols for PHP7.0 needed for properly
- debugging errors in PHP7.0 with gdb.
+Description: Debug symbols for PHP7.0-zts
+ This package provides the debug symbols for PHP7.0-zts needed for properly
+ debugging errors in PHP7.0-zts with gdb.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-dev
+Package: php7.0-zts-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
          libpcre3-dev,
          libssl-dev,
          libtool (>= 2.2),
-         php7.0-cli (>= ${binary:Version}),
-         php7.0-common (>= ${source:Version}),
+         php7.0-zts-cli (>= ${binary:Version}),
+         php7.0-zts-common (>= ${source:Version}),
          shtool,
          ${misc:Depends},
          ${perl:Depends}
@@ -251,22 +251,22 @@ Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
 Architecture: any
 Recommends: dh-php,
             pkg-php-tools
-Description: Files for PHP7.0 module development
- This package provides the files from the PHP7.0 source needed for compiling
+Description: Files for PHP7.0-zts module development
+ This package provides the files from the PHP7.0-zts source needed for compiling
  additional modules.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-fpm
+Package: php7.0-zts-fpm
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php7.0-cli,
-         php7.0-common (>= ${source:Version}),
-         php7.0-json,
-         php7.0-opcache,
+         php7.0-zts-cli,
+         php7.0-zts-common (>= ${source:Version}),
+         php7.0-zts-json,
+         php7.0-zts-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -278,7 +278,7 @@ Conflicts: php5-fpm (<< 5.6.16+dfsg-4~)
 Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  This package provides the Fast Process Manager interpreter that runs
  as a daemon and receives Fast/CGI requests.  Note that MOST Apache users
- probably want the libapache2-mod-php7.0 package.
+ probably want the libapache2-mod-php7.0-zts package.
  .
  ${php:Extensions}
  .
@@ -286,11 +286,11 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-phpdbg
+Package: php7.0-zts-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php7.0-common (>= ${source:Version}),
+         php7.0-zts-common (>= ${source:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -308,7 +308,7 @@ Description: server-side, HTML-embedded scripting language (PHPDBG binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-odbc
+Package: php7.0-zts-odbc
 Architecture: any
 Depends: php-common,
          ucf,
@@ -324,7 +324,7 @@ Description: ODBC module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-readline
+Package: php7.0-zts-readline
 Architecture: any
 Depends: php-common,
          ucf,
@@ -340,7 +340,7 @@ Description: readline module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-recode
+Package: php7.0-zts-recode
 Architecture: any
 Depends: php-common,
          ucf,
@@ -356,7 +356,7 @@ Description: recode module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-sqlite3
+Package: php7.0-zts-sqlite3
 Architecture: any
 Depends: php-common,
          ucf,
@@ -372,7 +372,7 @@ Description: SQLite3 module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-xmlrpc
+Package: php7.0-zts-xmlrpc
 Architecture: any
 Depends: php-common,
          ucf,
@@ -388,7 +388,7 @@ Description: XMLRPC-EPI module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-sybase
+Package: php7.0-zts-sybase
 Architecture: any
 Depends: php-common,
          ucf,
@@ -404,7 +404,7 @@ Description: Sybase module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-gd
+Package: php7.0-zts-gd
 Architecture: any
 Depends: php-common,
          ucf,
@@ -420,7 +420,7 @@ Description: GD module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-gmp
+Package: php7.0-zts-gmp
 Architecture: any
 Depends: php-common,
          ucf,
@@ -436,7 +436,7 @@ Description: GMP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-xsl
+Package: php7.0-zts-xsl
 Architecture: any
 Depends: php-common,
          ucf,
@@ -452,7 +452,7 @@ Description: XSL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-ldap
+Package: php7.0-zts-ldap
 Architecture: any
 Depends: php-common,
          ucf,
@@ -468,7 +468,7 @@ Description: LDAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-interbase
+Package: php7.0-zts-interbase
 Architecture: any
 Depends: php-common,
          ucf,
@@ -484,7 +484,7 @@ Description: Interbase module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-intl
+Package: php7.0-zts-intl
 Architecture: any
 Depends: php-common,
          ucf,
@@ -500,7 +500,7 @@ Description: Internationalisation module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-mcrypt
+Package: php7.0-zts-mcrypt
 Architecture: any
 Depends: php-common,
          ucf,
@@ -516,7 +516,7 @@ Description: libmcrypt module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-curl
+Package: php7.0-zts-curl
 Architecture: any
 Depends: php-common,
          ucf,
@@ -532,7 +532,7 @@ Description: CURL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-json
+Package: php7.0-zts-json
 Architecture: any
 Depends: php-common,
          ucf,
@@ -548,7 +548,7 @@ Description: JSON module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-pgsql
+Package: php7.0-zts-pgsql
 Architecture: any
 Depends: php-common,
          ucf,
@@ -564,7 +564,7 @@ Description: PostgreSQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-enchant
+Package: php7.0-zts-enchant
 Architecture: any
 Depends: php-common,
          ucf,
@@ -580,7 +580,7 @@ Description: Enchant module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-opcache
+Package: php7.0-zts-opcache
 Architecture: any
 Depends: php-common,
          ucf,
@@ -596,7 +596,7 @@ Description: Zend OpCache module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-imap
+Package: php7.0-zts-imap
 Architecture: any
 Depends: php-common,
          ucf,
@@ -612,7 +612,7 @@ Description: IMAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-mysql
+Package: php7.0-zts-mysql
 Architecture: any
 Depends: php-common,
          ucf,
@@ -628,7 +628,7 @@ Description: MySQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-tidy
+Package: php7.0-zts-tidy
 Architecture: any
 Depends: php-common,
          ucf,
@@ -644,7 +644,7 @@ Description: tidy module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-snmp
+Package: php7.0-zts-snmp
 Architecture: any
 Depends: php-common,
          ucf,
@@ -660,7 +660,7 @@ Description: SNMP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-pspell
+Package: php7.0-zts-pspell
 Architecture: any
 Depends: php-common,
          ucf,
@@ -676,7 +676,7 @@ Description: pspell module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-bz2
+Package: php7.0-zts-bz2
 Architecture: any
 Depends: php-common,
          ucf,
