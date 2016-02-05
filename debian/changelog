@@ -1,3 +1,11 @@
+php7.0 (7.0.3-1) unstable; urgency=medium
+
+  * dh-php is unversioned
+  * Imported Upstream version 7.0.3
+  * Rebase patches on top of 7.0.3 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 05 Feb 2016 10:51:15 +0100
+
 php7.0 (7.0.2-5) unstable; urgency=medium
 
   * Cleanup enabled modules even if php maintscript helpers are no longer
