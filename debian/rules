@@ -12,9 +12,8 @@ SED := sed
 
 # enable dpkg build flags
 DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/buildflags.mk
-include /usr/share/dpkg/architecture.mk
-include /usr/share/dpkg/pkg-info.mk
+include /usr/share/dpkg/default.mk
+
 export DEB_HOST_MULTIARCH
 PHP_SOURCE_VERSION   := $(DEB_VERSION)
 PHP_UPSTREAM_VERSION := $(DEB_VERSION_UPSTREAM)
@@ -25,6 +24,15 @@ PHP_MINOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$2}'
 PHP_RELEASE_VERSION  := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$3}')
 PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)
 PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)
+
+# Enable ZTS build if $(DEB_SOURCE) ends with -zts
+ZTS=$(shell echo $(DEB_SOURCE) | sed 's/php$(PHP_NAME_VERSION)//')
+ifeq ($(ZTS),-zts)
+$(warning Enabling ZTS build)
+PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)-zts
+PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)-zts
+CONFIGURE_ZTS        := --enable-maintainer-zts
+endif
 
 ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
@@ -197,6 +205,7 @@ COMMON_CONFIG := \
 		--enable-sysvshm \
 		--enable-zip \
 		--with-system-tzdata \
+		$(CONFIGURE_ZTS) \
 		$(CONFIGURE_DTRACE_ARGS)
 
 # disable all SAPIs in extension build
