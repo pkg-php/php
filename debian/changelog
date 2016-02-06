@@ -1,3 +1,10 @@
+php5.6 (5.6.18+dfsg-2) unstable; urgency=medium
+
+  * Remove extra 20-opcache.ini
+  * Add generic support for ZTS builds
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 06 Feb 2016 16:21:06 +0100
+
 php5.6 (5.6.18+dfsg-1) unstable; urgency=medium
 
   * dh-php is unversioned
