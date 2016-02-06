@@ -1,3 +1,13 @@
+php7.0 (7.0.3-2) unstable; urgency=medium
+
+  * Add generic support for ZTS builds
+  * Update systzdata patch to v13 and get php-bug62172.patch
+    (Courtesy of Remi Collet's repository)
+  * Remove extra 20-opcache.ini (Caused by fixed extension priority
+    handling in src:php-defaults)
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 06 Feb 2016 15:27:55 +0100
+
 php7.0 (7.0.3-1) unstable; urgency=medium
 
   * dh-php is unversioned
