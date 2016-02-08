@@ -1,3 +1,18 @@
+php5.6 (5.6.18+dfsg-3) unstable; urgency=medium
+
+  [ Neal Gompa ]
+  * Update php-cgi apache httpd config for phpX.Y
+  * Add php-fpm apache httpd 2.4 configuration
+  * Enable shmop php module.
+
+  [ Ondřej Surý ]
+  * The autopkgtests are now generated from templates in tests.in inside
+    debian/control rule
+  * Include pregenerated tests in the source package
+  * mod_phpX.c exports just major version in apache2 configuration
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 08 Feb 2016 11:52:07 +0100
+
 php5.6 (5.6.18+dfsg-2) unstable; urgency=medium
 
   * Remove extra 20-opcache.ini
