@@ -192,6 +192,7 @@ COMMON_CONFIG := \
 		--with-openssl=yes \
 		--enable-libxml \
 		--enable-session \
+		--enable-shmop \
 		--enable-simplexml \
 		--enable-soap \
 		--enable-sockets \
