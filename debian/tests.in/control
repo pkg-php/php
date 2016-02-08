@@ -1,0 +1,10 @@
+Tests: cli
+Depends: php@PHP_VERSION@-cli
+
+Tests: cgi
+Depends: apache2, php@PHP_VERSION@-cgi
+Restrictions: needs-root
+
+Tests: mod-php
+Depends: libapache2-mod-php@PHP_VERSION@
+Restrictions: needs-root

@@ -583,6 +583,11 @@ debian/control: debian/control.in debian/rules debian/changelog debian/source.li
 	  echo >>$@; \
 	  $(SED) -e "s,@package@,$${package}," -e "s,@description@,$${description}," >>$@ <debian/php-module.control.in; \
 	done
+	mkdir -p debian/tests
+	for f in debian/tests.in/*; do \
+	  t=$$(basename $${f}); \
+	  < debian/tests.in/$${t} $(SED_REPLACEMENT) > debian/tests/$${t}; \
+	done
 
 debian/source.lintian-overrides: debian/source.lintian-overrides.in debian/rules debian/changelog
 	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" >$@ <$<
