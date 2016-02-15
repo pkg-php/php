@@ -11,9 +11,9 @@ EOT
 # mode here.
 a2dismod actions 2>/dev/null || true
 a2dismod cgi 2>/dev/null || true
-a2disconf php7.0-cgi 2>/dev/null || true
+a2disconf php5.6-cgi 2>/dev/null || true
 
-a2enmod php7.0 2>/dev/null
+a2enmod php5.6 2>/dev/null
 service apache2 restart 2>/dev/null
 result=`wget -O- http://localhost/hello.php 2>/dev/null`
 test "$result" = "Hello, world!"
