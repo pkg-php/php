@@ -239,7 +239,7 @@ Depends: autoconf (>= 2.63),
          automake (>= 1.11),
          libpcre3-dev,
          libssl-dev,
-         libtool (>= 2.2),
+	 ${libtool:Depends},
          php5.6-cli (>= ${binary:Version}),
          php5.6-common (>= ${source:Version}),
          shtool,
@@ -248,7 +248,7 @@ Depends: autoconf (>= 2.63),
 Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
            ${libtool:Conflicts}
 Architecture: any
-Recommends: dh-php5.6,
+Recommends: dh-php,
             pkg-php-tools
 Description: Files for PHP5.6 module development
  This package provides the files from the PHP5.6 source needed for compiling
