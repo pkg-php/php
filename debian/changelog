@@ -1,3 +1,9 @@
+php7.0 (7.0.3-4) unstable; urgency=medium
+
+  * Resolve ltmain.sh link based on libtool version (Closes: #814271)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 15 Feb 2016 12:41:07 +0100
+
 php7.0 (7.0.3-3) unstable; urgency=medium
 
   [ Neal Gompa ]
