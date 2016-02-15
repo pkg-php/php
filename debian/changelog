@@ -1,3 +1,9 @@
+php5.6 (5.6.18+dfsg-4) unstable; urgency=medium
+
+  * Resolve ltmain.sh link based on libtool version
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 15 Feb 2016 12:42:20 +0100
+
 php5.6 (5.6.18+dfsg-3) unstable; urgency=medium
 
   [ Neal Gompa ]
