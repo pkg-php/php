@@ -86,6 +86,8 @@ MODULE_PACKAGE := \
 	package=php$(PHP_NAME_VERSION)-$${module}; \
 	versionless=$$(echo $${package} | $(SED) -e 's/$(PHP_NAME_VERSION)//g');
 
+LIBTOOL_VERSION := $(shell dpkg-query -f'$${Version}' -W libtool)
+
 # Disable the test now
 RUN_TESTS := no
 ifeq (nocheck,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
@@ -530,7 +532,11 @@ endif
 	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
 	ln -sf /usr/share/misc/config.sub $(PHPIZE_BUILDDIR)/config.sub
 	ln -sf /usr/share/aclocal/libtool.m4 $(PHPIZE_BUILDDIR)/libtool.m4
-	ln -sf /usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh
+	if dpkg --compare-versions $(LIBTOOL_VERSION) ge 2.4.6-0.1~; then \
+	    ln -sf /usr/share/libtool/build-aux/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh; \
+	else \
+	    ln -sf /usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh; \
+	fi	
 	ln -sf /usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool
 
 override_dh_apache2:
@@ -573,6 +579,11 @@ override_dh_gencontrol-arch:
 	    fi; \
 	    echo "php:Provides=phpapi-$${phpapi}" >> debian/$${package}.substvars; \
 	done; \
+	if dpkg --compare-versions $(LIBTOOL_VERSION) gt 2.4.6-0.1~; then \
+	    echo "libtool:Depends=libtool (>= 2.4.6-0.1~)" >> debian/php$(PHP_NAME_VERSION)-dev.substvars; \
+	else \
+	    echo "libtool:Depends=libtool" >> debian/php$(PHP_NAME_VERSION)-dev.substvars; \
+	fi
 	dh_gencontrol -a
 
 debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides debian/rules.d/* debian/php-module.control.in
