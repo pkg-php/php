@@ -22,17 +22,16 @@ PHP_DFSG_VERSION     := $(shell echo $(PHP_UPSTREAM_VERSION) | $(SED) -e 's/+.*/
 PHP_MAJOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$1}')
 PHP_MINOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$2}')
 PHP_RELEASE_VERSION  := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$3}')
-PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)
-PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)
 
 # Enable ZTS build if $(DEB_SOURCE) ends with -zts
 ZTS=$(shell echo $(DEB_SOURCE) | sed 's/php$(PHP_NAME_VERSION)//')
 ifeq ($(ZTS),-zts)
 $(warning Enabling ZTS build)
-PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)-zts
-PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)-zts
 CONFIGURE_ZTS        := --enable-maintainer-zts
 endif
+
+PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)$(ZTS)
+PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)$(ZTS)
 
 ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
@@ -567,7 +566,7 @@ override_dh_makeshlibs-arch:
 
 override_dh_gencontrol-arch:
 	# Bail-out if PHPAPI has changed
-	stored=$$(cat debian/phpapi); \
+	stored=$$(cat debian/phpapi)$(ZTS); \
 	for sapi in $(REAL_TARGETS); do \
 	    $(SAPI_PACKAGE) \
 	    $${sapi}-build/sapi/cli/php -n -r '$(BUILTIN_EXTENSION_CHECK)' \
