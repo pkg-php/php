@@ -82,8 +82,7 @@ XS-Testsuite: autopkgtest
 Package: libapache2-mod-php@PHP_VERSION@
 Section: httpd
 Architecture: any
-Depends: apache2 (>= 2.4),
-         libmagic1,
+Depends: libmagic1,
          mime-support,
          php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (>= ${source:Version}),
