@@ -8,3 +8,7 @@ Restrictions: needs-root
 Tests: mod-php
 Depends: libapache2-mod-php5.6
 Restrictions: needs-root
+
+Tests: fpm
+Depends: apache2, php5.6-fpm
+Restrictions: needs-root
