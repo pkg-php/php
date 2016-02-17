@@ -1,3 +1,15 @@
+php7.0 (7.0.3-5) unstable; urgency=medium
+
+  [ Neal Gompa ]
+  * Add a test for php-fpm
+
+  [ Ondřej Surý ]
+  * Don't depend directly on apache2
+  * Add patch to fix crash because of VM stack corruption (DEB.SURY.ORG #246)
+  * Miscelaneous fixes related to off-tree ZTS builds
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 17 Feb 2016 11:19:55 +0100
+
 php7.0 (7.0.3-4) unstable; urgency=medium
 
   * Resolve ltmain.sh link based on libtool version (Closes: #814271)
