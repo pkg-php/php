@@ -45,3 +45,4 @@
 0045-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0046-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
 0047-Fixed-Bug-62172-FPM-not-working-with-Apache-httpd-2..patch
+0048-Fixed-bug-71474-Crash-because-of-VM-stack-corruption.patch

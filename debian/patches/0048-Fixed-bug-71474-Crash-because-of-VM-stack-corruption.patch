@@ -1,0 +1,257 @@
+From: Dmitry Stogov <dmitry@zend.com>
+Date: Thu, 28 Jan 2016 11:41:15 +0300
+Subject: Fixed bug #71474 (Crash because of VM stack corruption on Magento2).
+
+---
+ Zend/tests/bug71474.phpt    |  23 ++++++++++
+ Zend/zend_execute.c         | 100 +++++++++++++++++++++++---------------------
+ Zend/zend_object_handlers.c |   2 +
+ Zend/zend_vm_def.h          |  12 +++---
+ Zend/zend_vm_execute.h      |  12 +++---
+ 5 files changed, 89 insertions(+), 60 deletions(-)
+ create mode 100644 Zend/tests/bug71474.phpt
+
+diff --git a/Zend/tests/bug71474.phpt b/Zend/tests/bug71474.phpt
+new file mode 100644
+index 0000000..72b0db9
+--- /dev/null
++++ b/Zend/tests/bug71474.phpt
+@@ -0,0 +1,23 @@
++--TEST--
++Bug #71474: Crash because of VM stack corruption on Magento2
++--FILE--
++<?php
++class foo {
++	function __call($name, $args) {
++		$a = $b = $c = $d = $e = $f = 1;
++	}
++}
++
++function test($n, $x) {
++//	var_dump($n);
++	if ($n > 0) {
++		$x->bug();
++		test($n - 1, $x);
++	}
++}
++
++test(3000, new foo());
++echo "OK\n";
++?>
++--EXPECT--
++OK
+diff --git a/Zend/zend_execute.c b/Zend/zend_execute.c
+index 369bf86..1cf9a27 100644
+--- a/Zend/zend_execute.c
++++ b/Zend/zend_execute.c
+@@ -2118,33 +2118,35 @@ static zend_always_inline void i_init_func_execute_data(zend_execute_data *execu
+ 	first_extra_arg = op_array->num_args;
+ 	num_args = EX_NUM_ARGS();
+ 	if (UNEXPECTED(num_args > first_extra_arg)) {
+-		zval *end, *src, *dst;
+-		uint32_t type_flags = 0;
++		if (EXPECTED(!(op_array->fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE))) {
++			zval *end, *src, *dst;
++			uint32_t type_flags = 0;
+ 
+-		if (EXPECTED((op_array->fn_flags & ZEND_ACC_HAS_TYPE_HINTS) == 0)) {
+-			/* Skip useless ZEND_RECV and ZEND_RECV_INIT opcodes */
+-			EX(opline) += first_extra_arg;
+-		}
++			if (EXPECTED((op_array->fn_flags & ZEND_ACC_HAS_TYPE_HINTS) == 0)) {
++				/* Skip useless ZEND_RECV and ZEND_RECV_INIT opcodes */
++				EX(opline) += first_extra_arg;
++			}
+ 
+-		/* move extra args into separate array after all CV and TMP vars */
+-		end = EX_VAR_NUM(first_extra_arg - 1);
+-		src = end + (num_args - first_extra_arg);
+-		dst = src + (op_array->last_var + op_array->T - first_extra_arg);
+-		if (EXPECTED(src != dst)) {
+-			do {
+-				type_flags |= Z_TYPE_INFO_P(src);
+-				ZVAL_COPY_VALUE(dst, src);
+-				ZVAL_UNDEF(src);
+-				src--;
+-				dst--;
+-			} while (src != end);
+-		} else {
+-			do {
+-				type_flags |= Z_TYPE_INFO_P(src);
+-				src--;
+-			} while (src != end);
++			/* move extra args into separate array after all CV and TMP vars */
++			end = EX_VAR_NUM(first_extra_arg - 1);
++			src = end + (num_args - first_extra_arg);
++			dst = src + (op_array->last_var + op_array->T - first_extra_arg);
++			if (EXPECTED(src != dst)) {
++				do {
++					type_flags |= Z_TYPE_INFO_P(src);
++					ZVAL_COPY_VALUE(dst, src);
++					ZVAL_UNDEF(src);
++					src--;
++					dst--;
++				} while (src != end);
++			} else {
++				do {
++					type_flags |= Z_TYPE_INFO_P(src);
++					src--;
++				} while (src != end);
++			}
++			ZEND_ADD_CALL_FLAG(execute_data, ((type_flags >> Z_TYPE_FLAGS_SHIFT) & IS_TYPE_REFCOUNTED));
+ 		}
+-		ZEND_ADD_CALL_FLAG(execute_data, ((type_flags >> Z_TYPE_FLAGS_SHIFT) & IS_TYPE_REFCOUNTED));
+ 	} else if (EXPECTED((op_array->fn_flags & ZEND_ACC_HAS_TYPE_HINTS) == 0)) {
+ 		/* Skip useless ZEND_RECV and ZEND_RECV_INIT opcodes */
+ 		EX(opline) += num_args;
+@@ -2231,33 +2233,35 @@ static zend_always_inline void i_init_execute_data(zend_execute_data *execute_da
+ 		first_extra_arg = op_array->num_args;
+ 		num_args = EX_NUM_ARGS();
+ 		if (UNEXPECTED(num_args > first_extra_arg)) {
+-			zval *end, *src, *dst;
+-			uint32_t type_flags = 0;
++			if (EXPECTED(!(op_array->fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE))) {
++				zval *end, *src, *dst;
++				uint32_t type_flags = 0;
+ 
+-			if (EXPECTED((op_array->fn_flags & ZEND_ACC_HAS_TYPE_HINTS) == 0)) {
+-				/* Skip useless ZEND_RECV and ZEND_RECV_INIT opcodes */
+-				EX(opline) += first_extra_arg;
+-			}
++				if (EXPECTED((op_array->fn_flags & ZEND_ACC_HAS_TYPE_HINTS) == 0)) {
++					/* Skip useless ZEND_RECV and ZEND_RECV_INIT opcodes */
++					EX(opline) += first_extra_arg;
++				}
+ 
+-			/* move extra args into separate array after all CV and TMP vars */
+-			end = EX_VAR_NUM(first_extra_arg - 1);
+-			src = end + (num_args - first_extra_arg);
+-			dst = src + (op_array->last_var + op_array->T - first_extra_arg);
+-			if (EXPECTED(src != dst)) {
+-				do {
+-					type_flags |= Z_TYPE_INFO_P(src);
+-					ZVAL_COPY_VALUE(dst, src);
+-					ZVAL_UNDEF(src);
+-					src--;
+-					dst--;
+-				} while (src != end);
+-			} else {
+-				do {
+-					type_flags |= Z_TYPE_INFO_P(src);
+-					src--;
+-				} while (src != end);
++				/* move extra args into separate array after all CV and TMP vars */
++				end = EX_VAR_NUM(first_extra_arg - 1);
++				src = end + (num_args - first_extra_arg);
++				dst = src + (op_array->last_var + op_array->T - first_extra_arg);
++				if (EXPECTED(src != dst)) {
++					do {
++						type_flags |= Z_TYPE_INFO_P(src);
++						ZVAL_COPY_VALUE(dst, src);
++						ZVAL_UNDEF(src);
++						src--;
++						dst--;
++					} while (src != end);
++				} else {
++					do {
++						type_flags |= Z_TYPE_INFO_P(src);
++						src--;
++					} while (src != end);
++				}
++				ZEND_ADD_CALL_FLAG(execute_data, ((type_flags >> Z_TYPE_FLAGS_SHIFT) & IS_TYPE_REFCOUNTED));
+ 			}
+-			ZEND_ADD_CALL_FLAG(execute_data, ((type_flags >> Z_TYPE_FLAGS_SHIFT) & IS_TYPE_REFCOUNTED));
+ 		} else if (EXPECTED((op_array->fn_flags & ZEND_ACC_HAS_TYPE_HINTS) == 0)) {
+ 			/* Skip useless ZEND_RECV and ZEND_RECV_INIT opcodes */
+ 			EX(opline) += num_args;
+diff --git a/Zend/zend_object_handlers.c b/Zend/zend_object_handlers.c
+index 98e537a..c66f8ad 100644
+--- a/Zend/zend_object_handlers.c
++++ b/Zend/zend_object_handlers.c
+@@ -1054,6 +1054,8 @@ ZEND_API zend_function *zend_get_call_trampoline_func(zend_class_entry *ce, zend
+ 
+ 	func->prototype = fbc;
+ 	func->scope = fbc->common.scope;
++	/* reserve space for arguments, local and temorary variables */
++	func->T = (fbc->type == ZEND_USER_FUNCTION)? MAX(fbc->op_array.last_var + fbc->op_array.T, 2) : 2;
+ 	func->filename = (fbc->type == ZEND_USER_FUNCTION)? fbc->op_array.filename : ZSTR_EMPTY_ALLOC();
+ 	func->line_start = (fbc->type == ZEND_USER_FUNCTION)? fbc->op_array.line_start : 0;
+ 	func->line_end = (fbc->type == ZEND_USER_FUNCTION)? fbc->op_array.line_end : 0;
+diff --git a/Zend/zend_vm_def.h b/Zend/zend_vm_def.h
+index 299b73a..5748fa8 100644
+--- a/Zend/zend_vm_def.h
++++ b/Zend/zend_vm_def.h
+@@ -7833,10 +7833,8 @@ ZEND_VM_HANDLER(158, ZEND_CALL_TRAMPOLINE, ANY, ANY)
+ {
+ 	zend_array *args;
+ 	zend_function *fbc = EX(func);
+-	zend_object *object = Z_OBJ(EX(This));
+ 	zval *ret = EX(return_value);
+ 	uint32_t call_info = EX_CALL_INFO() & (ZEND_CALL_NESTED | ZEND_CALL_TOP | ZEND_CALL_RELEASE_THIS);
+-	zend_class_entry *scope = EX(called_scope);
+ 	uint32_t num_args = EX_NUM_ARGS();
+ 	zend_execute_data *call;
+ 	USE_OPLINE
+@@ -7859,9 +7857,11 @@ ZEND_VM_HANDLER(158, ZEND_CALL_TRAMPOLINE, ANY, ANY)
+ 	SAVE_OPLINE();
+ 	call = execute_data;
+ 	execute_data = EG(current_execute_data) = EX(prev_execute_data);
+-	zend_vm_stack_free_call_frame(call);
+-	call = zend_vm_stack_push_call_frame(call_info, fbc->common.prototype, 2, scope, object);
+-	call->prev_execute_data = execute_data;
++
++	ZEND_ASSERT(zend_vm_calc_used_stack(2, fbc->common.prototype) <= (size_t)(((char*)EG(vm_stack_end)) - (char*)call));
++
++	call->func = fbc->common.prototype;
++	ZEND_CALL_NUM_ARGS(call) = 2;
+ 
+ 	ZVAL_STR(ZEND_CALL_ARG(call, 1), fbc->common.function_name);
+ 	ZVAL_ARR(ZEND_CALL_ARG(call, 2), args);
+@@ -7949,7 +7949,7 @@ ZEND_VM_C_LABEL(call_trampoline_end):
+ 	opline = EX(opline);
+ 
+ 	if (UNEXPECTED(call_info & ZEND_CALL_RELEASE_THIS)) {
+-		object = Z_OBJ(call->This);
++		zend_object *object = Z_OBJ(call->This);
+ 		OBJ_RELEASE(object);
+ 	}
+ 	EG(scope) = EX(func)->op_array.scope;
+diff --git a/Zend/zend_vm_execute.h b/Zend/zend_vm_execute.h
+index dc977f0..3be9edd 100644
+--- a/Zend/zend_vm_execute.h
++++ b/Zend/zend_vm_execute.h
+@@ -1721,10 +1721,8 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CALL_TRAMPOLINE_SPEC_HANDLER(Z
+ {
+ 	zend_array *args;
+ 	zend_function *fbc = EX(func);
+-	zend_object *object = Z_OBJ(EX(This));
+ 	zval *ret = EX(return_value);
+ 	uint32_t call_info = EX_CALL_INFO() & (ZEND_CALL_NESTED | ZEND_CALL_TOP | ZEND_CALL_RELEASE_THIS);
+-	zend_class_entry *scope = EX(called_scope);
+ 	uint32_t num_args = EX_NUM_ARGS();
+ 	zend_execute_data *call;
+ 	USE_OPLINE
+@@ -1747,9 +1745,11 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CALL_TRAMPOLINE_SPEC_HANDLER(Z
+ 	SAVE_OPLINE();
+ 	call = execute_data;
+ 	execute_data = EG(current_execute_data) = EX(prev_execute_data);
+-	zend_vm_stack_free_call_frame(call);
+-	call = zend_vm_stack_push_call_frame(call_info, fbc->common.prototype, 2, scope, object);
+-	call->prev_execute_data = execute_data;
++
++	ZEND_ASSERT(zend_vm_calc_used_stack(2, fbc->common.prototype) <= (size_t)(((char*)EG(vm_stack_end)) - (char*)call));
++
++	call->func = fbc->common.prototype;
++	ZEND_CALL_NUM_ARGS(call) = 2;
+ 
+ 	ZVAL_STR(ZEND_CALL_ARG(call, 1), fbc->common.function_name);
+ 	ZVAL_ARR(ZEND_CALL_ARG(call, 2), args);
+@@ -1837,7 +1837,7 @@ call_trampoline_end:
+ 	opline = EX(opline);
+ 
+ 	if (UNEXPECTED(call_info & ZEND_CALL_RELEASE_THIS)) {
+-		object = Z_OBJ(call->This);
++		zend_object *object = Z_OBJ(call->This);
+ 		OBJ_RELEASE(object);
+ 	}
+ 	EG(scope) = EX(func)->op_array.scope;
