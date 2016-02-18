@@ -1,3 +1,22 @@
+php7.0 (7.0.3-6) unstable; urgency=medium
+
+  [ Ondřej Surý ]
+  * Add lintian override for faulty dh_apache2 (#796328)
+  * Add support for dbgsym package
+  * Use dsoname instead of module when building extension ini files
+    (Courtesy of Miha Vrhovnik)
+  * Move mysqlnd to mysql extension package
+  * Split several compiled-in extensions to independent extension packages
+  * Make several builtin extensions shared and move them into -common package
+  * Add support for generated Replaces/Breaks/Conflicts/Provides for
+    extension packages
+
+  [ Neal Gompa ]
+  * Ensure php-fpm apache httpd config is prepared and installed
+  * Fix the tests to pass and handle conditions that should fail properly
+ 
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 22 Feb 2016 12:41:28 +0100
+
 php7.0 (7.0.3-5) unstable; urgency=medium
 
   [ Neal Gompa ]
