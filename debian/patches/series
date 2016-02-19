@@ -41,3 +41,5 @@
 0041-Remove-warning-about-mysql-library-minor-version-mis.patch
 0042-Revert-PEAR-version-to-last-working-version-from-PHP.patch
 0043-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
+0048-Disable-apxs2-module-activation-on-sapi-install.patch
+0050-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
