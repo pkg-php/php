@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:46 +0100
-Subject: 033-we_WANT_libtool
+Subject: we WANT libtool
 
 ---
  build/build2.mk | 3 ++-

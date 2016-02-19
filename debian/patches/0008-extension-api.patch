@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:46 +0100
-Subject: 053-extension_api
+Subject: extension api
 
 ---
  configure.in          | 5 ++++-

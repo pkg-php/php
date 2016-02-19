@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:47 +0100
-Subject: 100-recode_is_shared
+Subject: recode is shared
 
 ---
  ext/recode/config9.m4 | 2 +-

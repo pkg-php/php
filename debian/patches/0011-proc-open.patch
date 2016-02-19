@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:47 +0100
-Subject: 112-proc_open
+Subject: proc open
 
 ---
  ext/standard/proc_open.c | 2 +-

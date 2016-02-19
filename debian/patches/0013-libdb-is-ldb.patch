@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:47 +0100
-Subject: libdb_is_-ldb
+Subject: libdb is -ldb
 
 ---
  ext/dba/config.m4 | 2 +-

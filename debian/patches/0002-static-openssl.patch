@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:46 +0100
-Subject: 002-static_openssl
+Subject: static openssl
 
 ---
  acinclude.m4 | 4 +---

@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:47 +0100
-Subject: sybase-alias
+Subject: sybase alias
 
 ---
  ext/mssql/php_mssql.c | 32 ++++++++++++++++++++++++++++++++

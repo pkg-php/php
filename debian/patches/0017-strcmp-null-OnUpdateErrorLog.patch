@@ -1,6 +1,6 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Date: Sun, 1 Mar 2015 10:42:47 +0100
-Subject: strcmp_null-OnUpdateErrorLog
+Subject: strcmp null OnUpdateErrorLog
 
 ---
  tests/func/null-new_val.phpt | 10 ++++++++++
