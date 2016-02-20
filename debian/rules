@@ -525,7 +525,7 @@ endif
 	ln -sf /usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool
 
 override_dh_apache2:
-	for sapi in apache2 cgi; do \
+	for sapi in apache2 cgi fpm; do \
 	    $(SAPI_PACKAGE) \
 	    < debian/$${versionless}.apache2 $(SED_REPLACEMENT) > debian/$${package}.apache2; \
 	done
