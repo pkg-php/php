@@ -390,7 +390,20 @@ prepare-files-stamp:
 	  package=php$(PHP_NAME_VERSION)-$${module}; \
 	  modules=$$(eval echo \$${$${module}_EXTENSIONS}); \
 	  description=$$(eval echo \$${$${module}_DESCRIPTION}); \
+	  for tmpl in postinst postrm prerm bug-script bug-control triggers dirs substvars; do \
+	      < debian/php-module.$${tmpl}.in \
+		$(SED) -e "/\#EXTRA\#/ r debian/$${package}.$${tmpl}.extra" | \
+		$(SED) -e "s,@package@,$${package},g"		\
+	           -e "s,@modules@,$${modules},g"		\
+	           -e "s,@module@,$${module},g"			\
+	           -e "s|@description@|$${description}|g"	\
+	           -e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"	\
+	           -e "s,@PHP_API@,$${phpapi},g" | \
+		$(SED) -e '/\#EXTRA\#/ d' \
+	      > debian/$${package}.$${tmpl}; \
+	  done; \
 	  for dsoname in $${modules}; do \
+	    normalized=$$(echo $${dsoname} | sed -e 's/_/-/g'); \
 	    priority=$$(eval echo \$${$${dsoname}_PRIORITY}); \
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
 	    extension=$$(eval echo \$${$${dsoname}_EXTENSION}); \
@@ -404,19 +417,8 @@ prepare-files-stamp:
 	      > debian/tmp/usr/share/$${package}/$${module}/$${dsoname}.ini; \
 	    echo "usr/lib/php/*/$${dsoname}.so" >> debian/$${package}.install; \
 	    echo "usr/share/$${package}/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
-	  done; \
-	  for tmpl in postinst postrm prerm bug-script bug-control triggers dirs; do \
-	      < debian/php-module.$${tmpl}.in \
-		$(SED) -e "/\#EXTRA\#/ r debian/$${package}.$${tmpl}.extra" | \
-		$(SED) -e "s,@package@,$${package},g"		\
-	           -e "s,@modules@,$${modules},g"		\
-	           -e "s,@module@,$${module},g"			\
-	           -e "s,@priority@,$${priority},g"		\
-	           -e "s|@description@|$${description}|g"	\
-	           -e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"	\
-	           -e "s,@PHP_API@,$${phpapi},g" | \
-		$(SED) -e '/\#EXTRA\#/ d' \
-	      > debian/$${package}.$${tmpl}; \
+	    echo "php-$${module}:Provides=php-$${normalized}" >> debian/$${package}.substvars; \
+	    if [ "$${module}" != "$${normalized}" ]; then echo "php-$${module}:Provides=php$(PHP_NAME_VERSION)-$${normalized}" >> debian/$${package}.substvars; fi; \
 	  done; \
 	done
 	touch prepare-files-stamp
@@ -558,7 +560,7 @@ debian/control: debian/control.in debian/rules debian/changelog debian/source.li
 	  package=php$(PHP_NAME_VERSION)-$${ext}; \
 	  description=$$(eval echo \$${$${ext}_DESCRIPTION}); \
 	  echo >>$@; \
-	  $(SED) -e "s|@package@|$${package}|" -e "s|@description@|$${description}|" >>$@ <debian/php-module.control.in; \
+	  $(SED) -e "s|@ext@|$${ext}|" -e "s|@package@|$${package}|" -e "s|@description@|$${description}|" >>$@ <debian/php-module.control.in; \
 	done
 	mkdir -p debian/tests
 	for f in debian/tests.in/*; do \
