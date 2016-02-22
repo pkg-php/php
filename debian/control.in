@@ -205,20 +205,6 @@ Description: command-line interpreter for the PHP scripting language
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php@PHP_VERSION@-common
-Architecture: all
-Depends: php-common (>= 18~),
-         ${misc:Depends}
-Suggests: php-user-cache
-Conflicts: php5-common (<< 5.6.16+dfsg-4~)
-Description: Common files for packages built from the PHP source
- This package contains the documentation and example files relevant to all
- the other packages built from the PHP source.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: php@PHP_VERSION@-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
