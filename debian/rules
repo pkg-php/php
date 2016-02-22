@@ -186,9 +186,6 @@ COMMON_CONFIG := \
 		--enable-mbstring \
 		--enable-phar \
 		--enable-posix \
-		--enable-mysqlnd \
-		  --enable-mysqlnd-compression-support \
-		  --with-zlib-dir=/usr \
 		--with-openssl=yes \
 		--enable-libxml \
 		--enable-session \
