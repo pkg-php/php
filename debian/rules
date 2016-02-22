@@ -207,6 +207,7 @@ COMMON_CONFIG := \
 		--enable-sysvsem \
 		--enable-sysvshm \
 		--enable-zip \
+		--with-zlib=/usr \
 		--with-system-tzdata \
 		$(CONFIGURE_ZTS) \
 		$(CONFIGURE_DTRACE_ARGS)
@@ -427,9 +428,9 @@ prepare-files-stamp:
 	  modules=$$(eval echo \$${$${module}_EXTENSIONS}); \
 	  description=$$(eval echo \$${$${module}_DESCRIPTION}); \
 	  for dsoname in $${modules}; do \
-	    priority=$$(eval echo \$${$${module}_PRIORITY}); \
+	    priority=$$(eval echo \$${$${dsoname}_PRIORITY}); \
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
-	    extension=$$(eval echo \$${$${module}_EXTENSION}); \
+	    extension=$$(eval echo \$${$${dsoname}_EXTENSION}); \
 	    if [ -z "$${extension}" ]; then extension=extension; fi; \
 	    mkdir -p debian/tmp/usr/share/$${package}/$${module}/; \
 	    $(SED) -e "s,@extname@,$${module}," \
