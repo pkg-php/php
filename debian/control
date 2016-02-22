@@ -85,7 +85,7 @@ Architecture: any
 Depends: libmagic1,
          mime-support,
          php5.6-cli,
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          php5.6-json,
          php5.6-opcache,
          tzdata,
@@ -94,7 +94,8 @@ Depends: libmagic1,
          ${shlibs:Depends}
 Conflicts: libapache2-mod-php5 (<< 5.6.16+dfsg-4~),
            libapache2-mod-php5filter (<< 5.6.16+dfsg-4~)
-Provides: ${php:Provides}, libapache2-mod-php
+Provides: libapache2-mod-php,
+          ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
  This package provides the PHP module for the Apache 2 webserver (as
@@ -111,12 +112,13 @@ Package: libphp5.6-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}, libphp-embed
+Provides: libphp-embed,
+          ${php:Provides}
 Suggests: php-pear
 Conflicts: libphp5-embed (<< 5.6.16+dfsg-4~)
 Priority: optional
@@ -156,14 +158,15 @@ Architecture: any
 Depends: libmagic1,
          mime-support,
          php5.6-cli,
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          php5.6-json,
          php5.6-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}, php-cgi
+Provides: php-cgi,
+          ${php:Provides}
 Conflicts: php5-cgi (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (CGI binary)
@@ -190,7 +193,8 @@ Depends: libedit2 (>= 2.11-20080614-4),
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}, php-cli
+Provides: php-cli,
+          ${php:Provides}
 Breaks: php5-cli (<< 5.6.16+dfsg-4~)
 Replaces: php5-cli (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
@@ -204,44 +208,15 @@ Description: command-line interpreter for the PHP scripting language
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-common
-Architecture: all
-Depends: php-common (>= 18~),
-         ${misc:Depends}
-Suggests: php-user-cache
-Conflicts: php5-common (<< 5.6.16+dfsg-4~)
-Description: Common files for packages built from the PHP source
- This package contains the documentation and example files relevant to all
- the other packages built from the PHP source.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php5.6-dbg
-Depends: libapache2-mod-php5.6 (= ${binary:Version}) | php5.6-cgi (= ${binary:Version}) | php5.6-cli (= ${binary:Version}) | php5.6-fpm (= ${binary:Version}) | libphp5.6-embed (= ${binary:Version}) | php5.6-phpdbg (= ${binary:Version}),
-         ${misc:Depends}
-Recommends: gdb
-Section: debug
-Priority: extra
-Architecture: any
-Description: Debug symbols for PHP5.6
- This package provides the debug symbols for PHP5.6 needed for properly
- debugging errors in PHP5.6 with gdb.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: php5.6-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
          libpcre3-dev,
          libssl-dev,
-	 ${libtool:Depends},
          php5.6-cli (>= ${binary:Version}),
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          shtool,
+         ${libtool:Depends},
          ${misc:Depends},
          ${perl:Depends}
 Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
@@ -262,14 +237,15 @@ Architecture: any
 Depends: libmagic1,
          mime-support,
          php5.6-cli,
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          php5.6-json,
          php5.6-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}, php-fpm
+Provides: php-fpm,
+          ${php:Provides}
 Suggests: php-pear
 Pre-Depends: ${misc:Pre-Depends}
 Conflicts: php5-fpm (<< 5.6.16+dfsg-4~)
@@ -288,12 +264,13 @@ Package: php5.6-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Provides: ${php:Provides}, php-phpdbg
+Provides: php-phpdbg,
+          ${php:Provides}
 Conflicts: php5-phpdbg (<< 5.6.16+dfsg-4~)
 Recommends: php-readline
 Description: server-side, HTML-embedded scripting language (PHPDBG binary)
@@ -306,17 +283,32 @@ Description: server-side, HTML-embedded scripting language (PHPDBG binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php5.6-xsl
+Architecture: all
+Depends: php5.6-common,
+         php5.6-xml,
+         ${misc:Depends}
+Description: XSL module for PHP (dummy)
+ This package is a transitional dummy package and can be safely
+ removed.
+
 Package: php5.6-odbc
 Architecture: any
 Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-odbc:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-odbc:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-odbc:Replaces}
+Breaks: ${php-odbc:Breaks}
+Conflicts: ${php-odbc:Conflicts}
+Provides: ${php-odbc:Provides}
 Description: ODBC module for PHP
- This package provides a ODBC module for PHP.
+ This package provides the ODBC module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -328,11 +320,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-readline:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-readline:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-readline:Replaces}
+Breaks: ${php-readline:Breaks}
+Conflicts: ${php-readline:Conflicts}
+Provides: ${php-readline:Provides}
 Description: readline module for PHP
- This package provides a readline module for PHP.
+ This package provides the readline module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -344,11 +342,39 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-recode:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-recode:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-recode:Replaces}
+Breaks: ${php-recode:Breaks}
+Conflicts: ${php-recode:Conflicts}
+Provides: ${php-recode:Provides}
 Description: recode module for PHP
- This package provides a recode module for PHP.
+ This package provides the recode module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-common
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-common:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-common:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-common:Replaces}
+Breaks: ${php-common:Breaks}
+Conflicts: ${php-common:Conflicts}
+Provides: ${php-common:Provides}
+Description: documentation, examples and common module for PHP
+ This package provides the documentation, examples and common module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -360,11 +386,61 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-sqlite3:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-sqlite3:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-sqlite3:Replaces}
+Breaks: ${php-sqlite3:Breaks}
+Conflicts: ${php-sqlite3:Conflicts}
+Provides: ${php-sqlite3:Provides}
 Description: SQLite3 module for PHP
- This package provides a SQLite3 module for PHP.
+ This package provides the SQLite3 module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-xml
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-xml:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-xml:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-xml:Replaces}
+Breaks: ${php-xml:Breaks}
+Conflicts: ${php-xml:Conflicts}
+Provides: ${php-xml:Provides}
+Description: DOM, SimpleXML, WDDX, XML, and XSL module for PHP
+ This package provides the DOM, SimpleXML, WDDX, XML, and XSL module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-zip
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-zip:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-zip:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-zip:Replaces}
+Breaks: ${php-zip:Breaks}
+Conflicts: ${php-zip:Conflicts}
+Provides: ${php-zip:Provides}
+Description: Zip module for PHP
+ This package provides the Zip module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -376,11 +452,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-xmlrpc:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-xmlrpc:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-xmlrpc:Replaces}
+Breaks: ${php-xmlrpc:Breaks}
+Conflicts: ${php-xmlrpc:Conflicts}
+Provides: ${php-xmlrpc:Provides}
 Description: XMLRPC-EPI module for PHP
- This package provides a XMLRPC-EPI module for PHP.
+ This package provides the XMLRPC-EPI module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -392,11 +474,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-sybase:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-sybase:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-sybase:Replaces}
+Breaks: ${php-sybase:Breaks}
+Conflicts: ${php-sybase:Conflicts}
+Provides: ${php-sybase:Provides}
 Description: Sybase module for PHP
- This package provides a Sybase module for PHP.
+ This package provides the Sybase module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -408,11 +496,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-gd:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-gd:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-gd:Replaces}
+Breaks: ${php-gd:Breaks}
+Conflicts: ${php-gd:Conflicts}
+Provides: ${php-gd:Provides}
 Description: GD module for PHP
- This package provides a GD module for PHP.
+ This package provides the GD module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -424,27 +518,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-gmp:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-gmp:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-gmp:Replaces}
+Breaks: ${php-gmp:Breaks}
+Conflicts: ${php-gmp:Conflicts}
+Provides: ${php-gmp:Provides}
 Description: GMP module for PHP
- This package provides a GMP module for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php5.6-xsl
-Architecture: any
-Depends: php-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Description: XSL module for PHP
- This package provides a XSL module for PHP.
+ This package provides the GMP module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -456,11 +540,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-ldap:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-ldap:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-ldap:Replaces}
+Breaks: ${php-ldap:Breaks}
+Conflicts: ${php-ldap:Conflicts}
+Provides: ${php-ldap:Provides}
 Description: LDAP module for PHP
- This package provides a LDAP module for PHP.
+ This package provides the LDAP module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -472,11 +562,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-interbase:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-interbase:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-interbase:Replaces}
+Breaks: ${php-interbase:Breaks}
+Conflicts: ${php-interbase:Conflicts}
+Provides: ${php-interbase:Provides}
 Description: Interbase module for PHP
- This package provides a Interbase module for PHP.
+ This package provides the Interbase module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -488,11 +584,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-intl:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-intl:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-intl:Replaces}
+Breaks: ${php-intl:Breaks}
+Conflicts: ${php-intl:Conflicts}
+Provides: ${php-intl:Provides}
 Description: Internationalisation module for PHP
- This package provides a Internationalisation module for PHP.
+ This package provides the Internationalisation module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -504,27 +606,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-mcrypt:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-mcrypt:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-mcrypt:Replaces}
+Breaks: ${php-mcrypt:Breaks}
+Conflicts: ${php-mcrypt:Conflicts}
+Provides: ${php-mcrypt:Provides}
 Description: libmcrypt module for PHP
- This package provides a libmcrypt module for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php5.6-curl
-Architecture: any
-Depends: php-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Description: CURL module for PHP
- This package provides a CURL module for PHP.
+ This package provides the libmcrypt module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -536,11 +628,39 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-pgsql:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-pgsql:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-pgsql:Replaces}
+Breaks: ${php-pgsql:Breaks}
+Conflicts: ${php-pgsql:Conflicts}
+Provides: ${php-pgsql:Provides}
 Description: PostgreSQL module for PHP
- This package provides a PostgreSQL module for PHP.
+ This package provides the PostgreSQL module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-mbstring
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-mbstring:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-mbstring:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-mbstring:Replaces}
+Breaks: ${php-mbstring:Breaks}
+Conflicts: ${php-mbstring:Conflicts}
+Provides: ${php-mbstring:Provides}
+Description: MBSTRING module for PHP
+ This package provides the MBSTRING module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -552,11 +672,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-enchant:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-enchant:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-enchant:Replaces}
+Breaks: ${php-enchant:Breaks}
+Conflicts: ${php-enchant:Conflicts}
+Provides: ${php-enchant:Provides}
 Description: Enchant module for PHP
- This package provides a Enchant module for PHP.
+ This package provides the Enchant module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -568,11 +694,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-opcache:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-opcache:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-opcache:Replaces}
+Breaks: ${php-opcache:Breaks}
+Conflicts: ${php-opcache:Conflicts}
+Provides: ${php-opcache:Provides}
 Description: Zend OpCache module for PHP
- This package provides a Zend OpCache module for PHP.
+ This package provides the Zend OpCache module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -584,11 +716,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-imap:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-imap:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-imap:Replaces}
+Breaks: ${php-imap:Breaks}
+Conflicts: ${php-imap:Conflicts}
+Provides: ${php-imap:Provides}
 Description: IMAP module for PHP
- This package provides a IMAP module for PHP.
+ This package provides the IMAP module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -600,11 +738,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-mysql:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-mysql:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-mysql:Replaces}
+Breaks: ${php-mysql:Breaks}
+Conflicts: ${php-mysql:Conflicts}
+Provides: ${php-mysql:Provides}
 Description: MySQL module for PHP
- This package provides a MySQL module for PHP.
+ This package provides the MySQL module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -616,11 +760,61 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-tidy:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-tidy:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-tidy:Replaces}
+Breaks: ${php-tidy:Breaks}
+Conflicts: ${php-tidy:Conflicts}
+Provides: ${php-tidy:Provides}
 Description: tidy module for PHP
- This package provides a tidy module for PHP.
+ This package provides the tidy module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-soap
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-soap:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-soap:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-soap:Replaces}
+Breaks: ${php-soap:Breaks}
+Conflicts: ${php-soap:Conflicts}
+Provides: ${php-soap:Provides}
+Description: SOAP module for PHP
+ This package provides the SOAP module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-bcmath
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-bcmath:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-bcmath:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-bcmath:Replaces}
+Breaks: ${php-bcmath:Breaks}
+Conflicts: ${php-bcmath:Conflicts}
+Provides: ${php-bcmath:Provides}
+Description: Bcmath module for PHP
+ This package provides the Bcmath module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -632,11 +826,17 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-snmp:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-snmp:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-snmp:Replaces}
+Breaks: ${php-snmp:Breaks}
+Conflicts: ${php-snmp:Conflicts}
+Provides: ${php-snmp:Provides}
 Description: SNMP module for PHP
- This package provides a SNMP module for PHP.
+ This package provides the SNMP module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -648,27 +848,39 @@ Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-pspell:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-pspell:Pre-Depends}
 Built-Using: ${php:Built-Using}
+Replaces: ${php-pspell:Replaces}
+Breaks: ${php-pspell:Breaks}
+Conflicts: ${php-pspell:Conflicts}
+Provides: ${php-pspell:Provides}
 Description: pspell module for PHP
- This package provides a pspell module for PHP.
+ This package provides the pspell module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-bz2
+Package: php5.6-curl
 Architecture: any
 Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
+	 ${php-curl:Depends},
          ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-curl:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Description: bzip2 module for PHP
- This package provides a bzip2 module for PHP.
+Replaces: ${php-curl:Replaces}
+Breaks: ${php-curl:Breaks}
+Conflicts: ${php-curl:Conflicts}
+Provides: ${php-curl:Provides}
+Description: CURL module for PHP
+ This package provides the CURL module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
