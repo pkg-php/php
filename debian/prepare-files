@@ -24,5 +24,3 @@ php@PHP_VERSION@-fpm-reopenlogs
 php@PHP_VERSION@-fpm.service
 php@PHP_VERSION@-fpm.tmpfile
 php@PHP_VERSION@.load
-php@PHP_VERSION@-modules-source.dirs
-php@PHP_VERSION@-modules-source.install
