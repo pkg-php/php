@@ -429,7 +429,7 @@ prepare-files-stamp:
 	           -e "s,@modules@,$${modules},g"		\
 	           -e "s,@module@,$${module},g"		\
 	           -e "s,@priority@,$${priority},g"	\
-	           -e "s,@description@,$${description},g"	\
+	           -e "s|@description@|$${description}|g"	\
 	           -e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"	\
 	           -e "s,@PHP_API@,$${phpapi},g" \
 	      < debian/php-module.$${tmpl}.in \
@@ -575,7 +575,7 @@ debian/control: debian/control.in debian/rules debian/changelog debian/source.li
 	  package=php$(PHP_NAME_VERSION)-$${ext}; \
 	  description=$$(eval echo \$${$${ext}_DESCRIPTION}); \
 	  echo >>$@; \
-	  $(SED) -e "s,@package@,$${package}," -e "s,@description@,$${description}," >>$@ <debian/php-module.control.in; \
+	  $(SED) -e "s|@package@|$${package}|" -e "s|@description@|$${description}|" >>$@ <debian/php-module.control.in; \
 	done
 	mkdir -p debian/tests
 	for f in debian/tests.in/*; do \
