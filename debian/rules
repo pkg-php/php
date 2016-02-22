@@ -164,34 +164,15 @@ COMMON_CONFIG := \
 		--with-pic \
 		--with-layout=GNU \
 		--without-pear \
-		--enable-bcmath \
-		--enable-calendar \
-		--enable-ctype \
-		--enable-dom \
-		--enable-exif \
-		--with-gettext=/usr \
-		--enable-fileinfo \
-		--enable-filter \
-		--enable-ftp \
-		--enable-hash \
 		--with-iconv \
-		--with-pcre-regex=/usr \
-		--enable-pdo \
-		--enable-phar \
-		--enable-posix \
+		--enable-filter \
+		  --with-pcre-dir=/usr \
 		--with-openssl=yes \
+		--with-pcre-regex=/usr \
+		--enable-hash \
+		  --with-mhash=/usr \
 		--enable-libxml \
 		--enable-session \
-		--enable-shmop \
-		--enable-soap \
-		--enable-sockets \
-		--enable-tokenizer \
-		--with-mhash=yes \
-		--enable-sysvmsg \
-		--enable-sysvsem \
-		--enable-sysvshm \
-		--enable-zip \
-		--with-zlib=/usr \
 		--with-system-tzdata \
 		$(CONFIGURE_ZTS) \
 		$(CONFIGURE_DTRACE_ARGS)
@@ -427,14 +408,16 @@ prepare-files-stamp:
 	    echo "usr/share/$${package}/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
 	  done; \
 	  for tmpl in postinst postrm prerm bug-script bug-control triggers dirs; do \
-	    $(SED) -e "s,@package@,$${package},g"		\
+	      < debian/php-module.$${tmpl}.in \
+		$(SED) -e "/\#EXTRA\#/ r debian/$${package}.$${tmpl}.extra" | \
+		$(SED) -e "s,@package@,$${package},g"		\
 	           -e "s,@modules@,$${modules},g"		\
-	           -e "s,@module@,$${module},g"		\
-	           -e "s,@priority@,$${priority},g"	\
+	           -e "s,@module@,$${module},g"			\
+	           -e "s,@priority@,$${priority},g"		\
 	           -e "s|@description@|$${description}|g"	\
 	           -e "s,@PHP_VERSION@,$(PHP_NAME_VERSION),g"	\
-	           -e "s,@PHP_API@,$${phpapi},g" \
-	      < debian/php-module.$${tmpl}.in \
+	           -e "s,@PHP_API@,$${phpapi},g" | \
+		$(SED) -e '/\#EXTRA\#/ d' \
 	      > debian/$${package}.$${tmpl}; \
 	  done; \
 	done
