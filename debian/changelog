@@ -1,3 +1,9 @@
+php7.0 (7.0.3-8) unstable; urgency=medium
+
+  * Package zlib extension into phpX.Y-common
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 17:45:41 +0100
+
 php7.0 (7.0.3-7) unstable; urgency=medium
 
   * bz2 extension pulls libbz2-1.0, so it's better to have it in separate
