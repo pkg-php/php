@@ -1,7 +1,6 @@
 ext_PACKAGES     += common
 common_DESCRIPTION := documentation, examples and common
-common_EXTENSIONS  := bz2 calendar ctype exif fileinfo ftp gettext iconv pdo phar posix shmop sockets sysvmsg sysvsem sysvshm tokenizer
-bz2_config      := --with-bz2=shared,/usr
+common_EXTENSIONS  := calendar ctype exif fileinfo ftp gettext iconv pdo phar posix shmop sockets sysvmsg sysvsem sysvshm tokenizer
 calendar_config = --enable-calendar=shared
 ctype_config = --enable-ctype=shared
 exif_config = --enable-exif=shared
@@ -10,7 +9,7 @@ ftp_config = --enable-ftp=shared --with-openssl-dir=/usr
 gettext_config = --with-gettext=shared,/usr
 iconv_config = --with-iconv=shared
 pdo_config = --enable-pdo=shared
-pdo_PRIORITY    := 10
+pdo_PRIORITY := 10
 phar_config = --enable-phar=shared
 posix_config = --enable-posix=shared
 shmop_config = --enable-shmop=shared
