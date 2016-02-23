@@ -4,8 +4,15 @@ php5.6 (5.6.18+dfsg-6) unstable; urgency=medium
     package
   * Get rid of ${source:Version} everywhere
   * Remove PHPAPI version from lintian-overrides
+  * Add missing mysqlnd shared module back to phpX.Y-mysqlnd package
+  * Fix php5.6 source: not-binnmuable-all-depends-any php5.6 -> php5.6-common
+  * Merge php-<ext>:Provides into single line
+  * Rename @modules@ to @extensions@ to make the d/rules less confusing
+  * Disable module first before removing matching .ini file from
+    /etc/php/mods-available
+  * XML extension has to be loaded before WDDX or XMLRPC-EPI extensions
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 10:22:32 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 14:11:41 +0100
 
 php5.6 (5.6.18+dfsg-5) unstable; urgency=medium
 
