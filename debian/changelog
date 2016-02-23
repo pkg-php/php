@@ -10,6 +10,9 @@ php5.6 (5.6.18+dfsg-5) unstable; urgency=medium
   * Make several builtin extensions shared and move them into -common package
   * Add support for generated Replaces/Breaks/Conflicts/Provides for
     extension packages
+  * Disable built-in iconv support, leave only as shared extension
+  * Make stored PHPAPI ZTS agnostic
+  * Add support for dbgsym package
 
   [ Neal Gompa ]
   * Ensure php-fpm apache httpd config is prepared and installed
