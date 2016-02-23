@@ -138,8 +138,8 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 
 Package: php@PHP_VERSION@
 Architecture: all
-Depends: libapache2-mod-php@PHP_VERSION@ (>= ${source:Version}~) | php@PHP_VERSION@-cgi (>= ${source:Version}~) | php@PHP_VERSION@-fpm (>= ${source:Version}~),
-         php@PHP_VERSION@-common (>= ${source:Version}~),
+Depends: php@PHP_VERSION@-fpm | libapache2-mod-php@PHP_VERSION@ | php@PHP_VERSION@-cgi,
+         php@PHP_VERSION@-common (= ${binary:Version}),
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
@@ -186,7 +186,7 @@ Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
          mime-support,
-         php@PHP_VERSION@-common (>= ${source:Version}),
+         php@PHP_VERSION@-common (= ${binary:Version}),
          php@PHP_VERSION@-opcache,
          php@PHP_VERSION@-readline,
          tzdata,
