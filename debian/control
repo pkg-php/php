@@ -139,7 +139,7 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 Package: php5.6
 Architecture: all
 Depends: php5.6-fpm | libapache2-mod-php5.6 | php5.6-cgi,
-         php5.6-common (= ${binary:Version}),
+         php5.6-common,
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
@@ -600,6 +600,28 @@ Description: Internationalisation module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php5.6-mysql
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-mysql:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-mysql:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-mysql:Replaces}
+Breaks: ${php-mysql:Breaks}
+Conflicts: ${php-mysql:Conflicts}
+Provides: ${php-mysql:Provides}
+Description: MySQL module for PHP
+ This package provides the MySQL module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.6-mcrypt
 Architecture: any
 Depends: php-common,
@@ -754,23 +776,23 @@ Description: bzip2 module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-mysql
+Package: php5.6-bcmath
 Architecture: any
 Depends: php-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
-	 ${php-mysql:Depends},
+	 ${php-bcmath:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-mysql:Pre-Depends}
+	     ${php-bcmath:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Replaces: ${php-mysql:Replaces}
-Breaks: ${php-mysql:Breaks}
-Conflicts: ${php-mysql:Conflicts}
-Provides: ${php-mysql:Provides}
-Description: MySQL module for PHP
- This package provides the MySQL module(s) for PHP.
+Replaces: ${php-bcmath:Replaces}
+Breaks: ${php-bcmath:Breaks}
+Conflicts: ${php-bcmath:Conflicts}
+Provides: ${php-bcmath:Provides}
+Description: Bcmath module for PHP
+ This package provides the Bcmath module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -815,28 +837,6 @@ Conflicts: ${php-soap:Conflicts}
 Provides: ${php-soap:Provides}
 Description: SOAP module for PHP
  This package provides the SOAP module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php5.6-bcmath
-Architecture: any
-Depends: php-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-bcmath:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-bcmath:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-bcmath:Replaces}
-Breaks: ${php-bcmath:Breaks}
-Conflicts: ${php-bcmath:Conflicts}
-Provides: ${php-bcmath:Provides}
-Description: Bcmath module for PHP
- This package provides the Bcmath module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
