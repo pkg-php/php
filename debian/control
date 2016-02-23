@@ -138,8 +138,8 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 
 Package: php5.6
 Architecture: all
-Depends: libapache2-mod-php5.6 (>= ${source:Version}~) | php5.6-cgi (>= ${source:Version}~) | php5.6-fpm (>= ${source:Version}~),
-         php5.6-common (>= ${source:Version}~),
+Depends: php5.6-fpm | libapache2-mod-php5.6 | php5.6-cgi,
+         php5.6-common (= ${binary:Version}),
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
@@ -186,7 +186,7 @@ Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
          mime-support,
-         php5.6-common (>= ${source:Version}),
+         php5.6-common (= ${binary:Version}),
          php5.6-opcache,
          php5.6-readline,
          tzdata,
@@ -727,6 +727,28 @@ Conflicts: ${php-imap:Conflicts}
 Provides: ${php-imap:Provides}
 Description: IMAP module for PHP
  This package provides the IMAP module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-bz2
+Architecture: any
+Depends: php-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-bz2:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-bz2:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-bz2:Replaces}
+Breaks: ${php-bz2:Breaks}
+Conflicts: ${php-bz2:Conflicts}
+Provides: ${php-bz2:Provides}
+Description: bzip2 module for PHP
+ This package provides the bzip2 module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
