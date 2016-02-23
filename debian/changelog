@@ -11,12 +11,13 @@ php7.0 (7.0.3-6) unstable; urgency=medium
   * Add support for generated Replaces/Breaks/Conflicts/Provides for
     extension packages
   * Add missing php_enable to php-fpm postinst script
+  * Disable built-in iconv support, leave only as shared extension
 
   [ Neal Gompa ]
   * Ensure php-fpm apache httpd config is prepared and installed
   * Fix the tests to pass and handle conditions that should fail properly
  
- -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 07:28:59 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 07:49:00 +0100
 
 php7.0 (7.0.3-5) unstable; urgency=medium
 
