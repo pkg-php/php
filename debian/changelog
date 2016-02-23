@@ -4,8 +4,15 @@ php7.0 (7.0.3-7) unstable; urgency=medium
     package
   * Remove PHPAPI version from lintian-overrides
   * Get rid of ${source:Version} everywhere
+  * Add missing mysqlnd shared module back to phpX.Y-mysqlnd package
+  * Fix php7.0 source: not-binnmuable-all-depends-any php7.0 -> php7.0-common
+  * Merge php-<ext>:Provides into single line
+  * Rename @modules@ to @extensions@ to make the d/rules less confusing
+  * Disable module first before removing matching .ini file from
+    /etc/php/mods-available
+  * XML extension has to be loaded before WDDX or XMLRPC-EPI extensions
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 10:20:31 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 14:13:18 +0100
 
 php7.0 (7.0.3-6) unstable; urgency=medium
 
