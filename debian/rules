@@ -249,7 +249,7 @@ $(info Enabled extensions $(ext_EXTENSIONS))
 $(info Enabled config $(ext_config))
 
 %:
-	dh $@ $(DH_SYSTEMD) --with apache2 --parallel
+	dh $@ $(DH_SYSTEMD) --with apache2
 
 PREPARE_FILES := $(addprefix debian/,$(shell cat debian/prepare-files))
 
@@ -296,6 +296,7 @@ override_dh_auto_clean: unprepared
 override_dh_auto_configure: $(CONFIGURE_TARGETS)
 
 configure-%-stamp: debian/control prepared-stamp
+	echo "Configuring $* target"
 	echo ${$*_config}
 	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
 	touch configure-$*-stamp
@@ -303,10 +304,8 @@ configure-%-stamp: debian/control prepared-stamp
 override_dh_auto_build: $(BUILD_TARGETS)
 
 build-%-stamp: configure-%-stamp
-	dh_auto_build --builddirectory $*-build --parallel
+	dh_auto_build --builddirectory $*-build
 	touch build-$*-stamp
-
-.NOTPARALLEL: override_dh_auto_install
 
 override_dh_auto_install: $(INSTALL_TARGETS)
 
