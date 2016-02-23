@@ -139,7 +139,7 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 Package: php7.0
 Architecture: all
 Depends: php7.0-fpm, libapache2-mod-php7.0 | php7.0-cgi,
-         php7.0-common (= ${binary:Version}),
+         php7.0-common,
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
