@@ -6,7 +6,7 @@ set -e
 
 if [ "$1" = "purge" ]; then
     inidir=/etc/php/mods-available
-    for dsoname in @modules@; do
+    for dsoname in @extensions@; do
 	inifile=${dsoname}.ini
 
         # Query which package has this conffile registered

@@ -10,7 +10,7 @@ if [ "$1" = "configure" ]; then
     if [ -e /usr/lib/php/php-maintscript-helper ] ; then
 	. /usr/lib/php/php-maintscript-helper
 
-	for dsoname in @modules@; do
+	for dsoname in @extensions@; do
 	    inifile=${dsoname}.ini
 
 	    # Register new conffile with UCF
