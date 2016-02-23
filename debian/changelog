@@ -1,3 +1,12 @@
+php7.0 (7.0.3-7) unstable; urgency=medium
+
+  * bz2 extension pulls libbz2-1.0, so it's better to have it in separate
+    package
+  * Remove PHPAPI version from lintian-overrides
+  * Get rid of ${source:Version} everywhere
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 10:20:31 +0100
+
 php7.0 (7.0.3-6) unstable; urgency=medium
 
   [ Ondřej Surý ]
