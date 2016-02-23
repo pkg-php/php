@@ -162,7 +162,6 @@ COMMON_CONFIG := \
 		--with-pic \
 		--with-layout=GNU \
 		--without-pear \
-		--with-iconv \
 		--enable-filter \
 		  --with-pcre-dir=/usr \
 		--with-openssl=yes \
