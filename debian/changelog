@@ -1,3 +1,12 @@
+php5.6 (5.6.18+dfsg-6) unstable; urgency=medium
+
+  * bz2 extension pulls libbz2-1.0, so it's better to have it in separate
+    package
+  * Get rid of ${source:Version} everywhere
+  * Remove PHPAPI version from lintian-overrides
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 23 Feb 2016 10:22:32 +0100
+
 php5.6 (5.6.18+dfsg-5) unstable; urgency=medium
 
   [ Ondřej Surý ]
