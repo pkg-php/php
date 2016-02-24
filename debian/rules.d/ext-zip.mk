@@ -4,7 +4,6 @@ zip_EXTENSIONS  := zip
 zip_config = \
 	--enable-zip=shared \
 	--with-zlib-dir=/usr \
-	--with-pcre-dir=/usr \
 	--with-libzip=/usr
 export zip_EXTENSIONS
 export zip_DESCRIPTION

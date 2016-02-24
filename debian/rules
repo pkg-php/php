@@ -6,9 +6,15 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+# Enable parallel builds
+PARALLEL=--parallel
+
 # Enable this for debugging the sed scripts
 #SED=$(CURDIR)/debian/sedsed
 SED := sed
+
+# Make the shell scripts fail after first failed command (important for SAPI loops)
+SHELL := /bin/sh -e
 
 # enable dpkg build flags
 DPKG_EXPORT_BUILDFLAGS = 1
@@ -38,11 +44,7 @@ $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
 endif
 REAL_TARGETS         := apache2 phpdbg embed fpm cgi cli
 EXTRA_TARGETS        := ext
-TARGETS              := $(REAL_TARGETS) $(EXTRA_TARGETS)
-CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
-BUILD_TARGETS        := $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
-INSTALL_TARGETS      := $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
-CLI_INSTALL_DEPEND   := $(filter-out install-cli-stamp,$(INSTALL_TARGETS))
+TARGETS              := $(EXTRA_TARGETS) $(REAL_TARGETS)
 
 # Special package names
 PHP_PHP      := php$(PHP_NAME_VERSION)
@@ -125,22 +127,27 @@ QUILT_DIFF_OPTS := -p
 QUILT_NO_DIFF_TIMESTAMPS := 1 
 export QUILT_DIFF_OPTS QUILT_NO_DIFF_TIMESTAMPS
 
-PROG_SENDMAIL := /usr/sbin/sendmail
+export PROG_SENDMAIL := /usr/sbin/sendmail
 ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-  CFLAGS += -O2
+  DEB_CFLAGS_MAINT_APPEND += -O2
 else
-  CFLAGS += -O0
+  DEB_CFLAGS_MAINT_APPEND += -O0
 endif
-CFLAGS += -Wall -fsigned-char -fno-strict-aliasing 
-CFLAGS += $(shell getconf LFS_CFLAGS)
+DEB_CFLAGS_MAINT_APPEND += -Wall -pedantic -fsigned-char -fno-strict-aliasing 
+DEB_CFLAGS_MAINT_APPEND += $(shell getconf LFS_CFLAGS)
 
 # Enable IEEE-conformant floating point math on alphas (not the default)
 ifeq (alpha-linux-gnu,$(DEB_HOST_GNU_TYPE))
-  CFLAGS += -mieee
+  DEB_CFLAGS_MAINT_APPEND += -mieee
 endif
 
 # Enable producing of debugging information
-CFLAGS += -g
+DEB_CFLAGS_MAINT_APPEND += -g
+
+DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+export DEB_CFLAGS_MAINT_APPEND
+export DEB_LDFLAGS_MAINT_APPEND
 
 # some other helpful (for readability at least) shorthand variables
 PHPIZE_BUILDDIR := debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
@@ -163,7 +170,6 @@ COMMON_CONFIG := \
 		--with-layout=GNU \
 		--without-pear \
 		--enable-filter \
-		  --with-pcre-dir=/usr \
 		--with-openssl=yes \
 		--with-pcre-regex=/usr \
 		--enable-hash \
@@ -175,44 +181,44 @@ COMMON_CONFIG := \
 		$(CONFIGURE_DTRACE_ARGS)
 
 # disable all SAPIs in extension build
-ext_config = \
-		--prefix=/usr --enable-cli --disable-cgi \
+export ext_config = \
+		--prefix=/usr --enable-cli --disable-cgi --disable-phpdbg \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2 \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2/conf.d \
 		$(COMMON_CONFIG)
 
-apache2_config = \
-		--prefix=/usr --with-apxs2=/usr/bin/apxs2 --enable-cli --disable-cgi \
+export apache2_config = \
+		--prefix=/usr --with-apxs2=/usr/bin/apxs2 --enable-cli --disable-cgi --disable-phpdbg \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2 \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2/conf.d \
 		$(COMMON_CONFIG)
 
-cgi_config = \
-		--prefix=/usr --enable-cgi --enable-cli \
+export cgi_config = \
+		--prefix=/usr --enable-cgi --enable-cli --disable-phpdbg \
 		--enable-force-cgi-redirect --enable-fastcgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/cgi \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cgi/conf.d \
 		$(COMMON_CONFIG) \
 		--enable-pcntl
 
-cli_config = \
-		--prefix=/usr --enable-cli --disable-cgi \
+export cli_config = \
+		--prefix=/usr --enable-cli --disable-cgi --disable-phpdbg \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/cli \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/cli/conf.d \
 		$(COMMON_CONFIG) \
 		--enable-pcntl \
 		--with-libedit=shared,/usr
 
-embed_config = \
-		--prefix=/usr --enable-embed --enable-cli --disable-cgi \
+export embed_config = \
+		--prefix=/usr --enable-embed --enable-cli --disable-cgi --disable-phpdbg \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/embed \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/embed/conf.d \
 		$(COMMON_CONFIG) \
 		--without-mm \
 		--enable-pcntl
 
-fpm_config = \
-		--prefix=/usr --enable-fpm --enable-cli --disable-cgi \
+export fpm_config = \
+		--prefix=/usr --enable-fpm --enable-cli --disable-cgi --disable-phpdbg \
 		--sysconfdir=/etc/php/$(PHP_NAME_VERSION)/fpm \
 		--with-fpm-user=www-data --with-fpm-group=www-data \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/fpm \
@@ -221,15 +227,13 @@ fpm_config = \
 		--with-libevent-dir=/usr \
 		$(CONFIGURE_SYSTEMD)
 
-phpdbg_config = \
+export phpdbg_config = \
 		--prefix=/usr --enable-phpdbg --enable-cli --disable-cgi \
 		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/phpdbg \
 		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/phpdbg/conf.d \
 		$(COMMON_CONFIG) \
 		--enable-pcntl \
 		--with-libedit=shared,/usr
-
-export apache2_config apache2_filter_config cgi_config cli_config embed_config fpm_config phpdbg_config ext_config
 
 BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
 			$$s="The following extensions are built in:"; \
@@ -244,12 +248,12 @@ ext_DEBS       := $(addprefix php$(PHP_NAME_VERSION)-,$(ext_PACKAGES))
 ext_EXTENSIONS := $(foreach ext_package,$(ext_PACKAGES),$($(ext_package)_EXTENSIONS))
 ext_config     += $(foreach ext_ext,$(ext_EXTENSIONS),$($(ext_ext)_config))
 
-$(info Enabled packages $(ext_DEBS))
-$(info Enabled extensions $(ext_EXTENSIONS))
-$(info Enabled config $(ext_config))
+#$(info Enabled packages $(ext_DEBS))
+#$(info Enabled extensions $(ext_EXTENSIONS))
+#$(info Enabled config $(ext_config))
 
 %:
-	dh $@ $(DH_SYSTEMD) --with apache2 --parallel
+	dh $@ $(DH_SYSTEMD) --with apache2 $(PARALLEL)
 
 PREPARE_FILES := $(addprefix debian/,$(shell cat debian/prepare-files))
 
@@ -268,10 +272,6 @@ unprepared:
 
 override_dh_auto_clean: unprepared
 	rm -f $(subst @PHP_VERSION@,$(PHP_NAME_VERSION),$(PREPARE_FILES))
-	rm -f $(CONFIGURE_TARGETS)
-	rm -f $(BUILD_TARGETS)
-	rm -f $(INSTALL_TARGETS)
-	rm -f $(ext_CONTROL)
 
 	# just in case the build tests failed, kill the running mysqld
 	$(SHELL) debian/setup-mysql.sh $(MYSQL_PORT) $(MYSQL_DATA_DIR) stop > /dev/null 2>&1 || exit 0
@@ -293,37 +293,32 @@ override_dh_auto_clean: unprepared
 		done; \
 	done
 
-override_dh_auto_configure: $(CONFIGURE_TARGETS)
+	# clean build directories
+	for target in $(TARGETS); do \
+	  dh_auto_clean --builddirectory $${target}-build $(PARALLEL); \
+	  rm -rf $${target}-build; \
+	done
 
-configure-%-stamp: debian/control prepared-stamp
-	echo "Configuring $* target"
-	echo ${$*_config}
-	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config} --parallel
-	touch configure-$*-stamp
+override_dh_auto_configure: prepared
+	for target in $(TARGETS); do \
+	  dh_auto_configure --builddirectory $${target}-build $(PARALLEL) -- $$(eval echo \$${$${target}_config}); \
+	done
 
-override_dh_auto_build: $(BUILD_TARGETS)
+override_dh_auto_build:
+	for target in $(TARGETS); do \
+	  dh_auto_build --builddirectory $${target}-build $(PARALLEL); \
+	done
 
-build-%-stamp:
-	dh_auto_build --builddirectory $*-build --parallel
-	touch build-$*-stamp
-
-override_dh_auto_install: $(INSTALL_TARGETS)
-
-# install_targets = install-sapi install-binaries install-build install-headers install-programs install-pharcmd
-install-%-stamp:
-	dh_auto_install --builddirectory $*-build -- install INSTALL_ROOT=$(CURDIR)/debian/tmp --parallel
-	touch install-$*-stamp
-
-# CLI has to be installed as last target
-install-cli-stamp: $(CLI_INSTALL_DEPEND)
-	dh_auto_install --builddirectory cli-build -- install INSTALL_ROOT=$(CURDIR)/debian/tmp --parallel
-	touch install-cli-stamp
+override_dh_auto_install:
+	for target in $(TARGETS); do \
+	  dh_auto_install --builddirectory $${target}-build $(PARALLEL) -- install INSTALL_ROOT=$(CURDIR)/debian/tmp; \
+	done
 
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
 override_dh_auto_test: test-results.txt
 
-test-results.txt: $(BUILD_TARGETS)
+test-results.txt:
 ifeq (yes,$(RUN_TESTS))
 	mkdir -p temp_session_store
 	# start our own mysql server for the tests
