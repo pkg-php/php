@@ -67,7 +67,7 @@ index c1cca1e..ec8c29a 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index a387059..d282022 100644
+index 907f629..e44b51e 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -682,8 +682,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
@@ -82,10 +82,10 @@ index a387059..d282022 100644
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index b9c7e0b..b76b707 100644
+index 940d6c7..2757833 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
-@@ -1733,9 +1733,9 @@ int main(int argc, char *argv[])
+@@ -1757,9 +1757,9 @@ int main(int argc, char *argv[])
  				SG(request_info).no_headers = 1;
  
  #if ZEND_DEBUG
@@ -114,7 +114,7 @@ index b0ea105..4feb8f3 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 54e9a66..1c10f3f 100644
+index 9321eed..7a40a21 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
 @@ -1520,10 +1520,8 @@ phpdbg_main:
