@@ -156,6 +156,7 @@ PHPIZE_BUILDDIR := debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
 COMMON_CONFIG := \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--host=$(DEB_HOST_GNU_TYPE) \
+		--config-cache --cache-file=$(CURDIR)/config.cache \
 		--libdir=\$${prefix}/lib/php \
 		--libexecdir=\$${prefix}/lib/php \
 		--datadir=\$${prefix}/share/php/$(PHP_NAME_VERSION) \
@@ -299,6 +300,9 @@ override_dh_auto_clean: unprepared
 	  dh_auto_clean --builddirectory $${target}-build $(PARALLEL); \
 	  rm -rf $${target}-build; \
 	done
+
+	# remove shared config.cache
+	rm -f $(CURDIR)/config.cache
 
 override_dh_auto_configure: prepared
 	for target in $(TARGETS); do \
