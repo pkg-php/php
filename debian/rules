@@ -249,7 +249,7 @@ $(info Enabled extensions $(ext_EXTENSIONS))
 $(info Enabled config $(ext_config))
 
 %:
-	dh $@ $(DH_SYSTEMD) --with apache2
+	dh $@ $(DH_SYSTEMD) --with apache2 --parallel
 
 PREPARE_FILES := $(addprefix debian/,$(shell cat debian/prepare-files))
 
@@ -298,25 +298,25 @@ override_dh_auto_configure: $(CONFIGURE_TARGETS)
 configure-%-stamp: debian/control prepared-stamp
 	echo "Configuring $* target"
 	echo ${$*_config}
-	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config}
+	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" dh_auto_configure --builddirectory $*-build -- ${$*_config} --parallel
 	touch configure-$*-stamp
 
 override_dh_auto_build: $(BUILD_TARGETS)
 
-build-%-stamp: configure-%-stamp
-	dh_auto_build --builddirectory $*-build
+build-%-stamp:
+	dh_auto_build --builddirectory $*-build --parallel
 	touch build-$*-stamp
 
 override_dh_auto_install: $(INSTALL_TARGETS)
 
 # install_targets = install-sapi install-binaries install-build install-headers install-programs install-pharcmd
-install-%-stamp: build-%-stamp
-	dh_auto_install --builddirectory $*-build -- install INSTALL_ROOT=$(CURDIR)/debian/tmp
+install-%-stamp:
+	dh_auto_install --builddirectory $*-build -- install INSTALL_ROOT=$(CURDIR)/debian/tmp --parallel
 	touch install-$*-stamp
 
 # CLI has to be installed as last target
 install-cli-stamp: $(CLI_INSTALL_DEPEND)
-	dh_auto_install --builddirectory cli-build -- install INSTALL_ROOT=$(CURDIR)/debian/tmp
+	dh_auto_install --builddirectory cli-build -- install INSTALL_ROOT=$(CURDIR)/debian/tmp --parallel
 	touch install-cli-stamp
 
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
