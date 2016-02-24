@@ -73,7 +73,7 @@ Build-Depends: apache2-dev (>= 2.4),
                zlib1g-dev
 Build-Conflicts: bind-dev,
                  libxmlrpc-core-c3-dev
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Vcs-Git: git://anonscm.debian.org/pkg-php/php.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
