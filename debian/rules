@@ -460,8 +460,8 @@ override_dh_installdirs: prepare-files-stamp
 
 override_dh_install: rename-files-stamp remove-files-stamp prepare-fpm-pools
 	# install extra CGI-BIN
-	install -d -m 755 debian/tmp/usr/lib/cgi-bin/; \
-	install -m 755 cgi-build/sapi/cgi/usr.bin.$(PHP_CGI) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION); \
+	install -d -m 755 debian/tmp/usr/lib/cgi-bin/
+	ln debian/tmp/usr/bin/php-cgi$(PHP_NAME_VERSION) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
 
 	# sanitize php.ini files
 	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
