@@ -32,7 +32,7 @@ index e55bb6d..ab23dff 100644
  PHP_SUBST_OLD(EXTRA_LDFLAGS)
  PHP_SUBST_OLD(EXTRA_LDFLAGS_PROGRAM)
 diff --git a/scripts/php-config.in b/scripts/php-config.in
-index 754876a..1f4bb4c 100644
+index fa25dc7..746a58e 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
 @@ -19,6 +19,7 @@ php_cli_binary=NONE
