@@ -1,3 +1,10 @@
+php7.0 (7.0.3-10) unstable; urgency=medium
+
+  * Don't enable PHP FPM by default
+  * Fix non-expanded @EXTENSION_DIR@ in php-config
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 26 Feb 2016 10:39:12 +0100
+
 php7.0 (7.0.3-9) unstable; urgency=medium
 
   * Replace makefile magic with shell for loop when iterating through SAPI
