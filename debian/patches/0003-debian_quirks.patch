@@ -9,9 +9,9 @@ Subject: debian_quirks
  php.ini-production    |  2 +-
  sapi/cli/php.1.in     | 11 ++++++-----
  scripts/Makefile.frag |  4 ++--
- scripts/php-config.in |  6 +++---
+ scripts/php-config.in |  8 ++++----
  scripts/phpize.in     |  4 ++--
- 8 files changed, 21 insertions(+), 17 deletions(-)
+ 8 files changed, 22 insertions(+), 18 deletions(-)
 
 diff --git a/configure.in b/configure.in
 index 7b7ced4..a940930 100644
@@ -131,10 +131,10 @@ index 7cd78fa..df7cfdd 100644
  BUILD_FILES = \
  	scripts/phpize.m4 \
 diff --git a/scripts/php-config.in b/scripts/php-config.in
-index d6c62cc..754876a 100644
+index d6c62cc..fa25dc7 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
-@@ -6,9 +6,9 @@ datarootdir="@datarootdir@"
+@@ -6,11 +6,11 @@ datarootdir="@datarootdir@"
  exec_prefix="@exec_prefix@"
  version="@PHP_VERSION@"
  vernum="@PHP_VERSION_ID@"
@@ -145,8 +145,11 @@ index d6c62cc..754876a 100644
 +includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib $(getconf LFS_CFLAGS)"
 +ldflags="-L$prefix/lib/php/@DEBIAN_PHP_API@ @PHP_LDFLAGS@"
  libs="@EXTRA_LIBS@"
- extension_dir='@EXTENSION_DIR@'
+-extension_dir='@EXTENSION_DIR@'
++extension_dir="@EXTENSION_DIR@"
  man_dir=`eval echo @mandir@`
+ program_prefix="@program_prefix@"
+ program_suffix="@program_suffix@"
 diff --git a/scripts/phpize.in b/scripts/phpize.in
 index b86925e..9bd3b9a 100644
 --- a/scripts/phpize.in
