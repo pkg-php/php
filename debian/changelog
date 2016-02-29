@@ -1,3 +1,10 @@
+php5.6 (5.6.18+dfsg-10) unstable; urgency=medium
+
+  * Move mods-available directories to /etc/php/X.Y/mods-available
+  * Install missing php-module.preinst scripts
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 29 Feb 2016 15:42:59 +0100
+
 php5.6 (5.6.18+dfsg-9) unstable; urgency=medium
 
   * Don't enable PHP FPM by default
