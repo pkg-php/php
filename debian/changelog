@@ -1,6 +1,7 @@
 php7.0 (7.0.3-11) unstable; urgency=medium
 
   * Move mods-available directories to /etc/php/X.Y/mods-available
+  * Install missing php-module.preinst scripts
 
  -- Ondřej Surý <ondrej@debian.org>  Mon, 29 Feb 2016 12:35:55 +0100
 
