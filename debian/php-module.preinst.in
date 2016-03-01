@@ -36,9 +36,10 @@ if [ "$1" = "upgrade" ]; then
 		    rm -f "${symlink}"
 		fi
 	    done
-	
     done
-    rmdir --ignore-fail-on-non-empty "$inidir"
+    if [ -d "$inidir" ]; then
+	rmdir --ignore-fail-on-non-empty "$inidir";
+    fi
 fi
 
 #DEBHELPER#
