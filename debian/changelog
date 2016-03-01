@@ -1,3 +1,9 @@
+php7.0 (7.0.3-12) unstable; urgency=medium
+
+  * Turn comma into pipe to make fpm alternative to other web SAPIs
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 01 Mar 2016 17:33:03 +0100
+
 php7.0 (7.0.3-11) unstable; urgency=medium
 
   * Move mods-available directories to /etc/php/X.Y/mods-available
