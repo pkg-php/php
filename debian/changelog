@@ -1,3 +1,9 @@
+php5.6 (5.6.18+dfsg-11) unstable; urgency=medium
+
+  * Check for old inidir existence before removing it
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 01 Mar 2016 21:32:33 +0100
+
 php5.6 (5.6.18+dfsg-10) unstable; urgency=medium
 
   * Move mods-available directories to /etc/php/X.Y/mods-available
