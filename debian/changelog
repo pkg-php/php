@@ -1,3 +1,12 @@
+php7.0 (7.0.3-14) unstable; urgency=medium
+
+  * Remove ucfq part from prerm and postrm script that's not needed
+    anymore (it was needed for dual mysql and mysqlnd modules)
+  * Move php module deactivation back to postrm remove block
+    (Closes: #816465)
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 02 Mar 2016 18:11:26 +0100
+
 php7.0 (7.0.3-13) unstable; urgency=medium
 
   * Check for old inidir existence before removing it (Closes: #816429)
