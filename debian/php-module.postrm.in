@@ -4,6 +4,16 @@ set -e
 
 #EXTRA#
 
+if [ "$1" = "remove" ]; then
+    if [ -e /usr/lib/php/php-maintscript-helper ] ; then
+	. /usr/lib/php/php-maintscript-helper
+
+	for dsoname in @extensions@; do
+	    php_invoke dismod @PHP_VERSION@ ALL ${dsoname}
+	done
+    fi
+fi
+
 if [ "$1" = "purge" ]; then
     inidir=/etc/php/@PHP_VERSION@/mods-available
 
