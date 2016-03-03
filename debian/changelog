@@ -7,7 +7,7 @@ php5.6 (5.6.19+dfsg-1) unstable; urgency=medium
   * Move php module deactivation back to postrm remove block
   * Reorder SAPI cleanup scripts to properly disable PHP extensions
 
- -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 10:52:24 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 11:42:33 +0100
 
 php5.6 (5.6.18+dfsg-11) unstable; urgency=medium
 
