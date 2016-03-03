@@ -1,3 +1,11 @@
+php7.0 (7.0.4-2) unstable; urgency=medium
+
+  * Replace libvpx-dev with libwebp-dev in ext-gd.mk
+  * zlib extension needs to be enable as a module for all SAPIs to support
+    IMAGETYPE_SWC
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 20:52:13 +0100
+
 php7.0 (7.0.4-1) unstable; urgency=medium
 
   * php7.0 7.0.3-14
