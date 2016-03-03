@@ -179,6 +179,8 @@ COMMON_CONFIG := \
 		--enable-libxml \
 		--enable-session \
 		--with-system-tzdata \
+		--with-zlib=/usr \
+		  --with-zlib-dir=/usr \
 		$(CONFIGURE_ZTS) \
 		$(CONFIGURE_DTRACE_ARGS)
 
