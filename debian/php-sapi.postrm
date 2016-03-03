@@ -44,7 +44,7 @@ if [ "$1" = "purge" ]; then
     for dir in \
 	/etc/php/@PHP_VERSION@/@sapi@/conf.d \
 	/etc/php/@PHP_VERSION@/@sapi@ \
-	/etc/php/@PHP_VERSION@/
+	/etc/php/@PHP_VERSION@/ \
 	/etc/php; do
 	
 	if [ -d $dir ]; then
