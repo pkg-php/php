@@ -4,6 +4,7 @@ php7.0 (7.0.3-14) unstable; urgency=medium
     anymore (it was needed for dual mysql and mysqlnd modules)
   * Move php module deactivation back to postrm remove block
     (Closes: #816465)
+  * Reorder SAPI cleanup scripts to properly disable PHP extensions
 
  -- Ondřej Surý <ondrej@debian.org>  Wed, 02 Mar 2016 18:11:26 +0100
 
