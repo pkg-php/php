@@ -1,3 +1,11 @@
+php5.6 (5.6.19+dfsg-2) experimental; urgency=medium
+
+  * Upload just to experimental.  People were jumping just to wrong
+    conclusions about the PHP 5.6 and PHP 7.0 support in unstable and
+    testing.  That should make it clear enough.
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 16:36:53 +0100
+
 php5.6 (5.6.19+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.6.19+dfsg
