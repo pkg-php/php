@@ -3,6 +3,9 @@
 set -e
 
 #EXTRA#
+
+php_enable() { return 0; }
+
 #DEBHELPER#
 
 exit 0
