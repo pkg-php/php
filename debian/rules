@@ -369,7 +369,7 @@ prepare-files-stamp:
 	for file in $(PREPARE_FILES); do \
 	    versionless=$$(echo $$file | $(SED) -e 's/@PHP_VERSION@//g'); \
 	    versioned=$$(echo $$file | $(SED) -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
-	    package=$$(echo $$file | $(SED) -e 's/\..*$$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    package=$$(echo $$file | $(SED) -e 's,^debian/,,;s/\..*$$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    < $${versionless} $(SED_REPLACEMENT) > $${versioned}; \
 	    if [ -x $${versionless} ]; then chmod +x $${versioned}; fi; \
 	done
