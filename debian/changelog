@@ -1,3 +1,11 @@
+php7.0 (7.0.4-3) unstable; urgency=medium
+
+  * We need php_enable() in prerm script (Closes: #816763)
+  * Force ucf and ucfr de-registration of old config files
+  * ZLIB needs to be builtin module to support IMAGETYPE_SWC
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Mar 2016 12:23:27 +0100
+
 php7.0 (7.0.4-2) unstable; urgency=medium
 
   * Replace libvpx-dev with libwebp-dev in ext-gd.mk
