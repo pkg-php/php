@@ -1,6 +1,6 @@
 ext_PACKAGES     += common
 common_DESCRIPTION := documentation, examples and common
-common_EXTENSIONS  := calendar ctype exif fileinfo ftp gettext iconv pdo phar posix shmop sockets sysvmsg sysvsem sysvshm tokenizer zlib
+common_EXTENSIONS  := calendar ctype exif fileinfo ftp gettext iconv pdo phar posix shmop sockets sysvmsg sysvsem sysvshm tokenizer
 calendar_config = --enable-calendar=shared
 ctype_config = --enable-ctype=shared
 exif_config = --enable-exif=shared
