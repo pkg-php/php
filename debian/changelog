@@ -3,8 +3,11 @@ php7.0 (7.0.4-3) unstable; urgency=medium
   * We need php_enable() in prerm script (Closes: #816763)
   * Force ucf and ucfr de-registration of old config files
   * ZLIB needs to be builtin module to support IMAGETYPE_SWC
+  * Remove zlib extension from the list of extensions
+  * php-common.preinst.extra was missing from d/prepare-files
+  * Remove debian/ prefix from @package@ in prepared-files
 
- -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Mar 2016 12:23:27 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Mar 2016 16:12:42 +0100
 
 php7.0 (7.0.4-2) unstable; urgency=medium
 
