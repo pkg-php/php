@@ -1,3 +1,12 @@
+php5.6 (5.6.19+dfsg-3) experimental; urgency=medium
+
+  * Replace libvpx-dev with libwebp-dev in ext-gd.mk
+  * ZLIB needs to built-in extension to support IMAGETYPE_SWC
+  * We need php_enable() in prerm script (Closes: #816763)
+  * Force ucf and ucfr de-registration of old config files
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Mar 2016 12:31:52 +0100
+
 php5.6 (5.6.19+dfsg-2) experimental; urgency=medium
 
   * Upload just to experimental.  People were jumping just to wrong
