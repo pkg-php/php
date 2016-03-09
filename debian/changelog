@@ -1,3 +1,10 @@
+php7.0 (7.0.4-5) unstable; urgency=medium
+
+  * Apply patch to make opcache lockfile path configurable
+    (Courtesy of Gandi)
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 09 Mar 2016 12:27:40 +0100
+
 php7.0 (7.0.4-4) unstable; urgency=medium
 
   * Also kill old /etc/php/mods-available/zlib.ini
