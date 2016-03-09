@@ -1,6 +1,7 @@
 php7.0 (7.0.4-4) unstable; urgency=medium
 
   * Also kill old /etc/php/mods-available/zlib.ini
+    (Closes: #817205, #817202)
 
  -- Ondřej Surý <ondrej@debian.org>  Wed, 09 Mar 2016 10:08:25 +0100
 
