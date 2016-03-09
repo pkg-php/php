@@ -50,3 +50,4 @@
 0050-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0051-Don-t-put-INSTALL_ROOT-into-phar.phar-exec-stanza.patch
 0052-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
+0053-make-opcache-lockfile-path-configurable.patch
