@@ -1,3 +1,9 @@
+php7.0 (7.0.4-4) unstable; urgency=medium
+
+  * Also kill old /etc/php/mods-available/zlib.ini
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 09 Mar 2016 10:08:25 +0100
+
 php7.0 (7.0.4-3) unstable; urgency=medium
 
   * We need php_enable() in prerm script (Closes: #816763)
