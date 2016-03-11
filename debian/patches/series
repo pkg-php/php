@@ -45,3 +45,4 @@
 0045-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0046-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
 0047-make-opcache-lockfile-path-configurable.patch
+0048-Fix-bug-71659.patch
