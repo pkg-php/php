@@ -1,3 +1,15 @@
+php5.6 (5.6.19+dfsg-6) experimental; urgency=medium
+
+  * Register libphp@PHP_MAJOR@.so with update-alternatives, so there's no
+    dangling symbol in the piuparts
+  * Really expand $libdir and $datadir before AC_SUBST to allow passing
+    ${prefix} as part of --with-libdir
+  * Don't reset module provides at every dsoname, but at every module name
+  * Set PEAR_INSTALL_DIR manually to /usr/share/php even if we are not
+    building PEAR, so PEAR have correct paths
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 14 Mar 2016 16:13:16 +0100
+
 php5.6 (5.6.19+dfsg-5) experimental; urgency=medium
 
   * Apply patch to make opcache lockfile path configurable
