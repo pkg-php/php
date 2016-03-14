@@ -46,3 +46,4 @@
 0046-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
 0047-make-opcache-lockfile-path-configurable.patch
 0048-Fix-bug-71659.patch
+0049-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
