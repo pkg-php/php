@@ -402,9 +402,9 @@ prepare-files-stamp:
 		$(SED) -e '/\#EXTRA\#/ d' \
 	      > debian/$${package}.$${tmpl}; \
 	  done; \
+	  provides=""; \
 	  for dsoname in $${extensions}; do \
 	    normalized=$$(echo $${dsoname} | sed -e 's/_/-/g'); \
-	    provides=""; \
 	    priority=$$(eval echo \$${$${dsoname}_PRIORITY}); \
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
 	    extension=$$(eval echo \$${$${dsoname}_EXTENSION}); \
