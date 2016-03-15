@@ -7,10 +7,10 @@ Subject: Really expand $libdir/$datadir into @EXPANDED_LIBDIR/DATADIR@
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index 2f76f2f..d653676 100644
+index 8e7012c..27b9712 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1252,9 +1252,9 @@ EXPANDED_LOCALSTATEDIR=`eval echo $localstatedir`
+@@ -1253,9 +1253,9 @@ EXPANDED_LOCALSTATEDIR=`eval echo $localstatedir`
  EXPANDED_BINDIR=`eval echo $bindir`
  EXPANDED_SBINDIR=`eval echo $sbindir`
  EXPANDED_MANDIR=`eval echo $mandir`
@@ -21,4 +21,4 @@ index 2f76f2f..d653676 100644
 +EXPANDED_DATADIR=`eval echo $datadir`
  EXPANDED_PHP_CONFIG_FILE_PATH=`eval echo "$PHP_CONFIG_FILE_PATH"`
  EXPANDED_PHP_CONFIG_FILE_SCAN_DIR=`eval echo "$PHP_CONFIG_FILE_SCAN_DIR"`
- INCLUDE_PATH=.:/usr/share/php:$EXPANDED_PEAR_INSTALLDIR
+ INCLUDE_PATH=.:$EXPANDED_PEAR_INSTALLDIR
