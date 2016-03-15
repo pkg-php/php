@@ -3,7 +3,7 @@ Date: Sat, 2 May 2015 10:26:51 +0200
 Subject: debian_quirks
 
 ---
- configure.in          |  7 +++++--
+ configure.in          |  6 +++++-
  ext/ext_skel          |  2 +-
  php.ini-development   |  2 +-
  php.ini-production    |  2 +-
@@ -11,10 +11,10 @@ Subject: debian_quirks
  scripts/Makefile.frag |  4 ++--
  scripts/php-config.in |  8 ++++----
  scripts/phpize.in     |  4 ++--
- 8 files changed, 22 insertions(+), 18 deletions(-)
+ 8 files changed, 22 insertions(+), 17 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index e7fdd74..e46edb5 100644
+index e7fdd74..f1ba82b 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1085,7 +1085,7 @@ if test "$PHP_CLI" = "no"; then
@@ -26,7 +26,15 @@ index e7fdd74..e46edb5 100644
    --without-pear          Do not install PEAR], DEFAULT, yes)
  
  if test "$PHP_PEAR" != "no"; then
-@@ -1194,6 +1194,8 @@ dnl Build extension directory path
+@@ -1122,6 +1122,7 @@ dnl
+   PHP_ADD_MAKEFILE_FRAGMENT($abs_srcdir/pear/Makefile.frag,$abs_srcdir/pear,pear)
+ fi
+ 
++PEAR_INSTALLDIR=/usr/share/php
+ 
+ dnl Configuring Zend and TSRM.
+ dnl -------------------------------------------------------------------------
+@@ -1194,6 +1195,8 @@ dnl Build extension directory path
  
  ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modules.h|$SED 's/#define ZEND_MODULE_API_NO //'`
  
@@ -35,16 +43,7 @@ index e7fdd74..e46edb5 100644
  if test -z "$EXTENSION_DIR"; then
    extbasedir=$ZEND_MODULE_API_NO
    if test "$oldstyleextdir" = "yes"; then
-@@ -1242,7 +1244,7 @@ EXPANDED_SYSCONFDIR=`eval echo $sysconfdir`
- EXPANDED_DATADIR=$datadir
- EXPANDED_PHP_CONFIG_FILE_PATH=`eval echo "$PHP_CONFIG_FILE_PATH"`
- EXPANDED_PHP_CONFIG_FILE_SCAN_DIR=`eval echo "$PHP_CONFIG_FILE_SCAN_DIR"`
--INCLUDE_PATH=.:$EXPANDED_PEAR_INSTALLDIR
-+INCLUDE_PATH=.:/usr/share/php:$EXPANDED_PEAR_INSTALLDIR
- 
- exec_prefix=$old_exec_prefix
- libdir=$old_libdir
-@@ -1523,6 +1525,7 @@ $php_shtool mkdir -p scripts/man1
+@@ -1523,6 +1526,7 @@ $php_shtool mkdir -p scripts/man1
  ALL_OUTPUT_FILES="php5.spec main/build-defs.h \
  scripts/phpize scripts/man1/phpize.1 \
  scripts/php-config scripts/man1/php-config.1 \
