@@ -22,6 +22,7 @@ php@PHP_VERSION@-fpm.logrotate
 php@PHP_VERSION@-fpm-reopenlogs
 php@PHP_VERSION@-fpm.service
 php@PHP_VERSION@-fpm.tmpfile
+php@PHP_VERSION@-fpm.upstart
 php@PHP_VERSION@.load
 php@PHP_VERSION@-xml.substvars.extra
 php@PHP_VERSION@-xml.postinst.extra

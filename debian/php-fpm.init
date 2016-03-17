@@ -122,6 +122,9 @@ do_tmpfiles() {
 
 case "$1" in
     start)
+	if init_is_upstart; then
+	    exit 1
+	fi
 	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
 	do_tmpfiles $VERBOSE
 	do_check $VERBOSE
@@ -137,6 +140,9 @@ case "$1" in
 	esac
 	;;
     stop)
+	if init_is_upstart; then
+	    exit 0
+	fi
 	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
 	do_stop
 	case "$?" in
@@ -151,7 +157,10 @@ case "$1" in
         do_check yes
 	;;
     reload|force-reload)
-	log_daemon_msg "Reloading $DESC" "$NAME"
+	if init_is_upstart; then
+	    exit 1
+	fi
+    	log_daemon_msg "Reloading $DESC" "$NAME"
 	do_reload
 	log_end_msg $?
 	;;
@@ -166,6 +175,9 @@ case "$1" in
 	fi
 	;;
     restart)
+	if init_is_upstart; then
+	    exit 1
+	fi
 	log_daemon_msg "Restarting $DESC" "$NAME"
 	do_stop
 	case "$?" in
