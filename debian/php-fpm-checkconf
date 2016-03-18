@@ -1,6 +1,27 @@
 #!/bin/sh
 set -e
 CONFFILE=${1:-/etc/php/@PHP_VERSION@/fpm/php-fpm.conf}
+
+do_tmpfiles() {
+    local type path mode user group
+
+    [ "$1" != no ] && V=-v
+    
+    TMPFILES=/usr/lib/tmpfiles.d/php@PHP_VERSION@-fpm.conf
+
+    if [ -r "$TMPFILES" ]; then
+	while read type path mode user group age argument; do
+	    if [ "$type" = "d" ]; then
+		mkdir $V -p "$path"
+		chmod $V "$mode" "$path"
+		chown $V "$user:$group" "$path"
+	    fi
+	done < "$TMPFILES"
+    fi
+}
+
+do_tmpfiles no
+
 errors=$(/usr/sbin/php-fpm@PHP_VERSION@ --fpm-config "$CONFFILE" -t 2>&1 | grep "\[ERROR\]" || true);
 if [ -n "$errors" ]; then
     echo "Please fix your configuration file..."
