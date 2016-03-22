@@ -1,3 +1,14 @@
+php5.6 (5.6.19+dfsg-7) experimental; urgency=medium
+
+  * Add upstart init script for backport reasons
+  * Add do_tmpfiles() call to php-fpm-checkconf to get consistent
+    behaviour in all init systems
+  * libphp-embed 'update-alternatives --remove' call needs to be in prerm
+    script
+  * Override maintainer-script-empty prerm in PHP extension packages
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Mar 2016 10:41:52 +0100
+
 php5.6 (5.6.19+dfsg-6) experimental; urgency=medium
 
   * Register libphp@PHP_MAJOR@.so with update-alternatives, so there's no
