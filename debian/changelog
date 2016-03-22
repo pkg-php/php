@@ -8,8 +8,10 @@ php7.0 (7.0.4-7) unstable; urgency=medium
   * libphp-embed 'update-alternatives --remove' call needs to be in prerm
     script
   * Override maintainer-script-empty prerm in PHP extension packages
+  * apache2-module-depends-on-real-apache2-package lintian-override needs
+    to go in php-sapi.lintian-overrides to have any effect
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Mar 2016 10:39:44 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Mar 2016 10:45:18 +0100
 
 php7.0 (7.0.4-6) unstable; urgency=medium
 
