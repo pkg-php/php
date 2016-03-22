@@ -5,8 +5,11 @@ php7.0 (7.0.4-7) unstable; urgency=medium
     behaviour in all init systems
   * Fix use of UNDEF instead of NULL in read_dimension
     (Courtesy of Nikita Popov)
+  * libphp-embed 'update-alternatives --remove' call needs to be in prerm
+    script
+  * Override maintainer-script-empty prerm in PHP extension packages
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Mar 2016 10:18:49 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Mar 2016 10:39:44 +0100
 
 php7.0 (7.0.4-6) unstable; urgency=medium
 
