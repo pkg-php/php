@@ -1,3 +1,13 @@
+php7.0 (7.0.4-7) unstable; urgency=medium
+
+  * Add upstart init script for backport reasons
+  * Add do_tmpfiles() call to php-fpm-checkconf to get consistent
+    behaviour in all init systems
+  * Fix use of UNDEF instead of NULL in read_dimension
+    (Courtesy of Nikita Popov)
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Mar 2016 10:18:49 +0100
+
 php7.0 (7.0.4-6) unstable; urgency=medium
 
   * Add patch to fix segmentation fault in pcre running twig tests
