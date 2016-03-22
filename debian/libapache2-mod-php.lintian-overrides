@@ -1,2 +1,0 @@
-# dh-apache2 bug: http://bugs.debian.org/796328
-libapache2-mod-php@PHP_VERSION@: apache2-module-depends-on-real-apache2-package apache2-bin

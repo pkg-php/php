@@ -1,4 +1,3 @@
-libapache2-mod-php@PHP_VERSION@.lintian-overrides
 PEAR-Builder-print-info-about-php@PHP_VERSION@-dev.patch
 php@PHP_VERSION@.bug-control
 php@PHP_VERSION@-cgi.conf
