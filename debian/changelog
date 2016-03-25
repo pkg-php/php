@@ -12,8 +12,9 @@ php7.0 (7.0.4-7) unstable; urgency=medium
     to go in php-sapi.lintian-overrides to have any effect
   * Move embedded library fileinfo lintian-override to
     php-common.lintian-overrides.extra
+  * Add missing #EXTRA# to php-module.lintian-overrides template
 
- -- Ondřej Surý <ondrej@debian.org>  Fri, 25 Mar 2016 13:57:53 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 25 Mar 2016 17:25:41 +0100
 
 php7.0 (7.0.4-6) unstable; urgency=medium
 
