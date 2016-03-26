@@ -151,7 +151,7 @@ export DEB_CFLAGS_MAINT_APPEND
 export DEB_LDFLAGS_MAINT_APPEND
 
 # some other helpful (for readability at least) shorthand variables
-PHPIZE_BUILDDIR := debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
+PHPIZE_BUILDDIR := /usr/lib/php/$(PHP_ZEND_VERSION)/build/
 
 COMMON_CONFIG := \
 		--build=$(DEB_BUILD_GNU_TYPE) \
@@ -425,11 +425,6 @@ prepare-files-stamp:
 	done
 	touch prepare-files-stamp
 
-rename-files-stamp: rename-phar-stamp
-	mv -u debian/tmp/usr/lib/apache2/modules/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/apache2/modules/libphp$(PHP_NAME_VERSION).so
-	mv -u debian/tmp/usr/lib/php/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
-	touch rename-files-stamp
-
 remove-files-stamp:
 	# get rid of dreaded libtool files
 	find debian/tmp/ -name '*.la' -delete
@@ -464,10 +459,8 @@ remove-files-stamp:
 override_dh_installdirs: prepare-files-stamp
 	dh_installdirs
 
-override_dh_install: rename-files-stamp remove-files-stamp prepare-fpm-pools
-	# install extra CGI-BIN
-	install -d -m 755 debian/tmp/usr/lib/cgi-bin/
-	ln debian/tmp/usr/bin/php-cgi$(PHP_NAME_VERSION) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
+override_dh_install-indep: remove-files-stamp
+	dh_install -i
 
 	# sanitize php.ini files
 	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
@@ -487,27 +480,42 @@ override_dh_install: rename-files-stamp remove-files-stamp prepare-fpm-pools
 	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
 	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-development
 
-# install a helper script for checking PHP FPM configuration
-	mkdir -p debian/$(PHP_FPM)/usr/lib/php/
-	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
-	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
-
-	dh_install --fail-missing
-
 ifeq (yes,$(RUN_TESTS))
 	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
 endif
 
+override_dh_install-arch: remove-files-stamp prepare-fpm-pools
+# Rename Apache2 SAPI
+	mv -u debian/tmp/usr/lib/apache2/modules/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/apache2/modules/libphp$(PHP_NAME_VERSION).so
+# Rename embed SAPI
+	mv -u debian/tmp/usr/lib/php/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
+# Rename phar binaries
+	mv -u debian/tmp/usr/bin/phar.phar debian/tmp/usr/bin/phar.phar$(PHP_NAME_VERSION)
+	rm debian/tmp/usr/bin/phar
+	ln -s phar.phar$(PHP_NAME_VERSION) debian/tmp/usr/bin/phar$(PHP_NAME_VERSION)
+	mv -u debian/tmp/usr/share/man/man1/phar.phar.1 debian/tmp/usr/share/man/man1/phar.phar$(PHP_NAME_VERSION).1
+	mv -u debian/tmp/usr/share/man/man1/phar.1 debian/tmp/usr/share/man/man1/phar$(PHP_NAME_VERSION).1
+# Install extra CGI-BIN
+	install -d -m 755 debian/tmp/usr/lib/cgi-bin/
+	ln debian/tmp/usr/bin/php-cgi$(PHP_NAME_VERSION) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
+	dh_install -a
+# Install a helper script for checking PHP FPM configuration
+	mkdir -p debian/$(PHP_FPM)/usr/lib/php/
+	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
+	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
+
+override_dh_link:
 # shipping duplicate files from other packages is hell for security audits
-	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
-	ln -sf /usr/share/misc/config.sub $(PHPIZE_BUILDDIR)/config.sub
-	ln -sf /usr/share/aclocal/libtool.m4 $(PHPIZE_BUILDDIR)/libtool.m4
+	echo "/usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess" >> $(PHP_DEV).links
+	echo "/usr/share/misc/config.sub $(PHPIZE_BUILDDIR)/config.sub" >> $(PHP_DEV).links
+	echo "/usr/share/aclocal/libtool.m4 $(PHPIZE_BUILDDIR)/libtool.m4" >> $(PHP_DEV).links
 	if dpkg --compare-versions $(LIBTOOL_VERSION) ge 2.4.6-0.1~; then \
-	    ln -sf /usr/share/libtool/build-aux/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh; \
+	    echo "/usr/share/libtool/build-aux/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh" >> $(PHP_DEV).links; \
 	else \
-	    ln -sf /usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh; \
+	    echo "/usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh" >> $(PHP_DEV).links; \
 	fi	
-	ln -sf /usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool
+	echo "/usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool" >> $(PHP_DEV).links
+	dh_link
 
 override_dh_apache2:
 	for sapi in apache2 cgi fpm; do \
