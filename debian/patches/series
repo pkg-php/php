@@ -48,3 +48,4 @@
 0048-Fix-bug-71659.patch
 0049-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0050-Fix-use-of-UNDEF-instead-of-NULL-in-read_dimension.patch
+0051-fix-incompatible-pointers-on-64-bit.patch
