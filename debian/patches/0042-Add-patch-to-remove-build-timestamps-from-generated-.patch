@@ -51,7 +51,7 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index c1cca1e..ec8c29a 100644
+index 8983b53..589e299 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
 @@ -2216,9 +2216,9 @@ consult the installation file that came with this distribution, or visit \n\
@@ -67,7 +67,7 @@ index c1cca1e..ec8c29a 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index 907f629..e44b51e 100644
+index 5d789d2..24892b0 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -682,8 +682,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
@@ -114,7 +114,7 @@ index b0ea105..4feb8f3 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 9321eed..7a40a21 100644
+index 68a164c..82565d8 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
 @@ -1520,10 +1520,8 @@ phpdbg_main:

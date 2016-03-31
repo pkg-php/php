@@ -7,7 +7,7 @@ Subject: Fixed bug #63171, script hangs if odbc call during timeout
  1 file changed, 14 insertions(+), 7 deletions(-)
 
 diff --git a/ext/odbc/php_odbc.c b/ext/odbc/php_odbc.c
-index a91d7b7..82b4fd1 100644
+index e3c8e86..f432dcd 100644
 --- a/ext/odbc/php_odbc.c
 +++ b/ext/odbc/php_odbc.c
 @@ -434,7 +434,8 @@ static void _free_odbc_result(zend_resource *rsrc)
@@ -20,7 +20,7 @@ index a91d7b7..82b4fd1 100644
  #if defined(HAVE_SOLID) || defined(HAVE_SOLID_30) || defined(HAVE_SOLID_35)
  			SQLTransact(res->conn_ptr->henv, res->conn_ptr->hdbc,
  						(SQLUSMALLINT) SQL_COMMIT);
-@@ -484,9 +485,12 @@ static void _close_odbc_conn(zend_resource *rsrc)
+@@ -487,9 +488,12 @@ static void _close_odbc_conn(zend_resource *rsrc)
  		}
  	} ZEND_HASH_FOREACH_END();
  
@@ -36,7 +36,7 @@ index a91d7b7..82b4fd1 100644
  	efree(conn);
  	ODBCG(num_links)--;
  }
-@@ -509,9 +513,12 @@ static void _close_odbc_pconn(zend_resource *rsrc)
+@@ -512,9 +516,12 @@ static void _close_odbc_pconn(zend_resource *rsrc)
  		}
  	} ZEND_HASH_FOREACH_END();
  

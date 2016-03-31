@@ -45,7 +45,5 @@
 0045-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0046-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
 0047-make-opcache-lockfile-path-configurable.patch
-0048-Fix-bug-71659.patch
-0049-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
-0050-Fix-use-of-UNDEF-instead-of-NULL-in-read_dimension.patch
-0051-fix-incompatible-pointers-on-64-bit.patch
+0048-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
+0049-Fix-use-of-UNDEF-instead-of-NULL-in-read_dimension.patch

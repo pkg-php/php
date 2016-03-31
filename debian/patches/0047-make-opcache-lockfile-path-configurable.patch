@@ -24,7 +24,7 @@ index c074440..11c9c27 100644
 +opcache.lockfile_path (default "/tmp")
 +	Absolute path used to store shared lockfiles.
 diff --git a/ext/opcache/ZendAccelerator.h b/ext/opcache/ZendAccelerator.h
-index 89664a2..d6a37f5 100644
+index 99db6a2..42a34aa 100644
 --- a/ext/opcache/ZendAccelerator.h
 +++ b/ext/opcache/ZendAccelerator.h
 @@ -217,6 +217,7 @@ typedef struct _zend_accel_directives {
