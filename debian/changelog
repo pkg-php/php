@@ -1,3 +1,9 @@
+php5.6 (5.6.20+dfsg-2) experimental; urgency=medium
+
+  * Restore php.ini templates since phpX.Y-common is arch:any
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 31 Mar 2016 18:58:25 +0200
+
 php5.6 (5.6.20+dfsg-1) experimental; urgency=medium
 
   * Imported Upstream version 5.6.20+dfsg
