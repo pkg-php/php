@@ -47,3 +47,4 @@
 0047-make-opcache-lockfile-path-configurable.patch
 0048-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0049-Fix-use-of-UNDEF-instead-of-NULL-in-read_dimension.patch
+0050-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
