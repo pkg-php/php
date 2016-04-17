@@ -3,6 +3,7 @@ if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
 
     php_enable() {
 	# Enable PHP FPM by default when Apache 2 is installed
+	apache2_invoke enmod proxy_fcgi
 	return 0
     }
 else
