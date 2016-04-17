@@ -77,7 +77,6 @@ Standards-Version: 3.9.7
 Vcs-Git: git://anonscm.debian.org/pkg-php/php.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
-XS-Testsuite: autopkgtest
 
 Package: libapache2-mod-php@PHP_VERSION@
 Section: httpd
