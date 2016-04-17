@@ -1,5 +1,6 @@
 [Unit]
 Description=The PHP @PHP_VERSION@ FastCGI Process Manager
+Documentation=man:php-fpm@PHP_VERSION@(8)
 After=network.target
 
 [Service] 
