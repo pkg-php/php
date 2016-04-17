@@ -41,7 +41,7 @@ Files: debian/*
 Copyright: Ondřej Surý <ondrej@debian.org>
 License: Expat
 
-Files: debian/patches/use_embedded_timezonedb.patch
+Files: debian/patches/0013-Add-support-for-use-of-the-system-timezone-database.patch
 Copyright: 2008 Red Hat, Inc.
 License: PHP-3.01
 
