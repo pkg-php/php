@@ -1,7 +1,16 @@
-php_enable() {
-    # Don't enable PHP FPM by default
-    return 1
-}
+if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
+    . /usr/share/apache2/apache2-maintscript-helper
+
+    php_enable() {
+	# Enable PHP FPM by default when Apache 2 is installed
+	return 0
+    }
+else
+    php_enable() {
+	# Don't enable PHP FPM by default when Apache 2 is not installed
+	return 1
+    }
+fi
 
 if [ "$1" = "triggered" ] && [ "$2" = "/etc/php/@PHP_VERSION@/fpm/conf.d" ]; then
     invoke-rc.d php@PHP_VERSION@-fpm restart
