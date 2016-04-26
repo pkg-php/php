@@ -43,7 +43,7 @@ PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Z
 ifneq ($(DEB_SOURCE),php$(PHP_NAME_VERSION))
 $(error $(DEB_SOURCE) != php$(PHP_NAME_VERSION))
 endif
-REAL_TARGETS         := apache2 phpdbg embed fpm cgi cli
+REAL_TARGETS         := apache2 embed fpm cgi cli
 EXTRA_TARGETS        := ext
 TARGETS              := $(EXTRA_TARGETS) $(REAL_TARGETS)
 
@@ -56,7 +56,6 @@ PHP_DEV      := php$(PHP_NAME_VERSION)-dev
 PHP_APACHE2  := libapache2-mod-php$(PHP_NAME_VERSION)
 PHP_CGI      := php$(PHP_NAME_VERSION)-cgi
 PHP_CLI      := php$(PHP_NAME_VERSION)-cli
-PHP_PHPDBG   := php$(PHP_NAME_VERSION)-phpdbg
 
 # Generic commands
 
