@@ -6,7 +6,7 @@ Depends: apache2, php5.5-cgi
 Restrictions: needs-root
 
 Tests: mod-php
-Depends: libapache2-mod-php5.5
+Depends: apache2, libapache2-mod-php5.5
 Restrictions: needs-root
 
 Tests: fpm

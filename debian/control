@@ -1,4 +1,4 @@
-Source: php5.6
+Source: php5.5
 Section: php
 Priority: optional
 Maintainer: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
@@ -79,15 +79,15 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
 XS-Testsuite: autopkgtest
 
-Package: libapache2-mod-php5.6
+Package: libapache2-mod-php5.5
 Section: httpd
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-cli,
-         php5.6-common (= ${binary:Version}),
-         php5.6-json,
-         php5.6-opcache,
+         php5.5-cli,
+         php5.5-common (= ${binary:Version}),
+         php5.5-json,
+         php5.5-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -108,11 +108,11 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: libphp5.6-embed
+Package: libphp5.5-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-common (= ${binary:Version}),
+         php5.5-common (= ${binary:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -123,7 +123,7 @@ Suggests: php-pear
 Conflicts: libphp5-embed (<< 5.6.16+dfsg-4~)
 Priority: optional
 Description: HTML-embedded scripting language (Embedded SAPI library)
- This package provides the library /usr/lib/libphp5.6.so which can
+ This package provides the library /usr/lib/libphp5.5.so which can
  be used by application developers to embed PHP scripting functionality.
  .
  ${php:Extensions}
@@ -136,10 +136,10 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
  the API/ABI will be kept compatible even between minor releases.  You
  have been warned.
 
-Package: php5.6
+Package: php5.5
 Architecture: all
-Depends: php5.6-fpm | libapache2-mod-php5.6 | php5.6-cgi,
-         php5.6-common,
+Depends: php5.5-fpm | libapache2-mod-php5.5 | php5.5-cgi,
+         php5.5-common,
          ${misc:Depends}
 Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
@@ -153,14 +153,14 @@ Description: server-side, HTML-embedded scripting language (metapackage)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-cgi
+Package: php5.5-cgi
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-cli,
-         php5.6-common (= ${binary:Version}),
-         php5.6-json,
-         php5.6-opcache,
+         php5.5-cli,
+         php5.5-common (= ${binary:Version}),
+         php5.5-json,
+         php5.5-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -173,7 +173,7 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
  This package provides the /usr/lib/cgi-bin/php CGI interpreter built
  for use in Apache 2 with mod_actions, or any other CGI httpd that
  supports a similar mechanism.  Note that MOST users probably
- want the php5.6-fpm package.
+ want the php5.5-fpm package.
  .
  ${php:Extensions}
  .
@@ -181,14 +181,14 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-cli
+Package: php5.5-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
          mime-support,
-         php5.6-common (= ${binary:Version}),
-         php5.6-opcache,
-         php5.6-readline,
+         php5.5-common (= ${binary:Version}),
+         php5.5-opcache,
+         php5.5-readline,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -199,7 +199,7 @@ Breaks: php5-cli (<< 5.6.16+dfsg-4~)
 Replaces: php5-cli (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
- This package provides the /usr/bin/php5.6 command interpreter, useful for
+ This package provides the /usr/bin/php5.5 command interpreter, useful for
  testing PHP scripts from a shell or performing general shell scripting tasks.
  .
  ${php:Extensions}
@@ -208,13 +208,13 @@ Description: command-line interpreter for the PHP scripting language
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-dev
+Package: php5.5-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
          libpcre3-dev,
          libssl-dev,
-         php5.6-cli (>= ${binary:Version}),
-         php5.6-common (= ${binary:Version}),
+         php5.5-cli (>= ${binary:Version}),
+         php5.5-common (= ${binary:Version}),
          shtool,
          ${libtool:Depends},
          ${misc:Depends},
@@ -224,22 +224,22 @@ Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
 Architecture: any
 Recommends: dh-php,
             pkg-php-tools
-Description: Files for PHP5.6 module development
- This package provides the files from the PHP5.6 source needed for compiling
+Description: Files for PHP5.5 module development
+ This package provides the files from the PHP5.5 source needed for compiling
  additional modules.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-fpm
+Package: php5.5-fpm
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-cli,
-         php5.6-common (= ${binary:Version}),
-         php5.6-json,
-         php5.6-opcache,
+         php5.5-cli,
+         php5.5-common (= ${binary:Version}),
+         php5.5-json,
+         php5.5-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -252,7 +252,7 @@ Conflicts: php5-fpm (<< 5.6.16+dfsg-4~)
 Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  This package provides the Fast Process Manager interpreter that runs
  as a daemon and receives Fast/CGI requests.  Note that MOST Apache users
- probably want the libapache2-mod-php5.6 package.
+ probably want the libapache2-mod-php5.5 package.
  .
  ${php:Extensions}
  .
@@ -260,11 +260,11 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-phpdbg
+Package: php5.5-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
-         php5.6-common (= ${binary:Version}),
+         php5.5-common (= ${binary:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
@@ -283,16 +283,16 @@ Description: server-side, HTML-embedded scripting language (PHPDBG binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-xsl
+Package: php5.5-xsl
 Architecture: all
-Depends: php5.6-common,
-         php5.6-xml,
+Depends: php5.5-common,
+         php5.5-xml,
          ${misc:Depends}
 Description: XSL module for PHP (dummy)
  This package is a transitional dummy package and can be safely
  removed.
 
-Package: php5.6-odbc
+Package: php5.5-odbc
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -314,7 +314,7 @@ Description: ODBC module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-readline
+Package: php5.5-readline
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -336,7 +336,7 @@ Description: readline module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-recode
+Package: php5.5-recode
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -358,7 +358,7 @@ Description: recode module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-sqlite3
+Package: php5.5-sqlite3
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -380,7 +380,7 @@ Description: SQLite3 module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-xml
+Package: php5.5-xml
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -402,7 +402,7 @@ Description: DOM, SimpleXML, WDDX, XML, and XSL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-zip
+Package: php5.5-zip
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -424,7 +424,7 @@ Description: Zip module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-sybase
+Package: php5.5-sybase
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -446,7 +446,7 @@ Description: Sybase module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-gd
+Package: php5.5-gd
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -468,7 +468,7 @@ Description: GD module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-gmp
+Package: php5.5-gmp
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -490,7 +490,7 @@ Description: GMP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-ldap
+Package: php5.5-ldap
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -512,7 +512,7 @@ Description: LDAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-common
+Package: php5.5-common
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -534,7 +534,7 @@ Description: documentation, examples and common module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-intl
+Package: php5.5-intl
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -556,7 +556,7 @@ Description: Internationalisation module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-mysql
+Package: php5.5-mysql
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -578,7 +578,7 @@ Description: MySQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-mcrypt
+Package: php5.5-mcrypt
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -600,7 +600,7 @@ Description: libmcrypt module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-snmp
+Package: php5.5-snmp
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -622,7 +622,7 @@ Description: SNMP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-curl
+Package: php5.5-curl
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -644,7 +644,7 @@ Description: CURL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-json
+Package: php5.5-json
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -666,7 +666,7 @@ Description: JSON module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-pgsql
+Package: php5.5-pgsql
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -688,7 +688,7 @@ Description: PostgreSQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-mbstring
+Package: php5.5-mbstring
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -710,7 +710,7 @@ Description: MBSTRING module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-enchant
+Package: php5.5-enchant
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -732,7 +732,7 @@ Description: Enchant module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-imap
+Package: php5.5-imap
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -754,7 +754,7 @@ Description: IMAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-opcache
+Package: php5.5-opcache
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -776,7 +776,7 @@ Description: Zend OpCache module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-bcmath
+Package: php5.5-bcmath
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -798,7 +798,7 @@ Description: Bcmath module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-tidy
+Package: php5.5-tidy
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -820,7 +820,7 @@ Description: tidy module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-soap
+Package: php5.5-soap
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -842,7 +842,7 @@ Description: SOAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-interbase
+Package: php5.5-interbase
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -864,7 +864,7 @@ Description: Interbase module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-xmlrpc
+Package: php5.5-xmlrpc
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -886,7 +886,7 @@ Description: XMLRPC-EPI module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-pspell
+Package: php5.5-pspell
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
@@ -908,7 +908,7 @@ Description: pspell module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-bz2
+Package: php5.5-bz2
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
