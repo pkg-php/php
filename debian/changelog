@@ -9,8 +9,9 @@ php5.5 (5.5.34-1) experimental; urgency=medium
   * Update gbp.conf for PHP 5.5
   * Imported Upstream version 5.5.34
   * Rebase Debian patches on top of 5.5.34 release
+  * Synchronize patches with PHP 5.6
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 26 Apr 2016 11:43:56 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 26 Apr 2016 12:16:53 +0200
 
 php5.5 (5.5.32+dfsg-1+coinst) experimental; urgency=low
 
