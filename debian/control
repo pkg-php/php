@@ -358,28 +358,6 @@ Description: recode module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-common
-Architecture: any
-Depends: php-common (>= 1:33),
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-common:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-common:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-common:Replaces}
-Breaks: ${php-common:Breaks}
-Conflicts: ${php-common:Conflicts}
-Provides: ${php-common:Provides}
-Description: documentation, examples and common module for PHP
- This package provides the documentation, examples and common module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: php5.6-sqlite3
 Architecture: any
 Depends: php-common (>= 1:33),
@@ -534,23 +512,23 @@ Description: LDAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-interbase
+Package: php5.6-common
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
          ${misc:Depends},
          ${php:Depends},
-	 ${php-interbase:Depends},
+	 ${php-common:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-interbase:Pre-Depends}
+	     ${php-common:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Replaces: ${php-interbase:Replaces}
-Breaks: ${php-interbase:Breaks}
-Conflicts: ${php-interbase:Conflicts}
-Provides: ${php-interbase:Provides}
-Description: Interbase module for PHP
- This package provides the Interbase module(s) for PHP.
+Replaces: ${php-common:Replaces}
+Breaks: ${php-common:Breaks}
+Conflicts: ${php-common:Conflicts}
+Provides: ${php-common:Provides}
+Description: documentation, examples and common module for PHP
+ This package provides the documentation, examples and common module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -644,6 +622,50 @@ Description: SNMP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php5.6-curl
+Architecture: any
+Depends: php-common (>= 1:33),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-curl:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-curl:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-curl:Replaces}
+Breaks: ${php-curl:Breaks}
+Conflicts: ${php-curl:Conflicts}
+Provides: ${php-curl:Provides}
+Description: CURL module for PHP
+ This package provides the CURL module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php5.6-json
+Architecture: any
+Depends: php-common (>= 1:33),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-json:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-json:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-json:Replaces}
+Breaks: ${php-json:Breaks}
+Conflicts: ${php-json:Conflicts}
+Provides: ${php-json:Provides}
+Description: JSON module for PHP
+ This package provides the JSON module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.6-pgsql
 Architecture: any
 Depends: php-common (>= 1:33),
@@ -710,28 +732,6 @@ Description: Enchant module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-opcache
-Architecture: any
-Depends: php-common (>= 1:33),
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-opcache:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-opcache:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-opcache:Replaces}
-Breaks: ${php-opcache:Breaks}
-Conflicts: ${php-opcache:Conflicts}
-Provides: ${php-opcache:Provides}
-Description: Zend OpCache module for PHP
- This package provides the Zend OpCache module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: php5.6-imap
 Architecture: any
 Depends: php-common (>= 1:33),
@@ -754,23 +754,23 @@ Description: IMAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-bz2
+Package: php5.6-opcache
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
          ${misc:Depends},
          ${php:Depends},
-	 ${php-bz2:Depends},
+	 ${php-opcache:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-bz2:Pre-Depends}
+	     ${php-opcache:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Replaces: ${php-bz2:Replaces}
-Breaks: ${php-bz2:Breaks}
-Conflicts: ${php-bz2:Conflicts}
-Provides: ${php-bz2:Provides}
-Description: bzip2 module for PHP
- This package provides the bzip2 module(s) for PHP.
+Replaces: ${php-opcache:Replaces}
+Breaks: ${php-opcache:Breaks}
+Conflicts: ${php-opcache:Conflicts}
+Provides: ${php-opcache:Provides}
+Description: Zend OpCache module for PHP
+ This package provides the Zend OpCache module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -842,6 +842,28 @@ Description: SOAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php5.6-interbase
+Architecture: any
+Depends: php-common (>= 1:33),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-interbase:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-interbase:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-interbase:Replaces}
+Breaks: ${php-interbase:Breaks}
+Conflicts: ${php-interbase:Conflicts}
+Provides: ${php-interbase:Provides}
+Description: Interbase module for PHP
+ This package provides the Interbase module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.6-xmlrpc
 Architecture: any
 Depends: php-common (>= 1:33),
@@ -886,23 +908,23 @@ Description: pspell module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5.6-curl
+Package: php5.6-bz2
 Architecture: any
 Depends: php-common (>= 1:33),
          ucf,
          ${misc:Depends},
          ${php:Depends},
-	 ${php-curl:Depends},
+	 ${php-bz2:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-curl:Pre-Depends}
+	     ${php-bz2:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Replaces: ${php-curl:Replaces}
-Breaks: ${php-curl:Breaks}
-Conflicts: ${php-curl:Conflicts}
-Provides: ${php-curl:Provides}
-Description: CURL module for PHP
- This package provides the CURL module(s) for PHP.
+Replaces: ${php-bz2:Replaces}
+Breaks: ${php-bz2:Breaks}
+Conflicts: ${php-bz2:Conflicts}
+Provides: ${php-bz2:Provides}
+Description: bzip2 module for PHP
+ This package provides the bzip2 module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
