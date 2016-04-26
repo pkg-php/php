@@ -1,3 +1,12 @@
+php5.6 (5.6.20+json-2) experimental; urgency=medium
+
+  * Install changelogs to indep packages
+  * Turn license-problem-json-evil into catchall
+  * Add Breaks/Replaces between php5.6-dev and php5.6-json packages
+  * Fix license-problem-json-evil override at the right place
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 26 Apr 2016 19:40:41 +0200
+
 php5.6 (5.6.20+json-1) experimental; urgency=medium
 
   * Enable DEPRECATED mysql driver
