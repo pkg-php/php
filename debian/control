@@ -219,6 +219,8 @@ Depends: autoconf (>= 2.63),
          ${libtool:Depends},
          ${misc:Depends},
          ${perl:Depends}
+Breaks: php5.6-json (<< 5.6.20+json-1~)
+Replaces: php5.6-json (<< 5.6.20+json-1~)
 Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
            ${libtool:Conflicts}
 Architecture: any
