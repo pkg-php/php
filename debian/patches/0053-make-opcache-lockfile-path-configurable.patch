@@ -12,10 +12,8 @@ Signed-off-by: Fatih Acar <fatih.acar@gandi.net>
  ext/opcache/zend_shared_alloc.c       | 11 +++++++----
  4 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/ext/opcache/README b/ext/opcache/README
-index 693a7b4..de0acde 100644
---- a/ext/opcache/README
-+++ b/ext/opcache/README
+--- php5.5.orig/ext/opcache/README
++++ php5.5/ext/opcache/README
 @@ -218,3 +218,6 @@ opcache.mmap_base
  	processes have to map shared memory into the same address space. This
  	directive allows to manually fix the "Unable to reattach to base address"
@@ -23,11 +21,9 @@ index 693a7b4..de0acde 100644
 +
 +opcache.lockfile_path (default "/tmp")
 +	Absolute path used to store shared lockfiles.
-diff --git a/ext/opcache/ZendAccelerator.h b/ext/opcache/ZendAccelerator.h
-index 11942f1..9ffe61a 100644
---- a/ext/opcache/ZendAccelerator.h
-+++ b/ext/opcache/ZendAccelerator.h
-@@ -245,6 +245,7 @@ typedef struct _zend_accel_directives {
+--- php5.5.orig/ext/opcache/ZendAccelerator.h
++++ php5.5/ext/opcache/ZendAccelerator.h
+@@ -244,6 +244,7 @@ typedef struct _zend_accel_directives {
  	long           interned_strings_buffer;
  #endif
  	char          *restrict_api;
@@ -35,11 +31,9 @@ index 11942f1..9ffe61a 100644
  } zend_accel_directives;
  
  typedef struct _zend_accel_globals {
-diff --git a/ext/opcache/zend_accelerator_module.c b/ext/opcache/zend_accelerator_module.c
-index 5671f2f..600e0ca 100644
---- a/ext/opcache/zend_accelerator_module.c
-+++ b/ext/opcache/zend_accelerator_module.c
-@@ -284,6 +284,7 @@ ZEND_INI_BEGIN()
+--- php5.5.orig/ext/opcache/zend_accelerator_module.c
++++ php5.5/ext/opcache/zend_accelerator_module.c
+@@ -280,6 +280,7 @@ ZEND_INI_BEGIN()
  	STD_PHP_INI_BOOLEAN("opcache.enable_cli"             , "0"   , PHP_INI_SYSTEM, OnUpdateBool,              accel_directives.enable_cli,                zend_accel_globals, accel_globals)
  	STD_PHP_INI_ENTRY("opcache.error_log"                , ""    , PHP_INI_SYSTEM, OnUpdateString,	         accel_directives.error_log,                 zend_accel_globals, accel_globals)
  	STD_PHP_INI_ENTRY("opcache.restrict_api"             , ""    , PHP_INI_SYSTEM, OnUpdateString,	         accel_directives.restrict_api,              zend_accel_globals, accel_globals)
@@ -47,7 +41,7 @@ index 5671f2f..600e0ca 100644
  
  #ifdef ZEND_WIN32
  	STD_PHP_INI_ENTRY("opcache.mmap_base", NULL, PHP_INI_SYSTEM,	OnUpdateString,	                             accel_directives.mmap_base,                 zend_accel_globals, accel_globals)
-@@ -688,6 +689,7 @@ static ZEND_FUNCTION(opcache_get_configuration)
+@@ -684,6 +685,7 @@ static ZEND_FUNCTION(opcache_get_configu
  	add_assoc_bool(directives,   "opcache.fast_shutdown",          ZCG(accel_directives).fast_shutdown);
  	add_assoc_bool(directives,   "opcache.enable_file_override",   ZCG(accel_directives).file_override_enabled);
  	add_assoc_long(directives, 	 "opcache.optimization_level",     ZCG(accel_directives).optimization_level);
@@ -55,10 +49,8 @@ index 5671f2f..600e0ca 100644
  
  	add_assoc_zval(return_value, "directives", directives);
  
-diff --git a/ext/opcache/zend_shared_alloc.c b/ext/opcache/zend_shared_alloc.c
-index cde8114..66c901c 100644
---- a/ext/opcache/zend_shared_alloc.c
-+++ b/ext/opcache/zend_shared_alloc.c
+--- php5.5.orig/ext/opcache/zend_shared_alloc.c
++++ php5.5/ext/opcache/zend_shared_alloc.c
 @@ -38,7 +38,6 @@
  # include "sys/mman.h"
  #endif
@@ -67,7 +59,7 @@ index cde8114..66c901c 100644
  #define SEM_FILENAME_PREFIX ".ZendSem."
  #define S_H(s) g_shared_alloc_handler->s
  
-@@ -56,7 +55,7 @@ zend_smm_shared_globals *smm_shared_globals;
+@@ -56,7 +55,7 @@ zend_smm_shared_globals *smm_shared_glob
  static MUTEX_T zts_lock;
  #endif
  int lock_file;
@@ -76,7 +68,7 @@ index cde8114..66c901c 100644
  #endif
  
  static const zend_shared_memory_handler_entry handler_table[] = {
-@@ -76,7 +75,7 @@ static const zend_shared_memory_handler_entry handler_table[] = {
+@@ -76,7 +75,7 @@ static const zend_shared_memory_handler_
  };
  
  #ifndef ZEND_WIN32
@@ -94,7 +86,7 @@ index cde8114..66c901c 100644
  	lock_file = mkstemp(lockfile_name);
  	fchmod(lock_file, 0666);
  
-@@ -165,7 +164,11 @@ int zend_shared_alloc_startup(size_t requested_size)
+@@ -165,7 +164,11 @@ int zend_shared_alloc_startup(size_t req
  	smm_shared_globals = &tmp_shared_globals;
  	ZSMMG(shared_free) = requested_size; /* goes to tmp_shared_globals.shared_free */
  
