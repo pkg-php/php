@@ -1,4 +1,4 @@
-php5.6 (5.6.20+dfsg-4) experimental; urgency=medium
+php5.6 (5.6.21+json-1) experimental; urgency=medium
 
   * Enable DEPRECATED mysql driver
   * Remove repack scripts, they are not needed for PHP 7.0 anymore
