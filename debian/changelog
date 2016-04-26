@@ -1,3 +1,13 @@
+php5.6 (5.6.20+json-3) experimental; urgency=medium
+
+  [ Mathieu Parent ]
+  * binary-control-field-duplicates-source field "priority" in package libphp7.0-embed
+  * Use secure Vcs-* fields and move from gitweb to cgit
+  * Copyright: fix timezone-database.patch name
+  * Add documentation to php-fpm.service
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 26 Apr 2016 22:02:28 +0200
+
 php5.6 (5.6.20+json-2) experimental; urgency=medium
 
   * Install changelogs to indep packages
