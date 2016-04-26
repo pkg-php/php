@@ -5,12 +5,13 @@ set -e
 #EXTRA#
 
 if [ "$1" = "configure" ]; then
-    inidir=/etc/php/mods-available
+    # Install the new versioned configuration
+    inidir=/etc/php/@PHP_VERSION@/mods-available
 
     if [ -e /usr/lib/php/php-maintscript-helper ] ; then
 	. /usr/lib/php/php-maintscript-helper
 
-	for dsoname in @modules@; do
+	for dsoname in @extensions@; do
 	    inifile=${dsoname}.ini
 
 	    # Register new conffile with UCF

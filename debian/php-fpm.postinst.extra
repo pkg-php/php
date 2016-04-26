@@ -1,3 +1,8 @@
+php_enable() {
+    # Don't enable PHP FPM by default
+    return 1
+}
+
 if [ "$1" = "triggered" ] && [ "$2" = "/etc/php/@PHP_VERSION@/fpm/conf.d" ]; then
     invoke-rc.d php@PHP_VERSION@-fpm restart
 fi
