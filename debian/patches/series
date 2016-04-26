@@ -43,5 +43,5 @@
 0043-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
 0044-Disable-apxs2-module-activation-on-sapi-install.patch
 0045-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
-0053-make-opcache-lockfile-path-configurable.patch
-0054-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
+0046-make-opcache-lockfile-path-configurable.patch
+0047-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch

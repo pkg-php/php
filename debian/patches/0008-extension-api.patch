@@ -8,7 +8,7 @@ Subject: extension api
  2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/configure.in b/configure.in
-index a93751c..f75ac0a 100644
+index 58ef109..70c4889 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1191,8 +1191,10 @@ dnl Build extension directory path

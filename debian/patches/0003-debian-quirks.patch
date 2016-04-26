@@ -14,7 +14,7 @@ Subject: debian quirks
  8 files changed, 21 insertions(+), 20 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index d2bd921..a93751c 100644
+index 3e95f37..58ef109 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1082,7 +1082,7 @@ if test "$PHP_CLI" = "no"; then
