@@ -1,3 +1,13 @@
+php5.5 (5.5.34-2) experimental; urgency=medium
+
+  * Update phpapi to match PHP 5.5
+  * Fix changelog-news-debian-mismatch distribution experimental != unstable
+  * Turn license-problem-json-evil into catchall
+  * Install changelogs to indep packages
+  * Fix license-problem-json-evil override at the right place
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 26 Apr 2016 19:41:58 +0200
+
 php5.5 (5.5.34-1) experimental; urgency=medium
 
   * Use bundled libxmlrpc for PHP 5.5 xmlrpc extension
