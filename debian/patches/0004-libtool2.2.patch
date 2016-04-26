@@ -1,5 +1,5 @@
 From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
-Date: Sun, 1 Mar 2015 10:42:46 +0100
+Date: Sat, 2 May 2015 10:26:51 +0200
 Subject: libtool2.2
 
 ---
@@ -7,13 +7,13 @@ Subject: libtool2.2
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 27e4f1d..24d6873 100644
+index 9bd3b9a..4bf2811 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -6,10 +6,16 @@ datarootdir='@datarootdir@'
  exec_prefix="`eval echo @exec_prefix@`"
- phpdir="$prefix/lib/php5/build"
- includedir="$prefix/include/php5"
+ phpdir="$prefix/lib/php/@DEBIAN_PHP_API@/build"
+ includedir="$prefix/include/php/@DEBIAN_PHP_API@"
 +aclocaldir="$prefix/share/aclocal"
  builddir="`pwd`"
  SED="@SED@"
