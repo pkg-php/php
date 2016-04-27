@@ -1,3 +1,11 @@
+php5.6 (5.6.20+json-4) experimental; urgency=medium
+
+  * Debian PHPAPI stays same with ZTS and non-ZTS build
+  * Instead of conflicting with old php5 packages, use dpkg-divert to move
+    /usr/bin/phar away
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 27 Apr 2016 20:41:14 +0200
+
 php5.6 (5.6.20+json-3) experimental; urgency=medium
 
   [ Mathieu Parent ]
