@@ -1,4 +1,4 @@
-php7.0 (7.0.5-4) UNRELEASED; urgency=medium
+php7.0 (7.0.5-4) unstable; urgency=medium
 
   [ Mathieu Parent ]
   * Fix lintian warnings:
@@ -9,7 +9,14 @@ php7.0 (7.0.5-4) UNRELEASED; urgency=medium
     - Copyright: fix timezone-database.patch name
     - Add documentation to php-fpm.service
 
- -- Ondřej Surý <ondrej@debian.org>  Sun, 17 Apr 2016 21:23:14 +0200
+  [ Ondřej Surý ]
+  * Remove repack scripts, they are not needed for PHP 7.0 anymore
+  * Install changelogs to indep packages
+  * Debian PHPAPI stays same with ZTS and non-ZTS build
+  * Instead of conflicting with old php5 packages, use dpkg-divert to move
+    /usr/bin/phar away
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 27 Apr 2016 20:37:29 +0200
 
 php7.0 (7.0.5-3) unstable; urgency=medium
 
