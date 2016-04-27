@@ -549,7 +549,7 @@ override_dh_makeshlibs-arch:
 
 override_dh_gencontrol-arch:
 	# Bail-out if PHPAPI has changed
-	stored=$$(cat debian/phpapi)$(ZTS); \
+	stored=$$(cat debian/phpapi); \
 	for sapi in $(REAL_TARGETS); do \
 	    $(SAPI_PACKAGE) \
 	    $${sapi}-build/sapi/cli/php -n -r '$(BUILTIN_EXTENSION_CHECK)' \
