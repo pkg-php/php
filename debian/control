@@ -92,8 +92,6 @@ Depends: libmagic1,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
-Conflicts: libapache2-mod-php5 (<< 5.6.16+dfsg-4~),
-           libapache2-mod-php5filter (<< 5.6.16+dfsg-4~)
 Provides: libapache2-mod-php,
           ${php:Provides}
 Suggests: php-pear
@@ -120,7 +118,6 @@ Depends: libmagic1,
 Provides: libphp-embed,
           ${php:Provides}
 Suggests: php-pear
-Conflicts: libphp5-embed (<< 5.6.16+dfsg-4~)
 Description: HTML-embedded scripting language (Embedded SAPI library)
  This package provides the library /usr/lib/libphp5.6.so which can
  be used by application developers to embed PHP scripting functionality.
@@ -140,7 +137,6 @@ Architecture: all
 Depends: php5.6-fpm | libapache2-mod-php5.6 | php5.6-cgi,
          php5.6-common,
          ${misc:Depends}
-Conflicts: php5 (<< 5.6.16+dfsg-4~)
 Provides: php
 Description: server-side, HTML-embedded scripting language (metapackage)
  This package is a metapackage that, when installed, guarantees that you
@@ -166,7 +162,6 @@ Depends: libmagic1,
          ${shlibs:Depends}
 Provides: php-cgi,
           ${php:Provides}
-Conflicts: php5-cgi (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (CGI binary)
  This package provides the /usr/lib/cgi-bin/php CGI interpreter built
@@ -194,8 +189,6 @@ Depends: libedit2 (>= 2.11-20080614-4),
          ${shlibs:Depends}
 Provides: php-cli,
           ${php:Provides}
-Breaks: php5-cli (<< 5.6.16+dfsg-4~)
-Replaces: php5-cli (<< 5.6.16+dfsg-4~)
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
  This package provides the /usr/bin/php5.6 command interpreter, useful for
@@ -218,10 +211,7 @@ Depends: autoconf (>= 2.63),
          ${libtool:Depends},
          ${misc:Depends},
          ${perl:Depends}
-Breaks: php5.6-json (<< 5.6.20+json-1~)
-Replaces: php5.6-json (<< 5.6.20+json-1~)
-Conflicts: php5-dev (<< 5.6.16+dfsg-4~),
-           ${libtool:Conflicts}
+Conflicts: ${libtool:Conflicts}
 Architecture: any
 Recommends: dh-php,
             pkg-php-tools
@@ -249,7 +239,6 @@ Provides: php-fpm,
           ${php:Provides}
 Suggests: php-pear
 Pre-Depends: ${misc:Pre-Depends}
-Conflicts: php5-fpm (<< 5.6.16+dfsg-4~)
 Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  This package provides the Fast Process Manager interpreter that runs
  as a daemon and receives Fast/CGI requests.  Note that MOST Apache users
@@ -272,7 +261,6 @@ Depends: libmagic1,
          ${shlibs:Depends}
 Provides: php-phpdbg,
           ${php:Provides}
-Conflicts: php5-phpdbg (<< 5.6.16+dfsg-4~)
 Recommends: php-readline
 Description: server-side, HTML-embedded scripting language (PHPDBG binary)
  This package provides the /usr/bin/phpdbg command interpreter, useful for
@@ -295,7 +283,7 @@ Description: XSL module for PHP (dummy)
 
 Package: php5.6-odbc
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -317,7 +305,7 @@ Description: ODBC module for PHP
 
 Package: php5.6-readline
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -339,7 +327,7 @@ Description: readline module for PHP
 
 Package: php5.6-recode
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -361,7 +349,7 @@ Description: recode module for PHP
 
 Package: php5.6-sqlite3
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -383,7 +371,7 @@ Description: SQLite3 module for PHP
 
 Package: php5.6-xml
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -405,7 +393,7 @@ Description: DOM, SimpleXML, WDDX, XML, and XSL module for PHP
 
 Package: php5.6-zip
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -427,7 +415,7 @@ Description: Zip module for PHP
 
 Package: php5.6-sybase
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -449,7 +437,7 @@ Description: Sybase module for PHP
 
 Package: php5.6-gd
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -471,7 +459,7 @@ Description: GD module for PHP
 
 Package: php5.6-gmp
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -493,7 +481,7 @@ Description: GMP module for PHP
 
 Package: php5.6-ldap
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -515,7 +503,7 @@ Description: LDAP module for PHP
 
 Package: php5.6-common
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -537,7 +525,7 @@ Description: documentation, examples and common module for PHP
 
 Package: php5.6-intl
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -559,7 +547,7 @@ Description: Internationalisation module for PHP
 
 Package: php5.6-mysql
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -581,7 +569,7 @@ Description: MySQL module for PHP
 
 Package: php5.6-mcrypt
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -603,7 +591,7 @@ Description: libmcrypt module for PHP
 
 Package: php5.6-snmp
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -625,7 +613,7 @@ Description: SNMP module for PHP
 
 Package: php5.6-curl
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -647,7 +635,7 @@ Description: CURL module for PHP
 
 Package: php5.6-json
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -669,7 +657,7 @@ Description: JSON module for PHP
 
 Package: php5.6-pgsql
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -691,7 +679,7 @@ Description: PostgreSQL module for PHP
 
 Package: php5.6-mbstring
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -713,7 +701,7 @@ Description: MBSTRING module for PHP
 
 Package: php5.6-enchant
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -735,7 +723,7 @@ Description: Enchant module for PHP
 
 Package: php5.6-imap
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -757,7 +745,7 @@ Description: IMAP module for PHP
 
 Package: php5.6-opcache
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -779,7 +767,7 @@ Description: Zend OpCache module for PHP
 
 Package: php5.6-bcmath
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -801,7 +789,7 @@ Description: Bcmath module for PHP
 
 Package: php5.6-tidy
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -823,7 +811,7 @@ Description: tidy module for PHP
 
 Package: php5.6-soap
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -845,7 +833,7 @@ Description: SOAP module for PHP
 
 Package: php5.6-interbase
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -867,7 +855,7 @@ Description: Interbase module for PHP
 
 Package: php5.6-xmlrpc
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -889,7 +877,7 @@ Description: XMLRPC-EPI module for PHP
 
 Package: php5.6-pspell
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
@@ -911,7 +899,7 @@ Description: pspell module for PHP
 
 Package: php5.6-bz2
 Architecture: any
-Depends: php-common (>= 1:33),
+Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
