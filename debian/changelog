@@ -1,3 +1,10 @@
+php5.5 (5.5.35-1) experimental; urgency=medium
+
+  * Imported Upstream version 5.5.35
+  * Rebase patches on top of 5.5.35 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 29 Apr 2016 12:11:47 +0200
+
 php5.5 (5.5.34-4) experimental; urgency=medium
 
   * Debian PHPAPI stays same with ZTS and non-ZTS build
