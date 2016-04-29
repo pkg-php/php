@@ -1,3 +1,10 @@
+php7.0 (7.0.6-1) unstable; urgency=medium
+
+  * Imported Upstream version 7.0.6
+  * Rebase patches on top of 7.0.6 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 29 Apr 2016 12:14:25 +0200
+
 php7.0 (7.0.5-4) unstable; urgency=medium
 
   [ Mathieu Parent ]
