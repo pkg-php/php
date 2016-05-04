@@ -1,0 +1,6 @@
+
+---- EXPECTED OUTPUT
+Left Bottom: (0, 47)
+---- ACTUAL OUTPUT
+Left Bottom: (-1, 41)
+---- FAILED

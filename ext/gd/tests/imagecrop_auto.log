@@ -1,0 +1,46 @@
+
+---- EXPECTED OUTPUT
+TC IMG_CROP_DEFAULT
+int(11)
+int(11)
+Palette IMG_CROP_DEFAULT
+int(11)
+int(11)
+TC IMG_CROP_SIDES
+int(11)
+int(11)
+Palette IMG_CROP_SIDES
+int(11)
+int(11)
+TC IMG_CROP_BLACK
+int(11)
+int(11)
+Palette IMG_CROP_BLACK
+int(11)
+int(11)
+IMG_CROP_THRESHOLD
+int(240)
+int(134)
+---- ACTUAL OUTPUT
+TC IMG_CROP_DEFAULT
+int(99)
+int(99)
+Palette IMG_CROP_DEFAULT
+int(99)
+int(99)
+TC IMG_CROP_SIDES
+int(11)
+int(11)
+Palette IMG_CROP_SIDES
+int(11)
+int(11)
+TC IMG_CROP_BLACK
+int(11)
+int(11)
+Palette IMG_CROP_BLACK
+int(11)
+int(11)
+IMG_CROP_THRESHOLD
+int(240)
+int(134)
+---- FAILED

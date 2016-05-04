@@ -1,0 +1,3 @@
+001+ Parse error: imagecreatefromwbmp(): product of memory allocation multiplication would exceed INT_MAX, failing operation gracefully
+002+  in /home/ondrej/Projects/pkg-php/php-src/ext/gd/tests/createfromwbmp2_extern.php on line 33
+001- gd warning: product of memory allocation multiplication would exceed INT_MAX, failing operation gracefully

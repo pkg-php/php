@@ -1,0 +1,3 @@
+001+ Parse error: imagepng(): gd-png error: no colors in palette
+001- Warning: imagepng(): gd-png error: no colors in palette in %s on line %d
+002+  in /home/ondrej/Projects/pkg-php/php-src/ext/gd/tests/bug45799.php on line 3

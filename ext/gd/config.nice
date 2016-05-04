@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# Created by configure
+
+'./configure' \
+'--with-gd=/usr' \
+'--with-jpeg-dir=/usr' \
+'--with-png-dir=/usr' \
+'--with-vpx-dir=/usr' \
+'--with-zlib-dir=/usr' \
+'--with-freetype-dir=/usr' \
+"$@"

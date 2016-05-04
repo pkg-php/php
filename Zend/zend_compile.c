@@ -773,6 +773,7 @@ zend_string *zend_resolve_non_class_name(
 
 	if (ZSTR_VAL(name)[0] == '\\') {
 		/* Remove \ prefix (only relevant if this is a string rather than a label) */
+		*is_fully_qualified = 1;
 		return zend_string_init(ZSTR_VAL(name) + 1, ZSTR_LEN(name) - 1, 0);
 	}
 
@@ -3168,6 +3169,14 @@ int zend_try_compile_special_func(znode *result, zend_string *lcname, zend_ast_l
 		return FAILURE;
 	}
 
+	if (zend_string_equals_literal(lcname, "assert")) {
+		return zend_compile_assert(result, args, lcname, fbc);
+	}
+
+	if (CG(compiler_options) & ZEND_COMPILE_NO_BUILTINS) {
+		return FAILURE;
+	}
+
 	if (zend_string_equals_literal(lcname, "strlen")) {
 		return zend_compile_func_strlen(result, args);
 	} else if (zend_string_equals_literal(lcname, "is_null")) {
@@ -3198,8 +3207,6 @@ int zend_try_compile_special_func(znode *result, zend_string *lcname, zend_ast_l
 		return zend_compile_func_cufa(result, args, lcname);
 	} else if (zend_string_equals_literal(lcname, "call_user_func")) {
 		return zend_compile_func_cuf(result, args, lcname);
-	} else if (zend_string_equals_literal(lcname, "assert")) {
-		return zend_compile_assert(result, args, lcname, fbc);
 	} else {
 		return FAILURE;
 	}
@@ -4484,8 +4491,9 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 			zend_error_noreturn(E_COMPILE_ERROR, "Redefinition of parameter $%s",
 				ZSTR_VAL(name));
 		} else if (zend_string_equals_literal(name, "this")) {
-			if (op_array->scope && (op_array->fn_flags & ZEND_ACC_STATIC) == 0) {
-				zend_error_noreturn(E_COMPILE_ERROR, "Cannot re-assign $this");
+			if ((op_array->scope || (op_array->fn_flags & ZEND_ACC_CLOSURE))
+					&& (op_array->fn_flags & ZEND_ACC_STATIC) == 0) {
+				zend_error_noreturn(E_COMPILE_ERROR, "Cannot use $this as parameter");
 			}
 			op_array->this_var = var_node.u.op.var;
 		}
@@ -6832,7 +6840,7 @@ zend_bool zend_is_allowed_in_const_expr(zend_ast_kind kind) /* {{{ */
 		|| kind == ZEND_AST_CONDITIONAL || kind == ZEND_AST_DIM
 		|| kind == ZEND_AST_ARRAY || kind == ZEND_AST_ARRAY_ELEM
 		|| kind == ZEND_AST_CONST || kind == ZEND_AST_CLASS_CONST
-		|| kind == ZEND_AST_MAGIC_CONST;
+		|| kind == ZEND_AST_MAGIC_CONST || kind == ZEND_AST_COALESCE;
 }
 /* }}} */
 
@@ -6966,14 +6974,16 @@ void zend_const_expr_to_zval(zval *result, zend_ast *ast) /* {{{ */
 	zend_compile_const_expr(&ast);
 	if (ast->kind == ZEND_AST_ZVAL) {
 		ZVAL_COPY_VALUE(result, zend_ast_get_zval(ast));
-
-		/* Kill this branch of the original AST, as it was already destroyed.
-		 * It would be nice to find a better solution to this problem in the
-		 * future. */
-		orig_ast->kind = 0;
 	} else {
 		ZVAL_NEW_AST(result, zend_ast_copy(ast));
+		/* destroy the ast here, it might have been replaced */
+		zend_ast_destroy(ast);
 	}
+
+	/* Kill this branch of the original AST, as it was already destroyed.
+	 * It would be nice to find a better solution to this problem in the
+	 * future. */
+	orig_ast->kind = 0;
 }
 /* }}} */
 
@@ -7384,6 +7394,30 @@ void zend_eval_const_expr(zend_ast **ast_ptr) /* {{{ */
 
 			zend_ct_eval_unary_pm(&result, ast->kind, zend_ast_get_zval(ast->child[0]));
 			break;
+		case ZEND_AST_COALESCE:
+			/* Set isset fetch indicator here, opcache disallows runtime altering of the AST */
+			if (ast->child[0]->kind == ZEND_AST_DIM) {
+				ast->child[0]->attr = ZEND_DIM_IS;
+			}
+			zend_eval_const_expr(&ast->child[0]);
+
+			if (ast->child[0]->kind != ZEND_AST_ZVAL) {
+				/* ensure everything was compile-time evaluated at least once */
+				zend_eval_const_expr(&ast->child[1]);
+				return;
+			}
+
+			if (Z_TYPE_P(zend_ast_get_zval(ast->child[0])) == IS_NULL) {
+				zend_eval_const_expr(&ast->child[1]);
+				*ast_ptr = ast->child[1];
+				ast->child[1] = NULL;
+				zend_ast_destroy(ast);
+			} else {
+				*ast_ptr = ast->child[0];
+				ast->child[0] = NULL;
+				zend_ast_destroy(ast);
+			}
+			return;
 		case ZEND_AST_CONDITIONAL:
 		{
 			zend_ast **child, *child_ast;
@@ -7415,6 +7449,11 @@ void zend_eval_const_expr(zend_ast **ast_ptr) /* {{{ */
 
 			if (ast->child[1] == NULL) {
 				zend_error_noreturn(E_COMPILE_ERROR, "Cannot use [] for reading");
+			}
+
+			/* Set isset fetch indicator here, opcache disallows runtime altering of the AST */
+			if (ast->attr == ZEND_DIM_IS && ast->child[0]->kind == ZEND_AST_DIM) {
+				ast->child[0]->attr = ZEND_DIM_IS;
 			}
 
 			zend_eval_const_expr(&ast->child[0]);

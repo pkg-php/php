@@ -1,0 +1,7 @@
+
+---- EXPECTED OUTPUT
+Warning: imagepng(): gd-png error: no colors in palette in %s on line %d
+---- ACTUAL OUTPUT
+Parse error: imagepng(): gd-png error: no colors in palette
+ in /home/ondrej/Projects/pkg-php/php-src/ext/gd/tests/bug45799.php on line 3
+---- FAILED
