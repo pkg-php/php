@@ -1,0 +1,306 @@
+From: =?utf-8?q?Ond=C5=99ej_Sur=C3=BD?= <ondrej@sury.org>
+Date: Mon, 9 May 2016 15:53:04 +0200
+Subject: Revert fix for PHP#71820 as it broke mysqli_fetch_object
+
+---
+ ext/mysqli/mysqli.c            |  15 +-----
+ ext/mysqli/tests/bug71820.phpt | 104 -----------------------------------------
+ ext/pgsql/pgsql.c              |  15 +-----
+ ext/pgsql/tests/bug71820.phpt  |  93 ------------------------------------
+ 4 files changed, 2 insertions(+), 225 deletions(-)
+ delete mode 100644 ext/mysqli/tests/bug71820.phpt
+ delete mode 100644 ext/pgsql/tests/bug71820.phpt
+
+diff --git a/ext/mysqli/mysqli.c b/ext/mysqli/mysqli.c
+index 211f8ea..f19f6a8 100644
+--- a/ext/mysqli/mysqli.c
++++ b/ext/mysqli/mysqli.c
+@@ -1295,13 +1295,9 @@ void php_mysqli_fetch_into_hash(INTERNAL_FUNCTION_PARAMETERS, int override_flags
+ 		zend_fcall_info fci;
+ 		zend_fcall_info_cache fcc;
+ 		zval *retval_ptr;
+-		zend_bool props_merged = 0;
+ 
+ 		object_and_properties_init(return_value, ce, NULL);
+-		if (!ce->__set) {
+-			props_merged = 1;
+-			zend_merge_properties(return_value, Z_ARRVAL(dataset), 1 TSRMLS_CC);
+-		}
++		zend_merge_properties(return_value, Z_ARRVAL(dataset), 1 TSRMLS_CC);
+ 
+ 		if (ce->constructor) {
+ 			fci.size = sizeof(fci);
+@@ -1335,10 +1331,6 @@ void php_mysqli_fetch_into_hash(INTERNAL_FUNCTION_PARAMETERS, int override_flags
+ 
+ 			if (zend_call_function(&fci, &fcc TSRMLS_CC) == FAILURE) {
+ 				zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", ce->name, ce->constructor->common.function_name);
+-				if (fci.params) {
+-					efree(fci.params);
+-				}
+-				return;
+ 			} else {
+ 				if (retval_ptr) {
+ 					zval_ptr_dtor(&retval_ptr);
+@@ -1349,11 +1341,6 @@ void php_mysqli_fetch_into_hash(INTERNAL_FUNCTION_PARAMETERS, int override_flags
+ 			}
+ 		} else if (ctor_params) {
+ 			zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Class %s does not have a constructor hence you cannot use ctor_params", ce->name);
+-			return;
+-		}
+-
+-		if (!props_merged) {
+-			zend_merge_properties(return_value, Z_ARRVAL(dataset), 1 TSRMLS_CC);
+ 		}
+ 	}
+ }
+diff --git a/ext/mysqli/tests/bug71820.phpt b/ext/mysqli/tests/bug71820.phpt
+deleted file mode 100644
+index 02a2593..0000000
+--- a/ext/mysqli/tests/bug71820.phpt
++++ /dev/null
+@@ -1,104 +0,0 @@
+---TEST--
+-Bug #71820 __set has to be called after constructor, mysqli part
+---SKIPIF--
+-<?php
+-require_once('skipif.inc');
+-require_once('skipifconnectfailure.inc');
+-require_once("connect.inc");
+-?>
+---FILE--
+-<?php
+-
+-include "connect.inc";
+-
+-$tableName = 'test_mysqli_fetch_object';
+-
+-class TestRow
+-{
+-
+-	private $set_from_constructor;
+-	private $data;
+-	private $hello = "world";
+-
+-	public function __construct($set_from_constructor)
+-	{
+-		$this->set_from_constructor = $set_from_constructor;
+-	}
+-
+-	public function __set($name, $value)
+-	{
+-		if (!isset($this->data[$name])) {
+-			/* $this->set_from_constructor has an expected value */
+-			$this->data[$name] = 42 == $this->set_from_constructor ? $value : -1;
+-			return;
+-		}
+-		throw new \Exception('Duplicity column name.');
+-	}
+-
+-}
+-
+-
+-if (!($connection = my_mysqli_connect($host, $user, $passwd, $db, $port, $socket))) {
+-	printf("[001] Cannot connect to the server");
+-}
+-	
+-$rc = mysqli_query($connection, "DROP TABLE IF EXISTS $tableName");
+-if (!$rc)
+-	printf("[002] [%d] %s\n", mysqli_errno($connection), mysqli_error($connection));
+-
+-$table = <<<SQL
+-CREATE TABLE $tableName (
+-  id int NOT NULL auto_increment primary key,
+-  name varchar(255) NOT NULL
+-);
+-SQL;
+-
+-$rc = mysqli_query($connection, $table);
+-if (!$rc)
+-	printf("[003] [%d] %s\n", mysqli_errno($connection), mysqli_error($connection));
+-
+-$rc = mysqli_query($connection, "INSERT INTO " . $tableName . " (name) VALUES ('Doe'), ('Joe')");
+-if (!$rc)
+-	printf("[004] [%d] %s\n", mysqli_errno($connection), mysqli_error($connection));
+-
+-$result = mysqli_query($connection, 'SELECT * FROM ' . $tableName . ' LIMIT 10');
+-if (!$result)
+-	printf("[005] [%d] %s\n", mysqli_errno($result), mysqli_error($result));
+-
+-
+-while ($row = mysqli_fetch_object($result, 'TestRow', [42])) {
+-	var_dump($row);
+-}
+-
+-mysqli_close($connection);
+-
+-?>
+-==DONE==
+---EXPECTF--
+-object(TestRow)#%d (3) {
+-  ["set_from_constructor":"TestRow":private]=>
+-  int(42)
+-  ["data":"TestRow":private]=>
+-  array(2) {
+-    ["id"]=>
+-    string(1) "1"
+-    ["name"]=>
+-    string(3) "Doe"
+-  }
+-  ["hello":"TestRow":private]=>
+-  string(5) "world"
+-}
+-object(TestRow)#%d (3) {
+-  ["set_from_constructor":"TestRow":private]=>
+-  int(42)
+-  ["data":"TestRow":private]=>
+-  array(2) {
+-    ["id"]=>
+-    string(1) "2"
+-    ["name"]=>
+-    string(3) "Joe"
+-  }
+-  ["hello":"TestRow":private]=>
+-  string(5) "world"
+-}
+-==DONE==
+diff --git a/ext/pgsql/pgsql.c b/ext/pgsql/pgsql.c
+index 84195f7..8f3518d 100644
+--- a/ext/pgsql/pgsql.c
++++ b/ext/pgsql/pgsql.c
+@@ -2784,13 +2784,9 @@ static void php_pgsql_fetch_hash(INTERNAL_FUNCTION_PARAMETERS, long result_type,
+ 		zend_fcall_info fci;
+ 		zend_fcall_info_cache fcc;
+ 		zval *retval_ptr;
+-		zend_bool props_merged = 0;
+ 
+ 		object_and_properties_init(return_value, ce, NULL);
+-		if (!ce->__set) {
+-			props_merged = 1;
+-			zend_merge_properties(return_value, Z_ARRVAL(dataset), 1 TSRMLS_CC);
+-		}
++		zend_merge_properties(return_value, Z_ARRVAL(dataset), 1 TSRMLS_CC);
+ 
+ 		if (ce->constructor) {
+ 			fci.size = sizeof(fci);
+@@ -2824,10 +2820,6 @@ static void php_pgsql_fetch_hash(INTERNAL_FUNCTION_PARAMETERS, long result_type,
+ 
+ 			if (zend_call_function(&fci, &fcc TSRMLS_CC) == FAILURE) {
+ 				zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Could not execute %s::%s()", ce->name, ce->constructor->common.function_name);
+-				if (fci.params) {
+-					efree(fci.params);
+-				}
+-				return;
+ 			} else {
+ 				if (retval_ptr) {
+ 					zval_ptr_dtor(&retval_ptr);
+@@ -2838,11 +2830,6 @@ static void php_pgsql_fetch_hash(INTERNAL_FUNCTION_PARAMETERS, long result_type,
+ 			}
+ 		} else if (ctor_params) {
+ 			zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 0 TSRMLS_CC, "Class %s does not have a constructor hence you cannot use ctor_params", ce->name);
+-			return;
+-		}
+-
+-		if (!props_merged) {
+-			zend_merge_properties(return_value, Z_ARRVAL(dataset), 1 TSRMLS_CC);
+ 		}
+ 	}
+ }
+diff --git a/ext/pgsql/tests/bug71820.phpt b/ext/pgsql/tests/bug71820.phpt
+deleted file mode 100644
+index 4d99e34..0000000
+--- a/ext/pgsql/tests/bug71820.phpt
++++ /dev/null
+@@ -1,93 +0,0 @@
+---TEST--
+-Bug #71820 pg_fetch_object bind parameters before call constructor
+---SKIPIF--
+-<?php
+-require_once('skipif.inc');
+-?>
+---FILE--
+-<?php
+-
+-require_once('config.inc');
+-
+-$tableName = 'test_pg_fetch_object';
+-
+-class TestRow
+-{
+-
+-	private $set_from_constructor;
+-	private $data;
+-	private $hello = 42;
+-
+-	public function __construct($set_from_constructor)
+-	{
+-		$this->set_from_constructor = $set_from_constructor;
+-	}
+-
+-	public function __set($name, $value)
+-	{
+-		if (!isset($this->data[$name])) {
+-			/* $this->set_from_constructor has an expected value */
+-			$this->data[$name] = 42 == $this->set_from_constructor ? $value : -1;
+-			return;
+-		}
+-		throw new \Exception('Duplicity column name.');
+-	}
+-
+-}
+-
+-$connection = pg_connect($conn_str);
+-
+-if (!$connection) {
+-	die('Connection faild.');
+-}
+-
+-$table = <<<SQL
+-CREATE TABLE IF NOT EXISTS $tableName (
+-  id serial NOT NULL,
+-  name character varying NOT NULL
+-);
+-SQL;
+-pg_query($connection, $table);
+-
+-pg_query_params('INSERT INTO ' . $tableName . ' (name) VALUES ($1), ($2);', ['$1' => 'Doe', '$2' => 'Joe']);
+-
+-$result = pg_query('SELECT * FROM ' . $tableName . ' LIMIT 10;');
+-
+-while ($row = pg_fetch_object($result, NULL, 'TestRow', [42])) {
+-	var_dump($row);
+-}
+-
+-pg_query($connection, "DROP TABLE $tableName");
+-
+-pg_close($connection);
+-
+-?>
+-==DONE==
+---EXPECTF--
+-object(TestRow)#%d (3) {
+-  ["set_from_constructor":"TestRow":private]=>
+-  int(42)
+-  ["data":"TestRow":private]=>
+-  array(2) {
+-    ["id"]=>
+-    string(1) "1"
+-    ["name"]=>
+-    string(3) "Doe"
+-  }
+-  ["hello":"TestRow":private]=>
+-  int(42)
+-}
+-object(TestRow)#%d (3) {
+-  ["set_from_constructor":"TestRow":private]=>
+-  int(42)
+-  ["data":"TestRow":private]=>
+-  array(2) {
+-    ["id"]=>
+-    string(1) "2"
+-    ["name"]=>
+-    string(3) "Joe"
+-  }
+-  ["hello":"TestRow":private]=>
+-  int(42)
+-}
+-==DONE==
