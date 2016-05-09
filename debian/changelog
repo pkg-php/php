@@ -1,3 +1,11 @@
+php5.6 (5.6.21-2) experimental; urgency=medium
+
+  * Correct the Breaks/Replaces between xml and xsl extensions
+  * Revert back to master-X.Y/upstrean-X.Y branches after repository split
+  * Revert fix for PHP#71820 as it broke mysqli_fetch_object
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 09 May 2016 15:54:15 +0200
+
 php5.6 (5.6.21-1) experimental; urgency=medium
 
   * Imported Upstream version 5.6.21
