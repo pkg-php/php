@@ -1,3 +1,10 @@
+php7.0 (7.0.6-3) unstable; urgency=medium
+
+  * Don't rely on greping the output, but use php-fpmX.Y -t return code to
+    detect errors (Closes: #823784)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 09 May 2016 16:24:43 +0200
+
 php7.0 (7.0.6-2) unstable; urgency=medium
 
   * Revert fix for PHP#71820 as it broke mysqli_fetch_object
