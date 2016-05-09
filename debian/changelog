@@ -1,3 +1,9 @@
+php7.0 (7.0.6-2) unstable; urgency=medium
+
+  * Revert fix for PHP#71820 as it broke mysqli_fetch_object
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 09 May 2016 15:46:46 +0200
+
 php7.0 (7.0.6-1) unstable; urgency=medium
 
   * Imported Upstream version 7.0.6
