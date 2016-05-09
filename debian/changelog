@@ -1,3 +1,10 @@
+php5.6 (5.6.21-3) experimental; urgency=medium
+
+  * Don't rely on greping the output, but use php-fpmX.Y -t return code to
+    detect errors (Closes: #823784)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 09 May 2016 16:25:54 +0200
+
 php5.6 (5.6.21-2) experimental; urgency=medium
 
   * Correct the Breaks/Replaces between xml and xsl extensions
