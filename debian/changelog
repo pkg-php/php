@@ -1,3 +1,15 @@
+php5.6 (5.6.21-5) experimental; urgency=medium
+
+  [ Ondřej Surý ]
+  * Remove php-fpm-checkconf as php-fpm often ends with zend_mm_heap
+    corrupted that prevents th service to be (re)started
+
+  [ Santiago Vila ]
+  * "Arch: all" packages do not need the whole build process to be created
+    (Closes: #823960)
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 10 May 2016 21:18:04 +0200
+
 php5.6 (5.6.21-4) experimental; urgency=medium
 
   * Upstart init script was missing /run/php creation
