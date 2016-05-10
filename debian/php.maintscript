@@ -1,2 +1,0 @@
-symlink_to_dir /usr/share/doc/php@PHP_VERSION@ php@PHP_VERSION@-common 7.0.5-3~ php@PHP_VERSION@
-symlink_to_dir /usr/share/doc/php@PHP_VERSION@ /usr/share/doc/php@PHP_VERSION@-common 7.0.5-3~ php@PHP_VERSION@
