@@ -9,7 +9,11 @@ stop on runlevel [016]
 # you can uncomment this with recent upstart
 # reload signal USR2
 
-pre-start exec /usr/lib/php/php@PHP_VERSION@-fpm-checkconf
+pre-start script
+mkdir -p /run/php
+chmod 0755 /run/php
+chown www-data:www-data /run/php
+end script
 
 respawn
 exec /usr/sbin/php-fpm@PHP_VERSION@ --nodaemonize --fpm-config /etc/php/@PHP_VERSION@/fpm/php-fpm.conf
