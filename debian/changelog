@@ -1,3 +1,11 @@
+php7.0 (7.0.6-6) unstable; urgency=medium
+
+  [ Santiago Vila ]
+  * "Arch: all" packages do not need the whole build process to be created
+    (Closes: #823960)
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 10 May 2016 21:14:22 +0200
+
 php7.0 (7.0.6-5) unstable; urgency=medium
 
   * Remove php-fpm-checkconf as php-fpm often ends with zend_mm_heap
