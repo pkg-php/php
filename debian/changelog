@@ -1,3 +1,10 @@
+php7.0 (7.0.6-5) unstable; urgency=medium
+
+  * Remove php-fpm-checkconf as php-fpm often ends with zend_mm_heap
+    corrupted that prevents th service to be (re)started
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 10 May 2016 18:48:30 +0200
+
 php7.0 (7.0.6-4) unstable; urgency=medium
 
   * Upstart init script was missing /run/php creation
