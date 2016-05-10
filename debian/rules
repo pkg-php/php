@@ -486,7 +486,6 @@ override_dh_install-arch: remove-files-stamp prepare-fpm-pools
 
 # Install a helper script for checking PHP FPM configuration
 	mkdir -p debian/$(PHP_FPM)/usr/lib/php/
-	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
 	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
 
 	# sanitize php.ini files
