@@ -1,3 +1,13 @@
+php5.5 (5.5.35-2) experimental; urgency=medium
+
+  * Correct the Breaks/Replaces between xml and xsl extensions
+  * Disable systemd on Ubuntu 12.04 LTS
+  * We require a more recent libzip-dev >= 1.0.0
+  * Remove obsolete maintscript helper commands
+  * We need libpcre3-dev (>= 8.20) for PCRE JIT support
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 10 May 2016 15:19:03 +0200
+
 php5.5 (5.5.35-1) experimental; urgency=medium
 
   * Imported Upstream version 5.5.35
