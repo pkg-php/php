@@ -1,3 +1,13 @@
+php7.0 (7.0.6-4) unstable; urgency=medium
+
+  * Upstart init script was missing /run/php creation
+  * Disable systemd on Ubuntu 12.04 LTS
+  * We require a more recent libzip-dev >= 1.0.0
+  * Remove obsolete maintscript helper commands
+  * We need libpcre3-dev (>= 8.20) for PCRE JIT support
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 10 May 2016 15:16:05 +0200
+
 php7.0 (7.0.6-3) unstable; urgency=medium
 
   * Don't rely on greping the output, but use php-fpmX.Y -t return code to
