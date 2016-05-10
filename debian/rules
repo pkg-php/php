@@ -313,12 +313,16 @@ override_dh_auto_clean: unprepared
 	# remove shared config.cache
 	rm -f $(CURDIR)/config.cache
 
-override_dh_auto_configure: prepared
+override_dh_auto_configure-indep:
+
+override_dh_auto_configure-arch: prepared
 	for target in $(TARGETS); do \
 	  dh_auto_configure --builddirectory $${target}-build $(PARALLEL) -- $$(eval echo \$${$${target}_config}); \
 	done
 
-override_dh_auto_build:
+override_dh_auto_build-indep:
+
+override_dh_auto_build-arch:
 	for target in $(TARGETS); do \
 	  dh_auto_build --builddirectory $${target}-build $(PARALLEL); \
 	done
