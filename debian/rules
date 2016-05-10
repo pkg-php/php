@@ -116,6 +116,14 @@ else
   DH_SYSTEMD        :=
 endif
 
+# Disable systemd on Ubuntu 12.04 LTS
+ifeq (Ubuntu,$(DEB_VENDOR))
+  ifeq (precise,$(DEB_DISTRIBUTION))
+  CONFIGURE_SYSTEMD := --without-fpm-systemd
+  DH_SYSTEMD        :=
+  endif
+endif
+
 ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),amd64 armel armhf i386 ia64 powerpc))
   CONFIGURE_DTRACE_ARGS := --enable-dtrace
 else
