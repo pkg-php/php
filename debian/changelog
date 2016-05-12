@@ -1,3 +1,9 @@
+php7.0 (7.0.6-8) unstable; urgency=medium
+
+  * Restore dba extension package
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 12 May 2016 20:19:56 +0200
+
 php7.0 (7.0.6-7) unstable; urgency=medium
 
   * Add more systemd features to protect host system (Closes: #823973)
