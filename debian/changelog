@@ -1,3 +1,12 @@
+php5.5 (5.5.35-4) experimental; urgency=medium
+
+  * Remove php-fpm-checkconf as php-fpm often ends with zend_mm_heap
+    corrupted that prevents th service to be (re)started
+  * Add more systemd features to protect host system
+  * Restore dba extension package
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 12 May 2016 20:21:39 +0200
+
 php5.5 (5.5.35-3) experimental; urgency=medium
 
   [ Santiago Vila ]
