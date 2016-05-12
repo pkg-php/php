@@ -1,3 +1,11 @@
+php7.0 (7.0.6-7) unstable; urgency=medium
+
+  * Add more systemd features to protect host system (Closes: #823973)
+  * Remove php-gettext from phpX.Y-common provides as it clashes with
+    existing package (Closes: #823815)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 12 May 2016 10:47:10 +0200
+
 php7.0 (7.0.6-6) unstable; urgency=medium
 
   [ Santiago Vila ]
