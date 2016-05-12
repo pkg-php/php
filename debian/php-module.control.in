@@ -12,7 +12,8 @@ Built-Using: ${php:Built-Using}
 Replaces: ${php-@ext@:Replaces}
 Breaks: ${php-@ext@:Breaks}
 Conflicts: ${php-@ext@:Conflicts}
-Provides: ${php-@ext@:Provides}
+Provides: php@php_major@-@ext@,
+          ${php-@ext@:Provides}
 Description: @description@ module for PHP
  This package provides the @description@ module(s) for PHP.
  .

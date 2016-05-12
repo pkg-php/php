@@ -93,6 +93,7 @@ Depends: libmagic1,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: libapache2-mod-php,
+          libapache2-mod-php@PHP_MAJOR@,
           ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
@@ -116,6 +117,7 @@ Depends: libmagic1,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: libphp-embed,
+          libphp@PHP_MAJOR@-embed,
           ${php:Provides}
 Suggests: php-pear
 Description: HTML-embedded scripting language (Embedded SAPI library)
@@ -137,7 +139,8 @@ Architecture: all
 Depends: php@PHP_VERSION@-fpm | libapache2-mod-php@PHP_VERSION@ | php@PHP_VERSION@-cgi,
          php@PHP_VERSION@-common,
          ${misc:Depends}
-Provides: php
+Provides: php,
+          php@PHP_MAJOR@
 Description: server-side, HTML-embedded scripting language (metapackage)
  This package is a metapackage that, when installed, guarantees that you
  have at least one of the four server-side versions of the PHP interpreter
@@ -161,6 +164,7 @@ Depends: libmagic1,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: php-cgi,
+          php@PHP_MAJOR@-cgi,
           ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (CGI binary)
@@ -188,6 +192,7 @@ Depends: libedit2 (>= 2.11-20080614-4),
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: php-cli,
+          php@PHP_MAJOR@-cli,
           ${php:Provides}
 Suggests: php-pear
 Description: command-line interpreter for the PHP scripting language
@@ -236,6 +241,7 @@ Depends: libmagic1,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: php-fpm,
+          php@PHP_MAJOR@-fpm,
           ${php:Provides}
 Suggests: php-pear
 Pre-Depends: ${misc:Pre-Depends}
@@ -260,6 +266,7 @@ Depends: libmagic1,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: php-phpdbg,
+          php@PHP_MAJOR@-phpdbg,
           ${php:Provides}
 Recommends: php-readline
 Description: server-side, HTML-embedded scripting language (PHPDBG binary)

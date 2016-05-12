@@ -569,12 +569,15 @@ override_dh_gencontrol-arch:
 	dh_gencontrol -a
 
 debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides debian/rules.d/* debian/php-module.control.in
-	$(SED) -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" -e "s/@BUILT_USING@/$(BUILT_USING)/g" >$@ <$<
+	$(SED) -e "s/@PHP_MAJOR@/$(PHP_MAJOR_VERSION)/g" \
+	       -e "s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g" \
+		   -e "s/@BUILT_USING@/$(BUILT_USING)/g" >$@ <$<
 	for ext in $(ext_PACKAGES); do \
 	  package=php$(PHP_NAME_VERSION)-$${ext}; \
 	  description=$$(eval echo \$${$${ext}_DESCRIPTION}); \
 	  echo >>$@; \
-	  $(SED) -e "s|@ext@|$${ext}|" -e "s|@package@|$${package}|" -e "s|@description@|$${description}|" >>$@ <debian/php-module.control.in; \
+	  $(SED) -e "s|@ext@|$${ext}|" -e "s|@package@|$${package}|" \
+	         -e "s|@php_major@|$(PHP_MAJOR_VERSION)|" -e "s|@description@|$${description}|" >>$@ <debian/php-module.control.in; \
 	done
 	mkdir -p debian/tests
 	for f in debian/tests.in/*; do \
