@@ -1,8 +1,0 @@
-001+ Unknown error: imagecreatefrompng(): gd-png: fatal libpng error: Read Error: truncated data
-002+  in Unknown on line 0
-003+ 
-004+ Parse error: imagecreatefrompng(): gd-png error: setjmp returns error condition 2
-005+  in /home/ondrej/Projects/pkg-php/php-src/ext/gd/tests/bug39780_extern.php on line 3
-006+ 
-001- gd-png:  fatal libpng error: Read Error: truncated data
-002- gd-png error: setjmp returns error condition 2

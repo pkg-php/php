@@ -1,8 +1,0 @@
-
----- EXPECTED OUTPUT
-Warning: imagearc() expects exactly 8 parameters, 7 given in %s on line %d
-abebb25b5a2813cfbf92f1f24365786a
----- ACTUAL OUTPUT
-Warning: imagearc() expects exactly 8 parameters, 7 given in /home/ondrej/Projects/pkg-php/php-src/ext/gd/tests/imagearc_error1.php on line 8
-40a085f6e7d9b5f3622d69da5549e64f
----- FAILED
