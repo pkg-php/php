@@ -721,28 +721,6 @@ Description: Enchant module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-imap
-Architecture: any
-Depends: php-common (>= 1:35),
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-imap:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-imap:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-imap:Replaces}
-Breaks: ${php-imap:Breaks}
-Conflicts: ${php-imap:Conflicts}
-Provides: ${php-imap:Provides}
-Description: IMAP module for PHP
- This package provides the IMAP module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: php7.0-opcache
 Architecture: any
 Depends: php-common (>= 1:35),
@@ -760,6 +738,28 @@ Conflicts: ${php-opcache:Conflicts}
 Provides: ${php-opcache:Provides}
 Description: Zend OpCache module for PHP
  This package provides the Zend OpCache module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php7.0-imap
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-imap:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-imap:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-imap:Replaces}
+Breaks: ${php-imap:Breaks}
+Conflicts: ${php-imap:Conflicts}
+Provides: ${php-imap:Provides}
+Description: IMAP module for PHP
+ This package provides the IMAP module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -826,6 +826,28 @@ Conflicts: ${php-soap:Conflicts}
 Provides: ${php-soap:Provides}
 Description: SOAP module for PHP
  This package provides the SOAP module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php7.0-dba
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-dba:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-dba:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-dba:Replaces}
+Breaks: ${php-dba:Breaks}
+Conflicts: ${php-dba:Conflicts}
+Provides: ${php-dba:Provides}
+Description: DBA module for PHP
+ This package provides the DBA module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
