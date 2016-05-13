@@ -134,7 +134,7 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 
 Package: php@PHP_VERSION@
 Architecture: all
-Depends: php@PHP_VERSION@-fpm | libapache2-mod-php@PHP_VERSION@ | php@PHP_VERSION@-cgi,
+Depends: libapache2-mod-php@PHP_VERSION@ | php@PHP_VERSION@-fpm | php@PHP_VERSION@-cgi,
          php@PHP_VERSION@-common,
          ${misc:Depends}
 Provides: php
