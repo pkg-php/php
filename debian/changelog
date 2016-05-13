@@ -1,3 +1,16 @@
+php5.5 (5.5.35-5) experimental; urgency=medium
+
+  [ Ondřej Surý ]
+  * Offer libapache2-mod-phpX.Y as a first alternative in phpX.Y
+    dependency (Closes: #822774)
+
+  [ Mathieu Parent ]
+  * Enable PHP FPM by default after install (Closes: #820282)
+  * Only use fpm SetHandler when it works
+  * Enable mod_proxy_fcgi for php-fpm
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 13 May 2016 09:07:37 +0200
+
 php5.5 (5.5.35-4) experimental; urgency=medium
 
   * Remove php-fpm-checkconf as php-fpm often ends with zend_mm_heap
