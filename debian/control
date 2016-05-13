@@ -134,7 +134,7 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 
 Package: php5.5
 Architecture: all
-Depends: php5.5-fpm | libapache2-mod-php5.5 | php5.5-cgi,
+Depends: libapache2-mod-php5.5 | php5.5-fpm | php5.5-cgi,
          php5.5-common,
          ${misc:Depends}
 Provides: php
