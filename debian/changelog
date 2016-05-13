@@ -1,3 +1,16 @@
+php5.6 (5.6.21-7) experimental; urgency=medium
+
+  [ Ondřej Surý ]
+  * Offer libapache2-mod-phpX.Y as a first alternative in phpX.Y
+    dependency (Closes: #822774)
+
+  [ Mathieu Parent ]
+  * Enable PHP FPM by default after install (Closes: #820282)
+  * Only use fpm SetHandler when it works
+  * Enable mod_proxy_fcgi for php-fpm
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 13 May 2016 09:08:00 +0200
+
 php5.6 (5.6.21-6) experimental; urgency=medium
 
   * Add more systemd features to protect host system
