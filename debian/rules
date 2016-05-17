@@ -515,6 +515,11 @@ ifeq (yes,$(RUN_TESTS))
 	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
 endif
 
+override_dh_installinit:
+	dh_installinit --restart-after-upgrade
+
+override_dh_systemd_start:
+	dh_systemd_start --restart-after-upgrade
 
 override_dh_link:
 # shipping duplicate files from other packages is hell for security audits
