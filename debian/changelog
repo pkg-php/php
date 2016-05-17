@@ -1,3 +1,17 @@
+php5.5 (5.5.35-6) experimental; urgency=medium
+
+  [ Ondřej Surý ]
+  * Multiple d/copyright updates
+
+  [ Nishanth Aravamudan ]
+  * Not all environments are guaranteed to contain wget.
+
+  [ Ondřej Surý ]
+  * Remove default params from gbp.conf
+  * Re-Imported Upstream version 5.5.35 to fix gbp dch
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 17 May 2016 10:26:50 +0200
+
 php5.5 (5.5.35-5) experimental; urgency=medium
 
   [ Ondřej Surý ]
