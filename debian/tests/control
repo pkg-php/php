@@ -1,8 +1,8 @@
 Tests: cli
-Depends: php5.5-cli
+Depends: php5.5-cli, wget
 
 Tests: cgi
-Depends: apache2, php5.5-cgi
+Depends: apache2, php5.5-cgi, wget
 Restrictions: needs-root
 
 Tests: mod-php
@@ -10,5 +10,5 @@ Depends: apache2, libapache2-mod-php5.5
 Restrictions: needs-root
 
 Tests: fpm
-Depends: apache2, php5.5-fpm
+Depends: apache2, php5.5-fpm, wget 
 Restrictions: needs-root
