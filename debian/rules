@@ -117,11 +117,14 @@ else
   DH_SYSTEMD        :=
 endif
 
+RESTART_AFTER_UPGRADE := --restart-after-upgrade
+
 # Disable systemd on Ubuntu 12.04 LTS
 ifeq (Ubuntu,$(DEB_VENDOR))
   ifeq (precise,$(DEB_DISTRIBUTION))
   CONFIGURE_SYSTEMD := --without-fpm-systemd
   DH_SYSTEMD        :=
+  RESTART_AFTER_UPGRADE :=
   endif
 endif
 
@@ -516,10 +519,10 @@ ifeq (yes,$(RUN_TESTS))
 endif
 
 override_dh_installinit:
-	dh_installinit --restart-after-upgrade
+	dh_installinit $(RESTART_AFTER_UPGRADE)
 
 override_dh_systemd_start:
-	dh_systemd_start --restart-after-upgrade
+	dh_systemd_start $(RESTART_AFTER_UPGRADE)
 
 override_dh_link:
 # shipping duplicate files from other packages is hell for security audits
