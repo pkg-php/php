@@ -1,3 +1,10 @@
+php7.0 (7.0.6-13) unstable; urgency=medium
+
+  * Don't enable PHP FPM by default since libapache2-mod-phpX.Y is the
+    default choice now
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 19 May 2016 16:56:59 +0200
+
 php7.0 (7.0.6-12) unstable; urgency=medium
 
   * Enable --restart-after-upgrade for both dh_installinit and
