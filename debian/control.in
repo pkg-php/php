@@ -110,7 +110,10 @@ Package: libphp@PHP_VERSION@-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (= ${binary:Version}),
+         php@PHP_VERSION@-json,
+         php@PHP_VERSION@-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -254,6 +257,10 @@ Package: php@PHP_VERSION@-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php@PHP_VERSION@-cli,
+         php@PHP_VERSION@-common (= ${binary:Version}),
+         php@PHP_VERSION@-json,
+         php@PHP_VERSION@-opcache,
          php@PHP_VERSION@-common (= ${binary:Version}),
          tzdata,
          ucf,
