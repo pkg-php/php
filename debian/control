@@ -110,7 +110,10 @@ Package: libphp5.6-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php5.6-cli,
          php5.6-common (= ${binary:Version}),
+         php5.6-json,
+         php5.6-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -254,6 +257,10 @@ Package: php5.6-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php5.6-cli,
+         php5.6-common (= ${binary:Version}),
+         php5.6-json,
+         php5.6-opcache,
          php5.6-common (= ${binary:Version}),
          tzdata,
          ucf,
