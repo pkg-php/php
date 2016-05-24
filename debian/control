@@ -110,7 +110,10 @@ Package: libphp5.5-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php5.5-cli,
          php5.5-common (= ${binary:Version}),
+         php5.5-json,
+         php5.5-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
