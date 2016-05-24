@@ -109,7 +109,10 @@ Package: libphp7.0-embed
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php7.0-cli,
          php7.0-common (= ${binary:Version}),
+         php7.0-json,
+         php7.0-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -254,6 +257,10 @@ Package: php7.0-phpdbg
 Architecture: any
 Depends: libmagic1,
          mime-support,
+         php7.0-cli,
+         php7.0-common (= ${binary:Version}),
+         php7.0-json,
+         php7.0-opcache,
          php7.0-common (= ${binary:Version}),
          tzdata,
          ucf,
