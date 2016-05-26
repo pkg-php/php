@@ -1,3 +1,11 @@
+php7.0 (7.0.7-1) unstable; urgency=medium
+
+  * Depend on json also in the embed and phpdbg SAPIs
+  * Imported Upstream version 7.0.7
+  * Refresh patches on top of 7.0.7 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 26 May 2016 14:08:13 +0200
+
 php7.0 (7.0.6-13) unstable; urgency=medium
 
   * Don't enable PHP FPM by default since libapache2-mod-phpX.Y is the
