@@ -1,3 +1,11 @@
+php5.5 (5.5.36-1) experimental; urgency=medium
+
+  * Depend on json also in the embed and phpdbg SAPIs
+  * Imported Upstream version 5.5.36
+  * Rebase patches on top of PHP 5.5.36
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 26 May 2016 14:14:16 +0200
+
 php5.5 (5.5.35-7) experimental; urgency=medium
 
   * Enable --restart-after-upgrade for both dh_installinit and
