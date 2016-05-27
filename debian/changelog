@@ -1,3 +1,10 @@
+php5.5 (5.5.36-2) experimental; urgency=medium
+
+  * Drop ProtectSystem=full, PrivateTmp=full and PrivateDevices=true
+    because it breaks some systems (Closes: #825499)
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 27 May 2016 13:05:37 +0200
+
 php5.5 (5.5.36-1) experimental; urgency=medium
 
   * Depend on json also in the embed and phpdbg SAPIs
