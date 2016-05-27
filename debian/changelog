@@ -1,3 +1,10 @@
+php7.0 (7.0.7-3) unstable; urgency=medium
+
+  * The alternative base-files dependency to *systemd* deps is also
+    required only on linux-any
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 27 May 2016 13:21:07 +0200
+
 php7.0 (7.0.7-2) unstable; urgency=medium
 
   * Drop ProtectSystem=full, PrivateTmp=full and PrivateDevices=true
