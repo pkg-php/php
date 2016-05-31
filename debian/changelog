@@ -1,3 +1,9 @@
+php5.5 (5.5.36-3) experimental; urgency=medium
+
+  * Sync d/control.in to php7.0 version
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 31 May 2016 14:11:47 +0200
+
 php5.5 (5.5.36-2) experimental; urgency=medium
 
   * Drop ProtectSystem=full, PrivateTmp=full and PrivateDevices=true
