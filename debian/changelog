@@ -1,8 +1,14 @@
-php5.6 (5.6.22-3) experimental; urgency=medium
+php5.6 (5.6.22-4) experimental; urgency=medium
 
   * Don't break apache2 configuration if setenvif_module is not enabled
     (Closes: #825933)
   * Add notice about apache2 notices when apache2 package is installed
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 03 Jun 2016 13:33:55 +0200
+
+php5.6 (5.6.22-3) experimental; urgency=medium
+
+  * Sync d/control.in to php7.0 version
 
  -- Ondřej Surý <ondrej@debian.org>  Fri, 03 Jun 2016 13:26:46 +0200
 
