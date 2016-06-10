@@ -957,6 +957,10 @@ again:
 						php_var_serialize_string(buf, ZSTR_VAL(key), ZSTR_LEN(key));
 					}
 
+					if (Z_ISREF_P(data) && Z_REFCOUNT_P(data) == 1) {
+						data = Z_REFVAL_P(data);
+					}
+
 					/* we should still add element even if it's not OK,
 					 * since we already wrote the length of the array before */
 					if ((Z_TYPE_P(data) == IS_ARRAY && Z_TYPE_P(struc) == IS_ARRAY && Z_ARR_P(data) == Z_ARR_P(struc))
@@ -1079,6 +1083,11 @@ PHP_FUNCTION(unserialize)
 	/* We should keep an reference to return_value to prevent it from being dtor
 	   in case nesting calls to unserialize */
 	var_push_dtor(&var_hash, return_value);
+
+	/* Ensure return value is a value */
+	if (Z_ISREF_P(return_value)) {
+		zend_unwrap_reference(return_value);
+	}
 
 	PHP_VAR_UNSERIALIZE_DESTROY(var_hash);
 	if (class_hash) {
