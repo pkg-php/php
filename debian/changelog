@@ -1,5 +1,6 @@
-php7.1 (7.1.0~alpha-1) experimental; urgency=medium
+php7.1 (7.1.0~alpha1-1) experimental; urgency=low
 
-  * PHP 7.1.0~alpha1
+  * Imported Upstream version 7.1.0~alpha1
+  * Rebase patches on top of 7.1.0~alpha1
 
- -- Ondřej Surý <ondrej@debian.org>  Fri, 03 Jun 2016 13:22:25 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 10 Jun 2016 10:56:53 +0200
