@@ -501,9 +501,11 @@ static void compiler_globals_ctor(zend_compiler_globals *compiler_globals) /* {{
 	}
 	compiler_globals->script_encoding_list = NULL;
 
-	zend_interned_empty_string_init(&compiler_globals->empty_string);
+	compiler_globals->empty_string = zend_zts_interned_string_init("", sizeof("")-1);
 
 	memset(compiler_globals->one_char_string, 0, sizeof(compiler_globals->one_char_string));
+
+	zend_known_interned_strings_init(&compiler_globals->known_strings, &compiler_globals->known_strings_count);
 }
 /* }}} */
 
@@ -529,7 +531,10 @@ static void compiler_globals_dtor(zend_compiler_globals *compiler_globals) /* {{
 	}
 	compiler_globals->last_static_member = 0;
 
-	zend_interned_empty_string_free(&compiler_globals->empty_string);
+	zend_zts_interned_string_free(&compiler_globals->empty_string);
+
+	compiler_globals->known_strings = NULL;
+	compiler_globals->known_strings_count = 0;
 }
 /* }}} */
 
@@ -622,7 +627,7 @@ static zend_bool php_auto_globals_create_globals(zend_string *name) /* {{{ */
 	zval globals;
 
 	ZVAL_ARR(&globals, &EG(symbol_table));
-	Z_TYPE_INFO_P(&globals) = IS_ARRAY | (IS_TYPE_SYMBOLTABLE << Z_TYPE_FLAGS_SHIFT);
+	Z_TYPE_INFO_P(&globals) = IS_ARRAY;
 	ZVAL_NEW_REF(&globals, &globals);
 	zend_hash_update(&EG(symbol_table), name, &globals);
 	return 0;
