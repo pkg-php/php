@@ -9,7 +9,7 @@ Subject: php-fpm-do-reload-on-SIGHUP
  3 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/sapi/fpm/fpm/fpm_events.c b/sapi/fpm/fpm/fpm_events.c
-index ca45cb1..a3bf3a3 100644
+index 2b8e8cf..5b83969 100644
 --- a/sapi/fpm/fpm/fpm_events.c
 +++ b/sapi/fpm/fpm/fpm_events.c
 @@ -113,6 +113,11 @@ static void fpm_got_signal(struct fpm_event_s *ev, short which, void *arg) /* {{

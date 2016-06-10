@@ -14,7 +14,7 @@ Subject: debian_quirks
  8 files changed, 22 insertions(+), 17 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index d36db64..e82e9e0 100644
+index 9b67548..a1f2d41 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1094,7 +1094,7 @@ if test "$PHP_CLI" = "no"; then
@@ -52,7 +52,7 @@ index d36db64..e82e9e0 100644
  
  dnl
 diff --git a/ext/ext_skel b/ext/ext_skel
-index a1c6464..ebe5cd1 100755
+index f5b9b25..a9f6646 100755
 --- a/ext/ext_skel
 +++ b/ext/ext_skel
 @@ -70,7 +70,7 @@ if test -d "$extname" ; then

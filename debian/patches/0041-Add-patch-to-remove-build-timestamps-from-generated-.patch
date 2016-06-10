@@ -51,10 +51,10 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index 8983b53..589e299 100644
+index e758b33..25b8ae8 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
-@@ -2216,9 +2216,9 @@ consult the installation file that came with this distribution, or visit \n\
+@@ -2341,9 +2341,9 @@ consult the installation file that came with this distribution, or visit \n\
  								SG(request_info).no_headers = 1;
  							}
  #if ZEND_DEBUG
@@ -67,7 +67,7 @@ index 8983b53..589e299 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index 978c8b3..3ee61a4 100644
+index 09ce00f..799352b 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -682,8 +682,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
@@ -82,7 +82,7 @@ index 978c8b3..3ee61a4 100644
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 940d6c7..2757833 100644
+index 5adeb63..5e60255 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1757,9 +1757,9 @@ int main(int argc, char *argv[])
