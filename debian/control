@@ -82,7 +82,7 @@ Package: libapache2-mod-php7.0
 Section: httpd
 Architecture: any
 Depends: libmagic1,
-	 libpcre3 (>= 2:8.20),
+         libpcre3 (>= 2:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -109,7 +109,7 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
 Package: libphp7.0-embed
 Architecture: any
 Depends: libmagic1,
-	 libpcre3 (>= 2:8.20),
+         libpcre3 (>= 2:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -155,7 +155,7 @@ Description: server-side, HTML-embedded scripting language (metapackage)
 Package: php7.0-cgi
 Architecture: any
 Depends: libmagic1,
-	 libpcre3 (>= 2:8.20),
+         libpcre3 (>= 2:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -184,7 +184,7 @@ Package: php7.0-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
          libmagic1,
-	 libpcre3 (>= 2:8.20),
+         libpcre3 (>= 2:8.20),
          mime-support,
          php7.0-common (= ${binary:Version}),
          php7.0-json,
@@ -233,7 +233,7 @@ Description: Files for PHP7.0 module development
 Package: php7.0-fpm
 Architecture: any
 Depends: libmagic1,
-	 libpcre3 (>= 2:8.20),
+         libpcre3 (>= 2:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -261,13 +261,12 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
 Package: php7.0-phpdbg
 Architecture: any
 Depends: libmagic1,
-	 libpcre3 (>= 2:8.20),
+         libpcre3 (>= 2:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
          php7.0-json,
          php7.0-opcache,
-         php7.0-common (= ${binary:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
