@@ -3,8 +3,9 @@ php7.0 (7.0.8-1) unstable; urgency=medium
   * Tighten depends on pcre3 to workaround symbols brokeness
   * Imported Upstream version 7.0.8
   * Rebase patches on top of 7.0.8 release
+  * Adjust tidy extension for tidy-html5
 
- -- Ondřej Surý <ondrej@debian.org>  Fri, 24 Jun 2016 07:56:08 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 24 Jun 2016 08:22:40 +0200
 
 php7.0 (7.0.7-5) unstable; urgency=medium
 
