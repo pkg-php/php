@@ -51,3 +51,4 @@
 0051-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
 0052-make-opcache-lockfile-path-configurable.patch
 0053-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
+0054-Adjust-tidy-extension-for-tidy-html5.patch
