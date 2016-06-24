@@ -7,7 +7,7 @@ Subject: Really expand $libdir/$datadir into @EXPANDED_LIBDIR/DATADIR@
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index 270f8ba..159c205 100644
+index 3df11ac..0582f6a 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1244,9 +1244,9 @@ EXPANDED_LOCALSTATEDIR=`eval echo $localstatedir`

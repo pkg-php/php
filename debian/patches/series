@@ -48,6 +48,5 @@
 0048-Remove-warning-about-mysql-library-minor-version-mis.patch
 0049-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0050-Don-t-put-INSTALL_ROOT-into-phar.phar-exec-stanza.patch
-0051-Fix-ODBC-bug-for-varchars-returning-with-length-zero.patch
-0052-make-opcache-lockfile-path-configurable.patch
-0053-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
+0051-make-opcache-lockfile-path-configurable.patch
+0052-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
