@@ -50,3 +50,4 @@
 0050-Don-t-put-INSTALL_ROOT-into-phar.phar-exec-stanza.patch
 0051-make-opcache-lockfile-path-configurable.patch
 0052-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
+0053-Adjust-tidy-extension-for-tidy-html5.patch
