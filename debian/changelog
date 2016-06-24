@@ -2,8 +2,9 @@ php5.5 (5.5.37-1) experimental; urgency=medium
 
   * Imported Upstream version 5.5.37
   * Rebase patches on top of 5.5.37
+  * Adjust tidy extension for tidy-html5
 
- -- Ondřej Surý <ondrej@debian.org>  Fri, 24 Jun 2016 08:00:15 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 24 Jun 2016 08:27:36 +0200
 
 php5.5 (5.5.36-4) experimental; urgency=medium
 
