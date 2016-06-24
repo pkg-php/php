@@ -82,7 +82,7 @@ index 978c8b3..3ee61a4 100644
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 940d6c7..2757833 100644
+index 5adeb63..5e60255 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1757,9 +1757,9 @@ int main(int argc, char *argv[])
