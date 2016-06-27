@@ -210,7 +210,7 @@ Description: command-line interpreter for the PHP scripting language
 Package: php7.0-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
-         libpcre3-dev (>= 2:8:20),
+         libpcre3-dev (>= 2:8.20),
          libssl-dev,
          php7.0-cli (>= ${binary:Version}),
          php7.0-common (= ${binary:Version}),
