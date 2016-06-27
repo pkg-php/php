@@ -25,7 +25,7 @@ index 2b8e8cf..5b83969 100644
  
  		if (fpm_globals.is_child) {
 diff --git a/sapi/fpm/fpm/fpm_signals.c b/sapi/fpm/fpm/fpm_signals.c
-index a637e69..6c2c39e 100644
+index 8d0a4ca..13a1492 100644
 --- a/sapi/fpm/fpm/fpm_signals.c
 +++ b/sapi/fpm/fpm/fpm_signals.c
 @@ -160,6 +160,7 @@ static void sig_handler(int signo) /* {{{ */
