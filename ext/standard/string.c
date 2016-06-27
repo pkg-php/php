@@ -1670,7 +1670,11 @@ PHP_FUNCTION(dirname)
 
 	if (levels == 1) {
 		/* Defaut case */
+#ifdef PHP_WIN32
+		ZSTR_LEN(ret) = php_win32_ioutil_dirname(ZSTR_VAL(ret), str_len);
+#else
 		ZSTR_LEN(ret) = zend_dirname(ZSTR_VAL(ret), str_len);
+#endif
 	} else if (levels < 1) {
 		php_error_docref(NULL, E_WARNING, "Invalid argument, levels must be >= 1");
 		zend_string_free(ret);
@@ -1678,7 +1682,11 @@ PHP_FUNCTION(dirname)
 	} else {
 		/* Some levels up */
 		do {
+#ifdef PHP_WIN32
+			ZSTR_LEN(ret) = php_win32_ioutil_dirname(ZSTR_VAL(ret), str_len = ZSTR_LEN(ret));
+#else
 			ZSTR_LEN(ret) = zend_dirname(ZSTR_VAL(ret), str_len = ZSTR_LEN(ret));
+#endif
 		} while (ZSTR_LEN(ret) < str_len && --levels);
 	}
 
@@ -4614,6 +4622,9 @@ PHP_FUNCTION(parse_str)
 		symbol_table = zend_rebuild_symbol_table();
 		ZVAL_ARR(&tmp, symbol_table);
 		sapi_module.treat_data(PARSE_STRING, res, &tmp);
+		if (UNEXPECTED(zend_hash_del(symbol_table, CG(known_strings)[ZEND_STR_THIS]) == SUCCESS)) {
+			zend_throw_error(NULL, "Cannot re-assign $this");
+		}
 	} else 	{
 		zval ret;
 
