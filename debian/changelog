@@ -2,8 +2,9 @@ php7.1 (7.1.0~alpha2-1) experimental; urgency=medium
 
   * Imported Upstream version 7.1.0~alpha2
   * Rebase patches on top of 7.1.0~alpha2
+  * Adjust tidy extension for tidy-html5
 
- -- Ondřej Surý <ondrej@debian.org>  Mon, 27 Jun 2016 10:48:33 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 27 Jun 2016 11:14:19 +0200
 
 php7.1 (7.1.0~alpha1-1) experimental; urgency=low
 
