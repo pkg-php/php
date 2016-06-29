@@ -1,3 +1,15 @@
+php7.0 (7.0.8-3) unstable; urgency=medium
+
+  [ Ondřej Surý ]
+  * Improve libapache2-mod-php script to switch MPM only on fresh installs
+  * libapache2-mod-phpX.Y now recommends apache2 package (as this is what
+    most people want anyway)
+
+  [ Marc Deslauriers ]
+  * Re-enable test suite
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 29 Jun 2016 08:55:30 +0200
+
 php7.0 (7.0.8-2) unstable; urgency=medium
 
   [ Thomas Häber ]
