@@ -7,10 +7,13 @@ php7.0 (7.0.8-3) unstable; urgency=medium
 
   [ Marc Deslauriers ]
   * Re-enable test suite
-   + But revert the changes to setup-mysql.sh as they work only with
-     MySQL 5.7
 
- -- Ondřej Surý <ondrej@debian.org>  Wed, 29 Jun 2016 08:55:30 +0200
+  [ Ondřej Surý ]
+  * Update d/setup-mysql.sh to support MySQL 5.5, 5.6 and 5.7 and
+    build-depend on libnss-myhostname so mysql_install_db --force option
+    is not needed
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 29 Jun 2016 11:11:39 +0200
 
 php7.0 (7.0.8-2) unstable; urgency=medium
 
