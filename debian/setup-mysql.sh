@@ -36,12 +36,12 @@ mkdir -p $datadir
 chmod go-rx $datadir
 chown $user: $datadir
 
-mysql_install_db --no-defaults --user=$user --datadir=$datadir --mysqld-file=/usr/sbin/mysqld --random-password-file=$datadir/.mysql_secret
+mysql_install_db --no-defaults --user=$user --datadir=$datadir --rpm --force
 
 tmpf=$(mktemp)
 cat > "$tmpf" <<EOF
 USE mysql;
-UPDATE user SET authentication_string=PASSWORD(''), password_expired = 'N' WHERE user='root';
+UPDATE user SET password=PASSWORD('') WHERE user='root';
 FLUSH PRIVILEGES;
 EOF
 
