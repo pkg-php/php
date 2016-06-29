@@ -93,6 +93,7 @@ Depends: libmagic1,
          ${shlibs:Depends}
 Provides: libapache2-mod-php,
           ${php:Provides}
+Recommends: apache2
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
  This package provides the PHP module for the Apache 2 webserver (as
@@ -261,7 +262,6 @@ Depends: libmagic1,
          php5.5-common (= ${binary:Version}),
          php5.5-json,
          php5.5-opcache,
-         php5.5-common (= ${binary:Version}),
          tzdata,
          ucf,
          ${misc:Depends},
