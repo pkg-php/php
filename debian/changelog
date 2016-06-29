@@ -1,3 +1,15 @@
+php5.6 (5.6.23-2) experimental; urgency=medium
+
+  [ Ondřej Surý ]
+  * Improve libapache2-mod-php script to switch MPM only on fresh installs
+  * libapache2-mod-phpX.Y now recommends apache2 package (as this is what
+    most people want anyway)
+
+  [ Marc Deslauriers ]
+  * Re-enable test suite
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 29 Jun 2016 09:04:05 +0200
+
 php5.6 (5.6.23-1) experimental; urgency=medium
 
   * Imported Upstream version 5.6.23
