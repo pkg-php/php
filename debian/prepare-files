@@ -24,3 +24,4 @@ php@PHP_VERSION@-fpm.upstart
 php@PHP_VERSION@.load
 php@PHP_VERSION@-xml.substvars.extra
 php@PHP_VERSION@-xml.postinst.extra
+php-snmp.substvars.extra
