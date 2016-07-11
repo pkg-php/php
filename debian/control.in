@@ -185,8 +185,8 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
 Package: php@PHP_VERSION@-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
-         libpcre3 (>= 1:8.20),
          libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php@PHP_VERSION@-common (= ${binary:Version}),
          php@PHP_VERSION@-json,
