@@ -172,6 +172,7 @@ void init_executor(void) /* {{{ */
 	zend_objects_store_init(&EG(objects_store), 1024);
 
 	EG(full_tables_cleanup) = 0;
+	EG(vm_interrupt) = 0;
 	EG(timed_out) = 0;
 
 	EG(exception) = NULL;
@@ -1225,6 +1226,7 @@ static void zend_timeout_handler(int dummy) /* {{{ */
 	}
 
 	EG(timed_out) = 1;
+	EG(vm_interrupt) = 1;
 
 #ifndef ZTS
 	if (EG(hard_timeout) > 0) {
@@ -1239,7 +1241,7 @@ static void zend_timeout_handler(int dummy) /* {{{ */
 #ifdef ZEND_WIN32
 VOID CALLBACK tq_timer_cb(PVOID arg, BOOLEAN timed_out)
 {
-	zend_bool *php_timed_out;
+	zend_executor_globals *eg;
 
 	/* The doc states it'll be always true, however it theoretically
 		could be FALSE when the thread was signaled. */
@@ -1247,8 +1249,9 @@ VOID CALLBACK tq_timer_cb(PVOID arg, BOOLEAN timed_out)
 		return;
 	}
 
-	php_timed_out = (zend_bool *)arg;
-	*php_timed_out = 1;
+	eg = (zend_executor_globals *)arg;
+	eg->timed_out = 1;
+	eg->vm_interrupt = 1;
 }
 #endif
 
@@ -1259,8 +1262,9 @@ VOID CALLBACK tq_timer_cb(PVOID arg, BOOLEAN timed_out)
 
 static void zend_set_timeout_ex(zend_long seconds, int reset_signals) /* {{{ */
 {
-
 #ifdef ZEND_WIN32
+	zend_executor_globals *eg;
+
 	if(!seconds) {
 		return;
 	}
@@ -1278,7 +1282,8 @@ static void zend_set_timeout_ex(zend_long seconds, int reset_signals) /* {{{ */
 	}
 
 	/* XXX passing NULL means the default timer queue provided by the system is used */
-	if (!CreateTimerQueueTimer(&tq_timer, NULL, (WAITORTIMERCALLBACK)tq_timer_cb, (VOID*)&EG(timed_out), seconds*1000, 0, WT_EXECUTEONLYONCE)) {
+	eg = ZEND_MODULE_GLOBALS_BULK(executor);
+	if (!CreateTimerQueueTimer(&tq_timer, NULL, (WAITORTIMERCALLBACK)tq_timer_cb, (VOID*)eg, seconds*1000, 0, WT_EXECUTEONLYONCE)) {
 		tq_timer = NULL;
 		zend_error_noreturn(E_ERROR, "Could not queue new timer");
 		return;

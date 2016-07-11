@@ -1865,7 +1865,7 @@ Extensions:
   --with-oci8=DIR         Include Oracle Database OCI8 support. DIR defaults to $ORACLE_HOME.
                           Use --with-oci8=instantclient,/path/to/instant/client/lib
                           to use an Oracle Instant Client installation
-  --with-odbcver=HEX      Force support for the passed ODBC version. A hex number is expected, default 0x0300.
+  --with-odbcver=HEX      Force support for the passed ODBC version. A hex number is expected, default 0x0350.
                              Use the special value of 0 to prevent an explicit ODBCVER to be defined.
   --with-adabas=DIR       Include Adabas D support /usr/local
   --with-sapdb=DIR        Include SAP DB support /usr/local
@@ -3650,7 +3650,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
 PHP_MAJOR_VERSION=7
 PHP_MINOR_VERSION=1
 PHP_RELEASE_VERSION=0
-PHP_EXTRA_VERSION="alpha2"
+PHP_EXTRA_VERSION="alpha3"
 PHP_VERSION="$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION.$PHP_RELEASE_VERSION$PHP_EXTRA_VERSION"
 PHP_VERSION_ID=`expr $PHP_MAJOR_VERSION \* 10000 + $PHP_MINOR_VERSION \* 100 + $PHP_RELEASE_VERSION`
 
@@ -55193,7 +55193,7 @@ fi
 
 
 
-php_with_odbcver=0x0300
+php_with_odbcver=0x0350
 
 
 
@@ -55202,7 +55202,7 @@ if test "${with_odbcver+set}" = set; then :
   withval=$with_odbcver; PHP_ODBCVER=$withval
 else
 
-  PHP_ODBCVER=0x0300
+  PHP_ODBCVER=0x0350
   test "$PHP_ENABLE_ALL" && PHP_ODBCVER=$PHP_ENABLE_ALL
 
 fi

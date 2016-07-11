@@ -160,6 +160,7 @@ static const struct reserved_class_name reserved_class_names[] = {
 	{ZEND_STRL("string")},
 	{ZEND_STRL("true")},
 	{ZEND_STRL("void")},
+	{ZEND_STRL("iterable")},
 	{NULL, 0}
 };
 
@@ -204,6 +205,7 @@ static const builtin_type_info builtin_types[] = {
 	{ZEND_STRL("string"), IS_STRING},
 	{ZEND_STRL("bool"), _IS_BOOL},
 	{ZEND_STRL("void"), IS_VOID},
+	{ZEND_STRL("iterable"), IS_ITERABLE},
 	{NULL, 0, IS_UNDEF}
 };
 
@@ -1254,17 +1256,20 @@ static void zend_mark_function_as_generator() /* {{{ */
 	}
 
 	if (CG(active_op_array)->fn_flags & ZEND_ACC_HAS_RETURN_TYPE) {
-		const char *msg = "Generators may only declare a return type of Generator, Iterator or Traversable, %s is not permitted";
 		zend_arg_info return_info = CG(active_op_array)->arg_info[-1];
 
-		if (!return_info.class_name) {
-			zend_error_noreturn(E_COMPILE_ERROR, msg, zend_get_type_by_const(return_info.type_hint));
-		}
+		if (return_info.type_hint != IS_ITERABLE) {
+			const char *msg = "Generators may only declare a return type of Generator, Iterator, Traversable, or iterable, %s is not permitted";
+			
+			if (!return_info.class_name) {
+				zend_error_noreturn(E_COMPILE_ERROR, msg, zend_get_type_by_const(return_info.type_hint));
+			}
 
-		if (!zend_string_equals_literal_ci(return_info.class_name, "Traversable")
-			&& !zend_string_equals_literal_ci(return_info.class_name, "Iterator")
-			&& !zend_string_equals_literal_ci(return_info.class_name, "Generator")) {
-			zend_error_noreturn(E_COMPILE_ERROR, msg, ZSTR_VAL(return_info.class_name));
+			if (!zend_string_equals_literal_ci(return_info.class_name, "Traversable")
+				&& !zend_string_equals_literal_ci(return_info.class_name, "Iterator")
+				&& !zend_string_equals_literal_ci(return_info.class_name, "Generator")) {
+				zend_error_noreturn(E_COMPILE_ERROR, msg, ZSTR_VAL(return_info.class_name));
+			}
 		}
 	}
 
@@ -3195,9 +3200,9 @@ uint32_t zend_compile_args(zend_ast *ast, zend_function *fbc) /* {{{ */
 
 ZEND_API zend_uchar zend_get_call_op(const zend_op *init_op, zend_function *fbc) /* {{{ */
 {
-	if (fbc && init_op->opcode == ZEND_INIT_FCALL) {
+	if (fbc) {
 		if (fbc->type == ZEND_INTERNAL_FUNCTION) {
-			if (!zend_execute_internal) {
+			if (init_op->opcode == ZEND_INIT_FCALL && !zend_execute_internal) {
 				if (!(fbc->common.fn_flags & (ZEND_ACC_ABSTRACT|ZEND_ACC_DEPRECATED|ZEND_ACC_HAS_TYPE_HINTS|ZEND_ACC_RETURN_REFERENCE))) {
 					return ZEND_DO_ICALL;
 				} else {
@@ -3205,7 +3210,7 @@ ZEND_API zend_uchar zend_get_call_op(const zend_op *init_op, zend_function *fbc)
 				}
 			}
 		} else {
-			if (zend_execute_ex == execute_ex) {
+			if (zend_execute_ex == execute_ex && !(fbc->common.fn_flags & ZEND_ACC_ABSTRACT)) {
 				return ZEND_DO_UCALL;
 			}
 		}
@@ -3518,19 +3523,9 @@ int zend_compile_func_cuf(znode *result, zend_ast_list *args, zend_string *lcnam
 		zend_ast *arg_ast = args->child[i];
 		znode arg_node;
 		zend_op *opline;
-		zend_bool send_user = 0;
 
-		if (zend_is_variable(arg_ast) && !zend_is_call(arg_ast)) {
-			zend_compile_var(&arg_node, arg_ast, BP_VAR_FUNC_ARG | (i << BP_VAR_SHIFT));
-			send_user = 1;
-		} else {
-			zend_compile_expr(&arg_node, arg_ast);
-			if (arg_node.op_type & (IS_VAR|IS_CV)) {
-				send_user = 1;
-			}
-		}
-
-		if (send_user) {
+		zend_compile_expr(&arg_node, arg_ast);
+		if (arg_node.op_type & (IS_VAR|IS_CV)) {
 			opline = zend_emit_op(NULL, ZEND_SEND_USER, &arg_node, NULL);
 		} else {
 			opline = zend_emit_op(NULL, ZEND_SEND_VAL, &arg_node, NULL);
@@ -4513,16 +4508,32 @@ void zend_compile_switch(zend_ast *ast) /* {{{ */
 
 	znode expr_node, case_node;
 	zend_op *opline;
-	uint32_t *jmpnz_opnums = safe_emalloc(sizeof(uint32_t), cases->children, 0);
-	uint32_t opnum_default_jmp;
+	uint32_t *jmpnz_opnums, opnum_default_jmp;
 
 	zend_compile_expr(&expr_node, expr_ast);
+
+	if (cases->children == 1 && cases->child[0]->child[0] == NULL) {
+		/* we have to take care about the case that only have one default branch,
+		 * expr result will not be unrefed in this case, but it should be like in ZEND_CASE */
+		zend_ast *stmt_ast = cases->child[0]->child[1];
+		if (expr_node.op_type == IS_VAR || expr_node.op_type == IS_TMP_VAR) {
+			zend_emit_op(NULL, ZEND_FREE, &expr_node, NULL);
+		} else if (expr_node.op_type == IS_CONST) {
+			zval_dtor(&expr_node.u.constant);
+		}
+
+		zend_begin_loop(ZEND_NOP, NULL);
+		zend_compile_stmt(stmt_ast);
+		zend_end_loop(get_next_op_number(CG(active_op_array)), NULL);
+		return;
+	}
 
 	zend_begin_loop(ZEND_FREE, &expr_node);
 
 	case_node.op_type = IS_TMP_VAR;
 	case_node.u.op.var = get_temporary_variable(CG(active_op_array));
 
+	jmpnz_opnums = safe_emalloc(sizeof(uint32_t), cases->children, 0);
 	for (i = 0; i < cases->children; ++i) {
 		zend_ast *case_ast = cases->child[i];
 		zend_ast *cond_ast = case_ast->child[0];
@@ -5109,6 +5120,13 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 							if (Z_TYPE(default_node.u.constant) != IS_DOUBLE && Z_TYPE(default_node.u.constant) != IS_LONG) {
 								zend_error_noreturn(E_COMPILE_ERROR, "Default value for parameters "
 									"with a float type can only be float, integer, or NULL");
+							}
+							break;
+						
+						case IS_ITERABLE:
+							if (Z_TYPE(default_node.u.constant) != IS_ARRAY) {
+								zend_error_noreturn(E_COMPILE_ERROR, "Default value for parameters "
+									"with iterable type can only be an array or NULL");
 							}
 							break;
 							

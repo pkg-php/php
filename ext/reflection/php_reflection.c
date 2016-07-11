@@ -107,7 +107,8 @@ ZEND_DECLARE_MODULE_GLOBALS(reflection)
 	intern = Z_REFLECTION_P(getThis());                                                      				\
 	if (intern->ptr == NULL) {                                                            \
 		RETURN_ON_EXCEPTION                                                                                 \
-		php_error_docref(NULL, E_ERROR, "Internal error: Failed to retrieve the reflection object");                    \
+		zend_throw_error(NULL, "Internal error: Failed to retrieve the reflection object");        \
+		return;                                                                                             \
 	}                                                                                                       \
 
 #define GET_REFLECTION_OBJECT_PTR(target)                                                                   \
@@ -1398,7 +1399,6 @@ static void reflection_class_constant_factory(zend_class_entry *ce, zend_string 
 static void _reflection_export(INTERNAL_FUNCTION_PARAMETERS, zend_class_entry *ce_ptr, int ctor_argc)
 {
 	zval reflector;
-	zval output, *output_ptr = &output;
 	zval *argument_ptr, *argument2_ptr;
 	zval retval, params[2];
 	int result;
@@ -1455,9 +1455,8 @@ static void _reflection_export(INTERNAL_FUNCTION_PARAMETERS, zend_class_entry *c
 	}
 
 	/* Call static reflection::export */
-	ZVAL_BOOL(&output, return_output);
 	ZVAL_COPY_VALUE(&params[0], &reflector);
-	ZVAL_COPY_VALUE(&params[1], output_ptr);
+	ZVAL_BOOL(&params[1], return_output);
 
 	ZVAL_STRINGL(&fci.function_name, "reflection::export", sizeof("reflection::export") - 1);
 	fci.object = NULL;
@@ -1498,7 +1497,8 @@ static parameter_reference *_reflection_param_get_default_param(INTERNAL_FUNCTIO
 		if (EG(exception) && EG(exception)->ce == reflection_exception_ptr) {
 			return NULL;
 		}
-		php_error_docref(NULL, E_ERROR, "Internal error: Failed to retrieve the reflection object");
+		zend_throw_error(NULL, "Internal error: Failed to retrieve the reflection object");
+		return NULL;
 	}
 
 	param = intern->ptr;
@@ -5188,8 +5188,8 @@ ZEND_METHOD(reflection_class, isSubclassOf)
 			if (instanceof_function(Z_OBJCE_P(class_name), reflection_class_ptr)) {
 				argument = Z_REFLECTION_P(class_name);
 				if (argument->ptr == NULL) {
-					php_error_docref(NULL, E_ERROR, "Internal error: Failed to retrieve the argument's reflection object");
-					/* Bails out */
+					zend_throw_error(NULL, "Internal error: Failed to retrieve the argument's reflection object");
+					return;
 				}
 				class_ce = argument->ptr;
 				break;
@@ -5232,8 +5232,8 @@ ZEND_METHOD(reflection_class, implementsInterface)
 			if (instanceof_function(Z_OBJCE_P(interface), reflection_class_ptr)) {
 				argument = Z_REFLECTION_P(interface);
 				if (argument->ptr == NULL) {
-					php_error_docref(NULL, E_ERROR, "Internal error: Failed to retrieve the argument's reflection object");
-					/* Bails out */
+					zend_throw_error(NULL, "Internal error: Failed to retrieve the argument's reflection object");
+					return;
 				}
 				interface_ce = argument->ptr;
 				break;
@@ -5633,8 +5633,8 @@ ZEND_METHOD(reflection_property, getValue)
 			return;
 		}
 		if (Z_TYPE(CE_STATIC_MEMBERS(intern->ce)[ref->prop.offset]) == IS_UNDEF) {
-			php_error_docref(NULL, E_ERROR, "Internal error: Could not find the property %s::%s", ZSTR_VAL(intern->ce->name), ZSTR_VAL(ref->prop.name));
-			/* Bails out */
+			zend_throw_error(NULL, "Internal error: Could not find the property %s::%s", ZSTR_VAL(intern->ce->name), ZSTR_VAL(ref->prop.name));
+			return;
 		}
 		member_p = &CE_STATIC_MEMBERS(intern->ce)[ref->prop.offset];
 		ZVAL_DEREF(member_p);
@@ -5700,8 +5700,8 @@ ZEND_METHOD(reflection_property, setValue)
 		}
 
 		if (Z_TYPE(CE_STATIC_MEMBERS(intern->ce)[ref->prop.offset]) == IS_UNDEF) {
-			php_error_docref(NULL, E_ERROR, "Internal error: Could not find the property %s::%s", ZSTR_VAL(intern->ce->name), ZSTR_VAL(ref->prop.name));
-			/* Bails out */
+			zend_throw_error(NULL, "Internal error: Could not find the property %s::%s", ZSTR_VAL(intern->ce->name), ZSTR_VAL(ref->prop.name));
+			return;
 		}
 		variable_ptr = &CE_STATIC_MEMBERS(intern->ce)[ref->prop.offset];
 		if (variable_ptr != value) {
