@@ -335,7 +335,9 @@ override_dh_auto_install:
 
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
-override_dh_auto_test: test-results.txt
+override_dh_auto_test-indep:
+
+override_dh_auto_test-arch: test-results.txt
 
 test-results.txt:
 ifeq (yes,$(RUN_TESTS))
