@@ -7,7 +7,7 @@ Subject: Adjust tidy extension for tidy-html5
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/ext/tidy/tidy.c b/ext/tidy/tidy.c
-index c5d43b0..7cd49d6 100644
+index 0537c57..74daa51 100644
 --- a/ext/tidy/tidy.c
 +++ b/ext/tidy/tidy.c
 @@ -31,7 +31,7 @@
