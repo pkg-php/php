@@ -1,3 +1,9 @@
+php7.0 (7.0.8-5) unstable; urgency=medium
+
+  * Run tests only on arch builds (Closes: #830800)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 11 Jul 2016 20:38:54 +0200
+
 php7.0 (7.0.8-4) unstable; urgency=medium
 
   * phpX.Y-snmp needs to depend on snmp to avoid 'Cannot adopt OID in *'
