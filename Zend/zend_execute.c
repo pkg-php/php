@@ -1262,9 +1262,11 @@ static zend_never_inline ZEND_COLD void zend_wrong_string_offset(void)
 						case ZEND_ASSIGN_REF:
 						case ZEND_ADD_ARRAY_ELEMENT:
 						case ZEND_INIT_ARRAY:
+						case ZEND_MAKE_REF:
 							msg = "Cannot create references to/from string offsets";
 							break;
 						case ZEND_RETURN_BY_REF:
+						case ZEND_VERIFY_RETURN_TYPE:
 							msg = "Cannot return string offsets by reference";
 							break;
 						case ZEND_UNSET_DIM:
@@ -2378,9 +2380,12 @@ static void cleanup_unfinished_calls(zend_execute_data *execute_data, uint32_t o
 		
 		if (UNEXPECTED(opline->opcode == ZEND_INIT_FCALL ||
 			opline->opcode == ZEND_INIT_FCALL_BY_NAME ||
+			opline->opcode == ZEND_INIT_NS_FCALL_BY_NAME ||
 			opline->opcode == ZEND_INIT_DYNAMIC_CALL ||
+			opline->opcode == ZEND_INIT_USER_CALL ||
 			opline->opcode == ZEND_INIT_METHOD_CALL ||
-			opline->opcode == ZEND_INIT_STATIC_METHOD_CALL)) {
+			opline->opcode == ZEND_INIT_STATIC_METHOD_CALL ||
+			opline->opcode == ZEND_NEW)) {
 			ZEND_ASSERT(op_num);
 			opline--;
 		}

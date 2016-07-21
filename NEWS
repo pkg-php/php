@@ -1,5 +1,144 @@
 PHP                                                                        NEWS
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+21 Jul 2016, PHP 7.1.0beta1
+
+- Core:
+  . Fixed bug #72629 (Caught exception assignment to variables ignores
+    references). (Laruence)
+  . Fixed bug #72594 (Calling an earlier instance of an included anonymous
+    class fatals). (Laruence)
+  . Fixed bug #72581 (previous property undefined in Exception after
+    deserialization). (Laruence)
+  . Fixed bug #72543 (Different references behavior comparing to PHP 5)
+    (Laruence, Dmitry, Nikita)
+  . Fixed bug #72347 (VERIFY_RETURN type casts visible in finally). (Dmitry)
+  . Fixed bug #72216 (Return by reference with finally is not memory safe).
+    (Dmitry)
+  . Fixed bug #72215 (Wrong return value if var modified in finally). (Dmitry)
+  . Fixed bug #71818 (Memory leak when array altered in destructor). (Dmitry)
+  . Fixed bug #71539 (Memory error on $arr[$a] =& $arr[$b] if RHS rehashes)
+    (Dmitry, Nikita)
+  . Added new constant PHP_FD_SETSIZE. (cmb)
+  . Added optind parameter to getopt(). (as)
+  . Added PHP to SAPI error severity mapping for logs. (Martin Vobruba)
+  . Fixed bug #71911 (Unable to set --enable-debug on building extensions by
+    phpize on Windows). (Yuji Uchiyama)
+  . Fixed bug #29368 (The destructor is called when an exception is thrown from
+    the constructor). (Dmitry)
+  . Implemented RFC: RNG Fixes. (Leigh)
+  . Implemented email validation as per RFC 6531. (Leo Feyer, Anatol)
+  . Fixed bug #72513 (Stack-based buffer overflow vulnerability in
+    virtual_file_ex). (Stas)
+  . Fixed bug #72573 (HTTP_PROXY is improperly trusted by some PHP libraries
+    and applications). (Stas)
+
+- bz2:
+  . Fixed bug #72613 (Inadequate error handling in bzread()). (Stas)
+
+- COM:
+  . Fixed bug #72569 (DOTNET/COM array parameters broke in PHP7). (Anatol)
+
+- Curl:
+  . Fixed bug #72541 (size_t overflow lead to heap corruption). (Stas)
+
+- Date:
+  . Fixed bug #66836 (DateTime::createFromFormat 'U' with pre 1970 dates fails
+    parsing). (derick)
+
+- DOM:
+  . Fixed bug #66502 (DOM document dangling reference). (Sean Heelan, cmb)
+
+- Exif:
+  . Fixed bug #72603 (Out of bound read in exif_process_IFD_in_MAKERNOTE).
+    (Stas)
+  . Fixed bug #72618 (NULL Pointer Dereference in exif_process_user_comment).
+    (Stas)
+
+- Filter:
+  . Fixed bug #71745 (FILTER_FLAG_NO_RES_RANGE does not cover whole 127.0.0.0/8
+    range). (bugs dot php dot net at majkl578 dot cz)
+
+- FPM:
+  . Fixed bug #72575 (using --allow-to-run-as-root should ignore missing user).
+    (gooh)
+
+- GD:
+  . Fixed bug #72596 (imagetypes function won't advertise WEBP support). (cmb)
+  . Fixed bug #72604 (imagearc() ignores thickness for full arcs). (cmb)
+  . Fixed bug #70315 (500 Server Error but page is fully rendered). (cmb)
+  . Fixed bug #43828 (broken transparency of imagearc for truecolor in
+    blendingmode). (cmb)
+  . Fixed bug #72512 (gdImageTrueColorToPaletteBody allows arbitrary write/read
+    access). (Pierre)
+  . Fixed bug #72519 (imagegif/output out-of-bounds access). (Pierre)
+  . Fixed bug #72558 (Integer overflow error within _gdContributionsAlloc()).
+    (Pierre)
+  . Fixed bug #72482 (Ilegal write/read access caused by gdImageAALine
+    overflow). (Pierre)
+  . Fixed bug #72494 (imagecropauto out-of-bounds access). (Pierre)
+
+- Intl:
+  . Partially fixed #72506 (idn_to_ascii for UTS #46 incorrect for long domain
+    names). (cmb)
+  . Fixed bug #72533 (locale_accept_from_http out-of-bounds access). (Stas)
+
+- Mbstring:
+  . Deprecated mb_ereg_replace() eval option. (Rouven Weßling, cmb)
+  . Fixed bug #69151 (mb_ereg should reject ill-formed byte sequence).
+    (Masaki Kagaya)
+
+- MCrypt:
+  . Deprecated ext/mcrypt. (Scott Arciszewski, cmb)
+  . Fixed bug #72551, bug #72552 (In correct casting from size_t to int lead to
+    heap overflow in mdecrypt_generic). (Stas)
+
+- Opcache:
+  . Fixed bug #72590 (Opcache restart with kill_all_lockers does not work).
+    (Keyur)
+
+- OpenSSL:
+  . Fixed bug #72360 (ext/openssl build failure with OpenSSL 1.1.0).
+    (Jakub Zelenka)
+  . Bumped a minimal version to 1.0.1. (Jakub Zelenka)
+  . Dropped support for SSL2. (Remi)
+
+- PDO_pgsql:
+  . Fixed bug #70313 (PDO statement fails to throw exception). (Matteo)
+  . Fixed bug #72570 (Segmentation fault when binding parameters on a query
+    without placeholders). (Matteo)
+
+- Pcntl
+  . Implemented asynchronous signal handling without TICKS. (Dmitry)
+  . Added pcntl_signal_get_handler() that returns the current signal handler
+    for a particular signal. Addresses FR #72409. (David Walker)
+  . Add signinfo to pcntl_signal() handler args (Bishop Bettini, David Walker)
+
+- Reflection:
+  . Fixed bug #72222 (ReflectionClass::export doesn't handle array constants).
+    (Nikita Nefedov)
+
+- SimpleXML:
+  . Fixed bug #72588 (Using global var doesn't work while accessing SimpleXML
+    element). (Laruence)
+
+- Standard:
+  . Fixed bug #72622 (array_walk + array_replace_recursive create references
+    from nothing). (Laruence)
+
+- Tidy:
+  . Implemented support for libtidy 5.0.0 and above. (Michael Orlitzky, Anatol)
+
+- Wddx:
+  . Fixed bug #72564 (boolean always deserialized as "true") (Remi)
+
+- XMLRPC:
+  . Fixed bug #72606 (heap-buffer-overflow (write) simplestring_addn
+    simplestring.c). (Stas)
+
+- Zip:
+  . Fixed bug #72520 (Stack-based buffer overflow vulnerability in
+    php_stream_zip_opener). (Stas)
+
 07 Jul 2016, PHP 7.1.0alpha3
 
 - Core:
@@ -25,6 +164,11 @@ PHP                                                                        NEWS
     instance of Error from __wakeup() or __set_state() instead of resulting in
     a fatal error. (Aaron Piotrowski)
   . Export date_get_interface_ce() for extension use. (Jeremy Mikola)
+
+- DBA:
+  . Data modification functions (e.g.: dba_insert()) now throw an instance of
+    Error instead of triggering a catchable fatal error if the key is does not
+    contain exactly two elements. (Aaron Piotrowski)
 
 - DOM:
   . Invalid schema or RelaxNG validation contexts will throw an instance of
@@ -100,10 +244,16 @@ PHP                                                                        NEWS
   . An invalid setting for session.hash_function will throw an instance of
     Error instead of resulting in a fatal error when a session ID is created.
     (Aaron Piotrowski)
+  . Fixed bug #72562 (Use After Free in unserialize() with Unexpected Session
+    Deserialization). (Stas)
 
 - SimpleXML:
   . Creating an unnamed or duplicate attribute will throw an instance of Error
     instead of resulting in a fatal error. (Aaron Piotrowski)
+
+- SNMP:
+  . Fixed bug #72479 (Use After Free Vulnerability in SNMP with GC and
+    unserialize()). (Stas)
 
 - SPL:
   . Attempting to clone an SplDirectory object will throw an instance of Error
