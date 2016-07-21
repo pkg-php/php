@@ -29,7 +29,7 @@ index 755a3fb..101a91a 100644
  /*
     +----------------------------------------------------------------------+
 diff --git a/configure.in b/configure.in
-index b6aacea..dd99b1e 100644
+index 98837c3..2f9150e 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -136,6 +136,8 @@ AC_DEFUN([PHP_EXT_DIR],[$config_m4_dir])dnl
@@ -129,7 +129,7 @@ index 56ffe34..0461cc6 100644
  #include "ext/standard/base64.h"
  
 diff --git a/main/streams/streams.c b/main/streams/streams.c
-index d64d5ca..27315a8 100644
+index e21d21a..f7a236d 100644
 --- a/main/streams/streams.c
 +++ b/main/streams/streams.c
 @@ -21,7 +21,6 @@
