@@ -1926,6 +1926,9 @@
 /* */
 #undef HAVE_TIDY
 
+/* defined if tidybuffio.h exists */
+#undef HAVE_TIDYBUFFIO_H
+
 /* */
 #undef HAVE_TIDYOPTGETDOC
 
