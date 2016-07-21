@@ -1,3 +1,14 @@
+php5.5 (5.5.38-1) experimental; urgency=medium
+
+  * Revert the changes to setup-mysql.sh as they work only with MySQL 5.7
+  * Update d/setup-mysql.sh to support MySQL 5.5, 5.6 and 5.7 and
+    build-depend on libnss-myhostname so mysql_install_db --force option
+    is not needed
+  * Imported Upstream version 5.5.38
+  * Rebase patches on top of PHP-5.5.38
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 21 Jul 2016 14:32:53 +0200
+
 php5.5 (5.5.37-2) experimental; urgency=medium
 
   [ Ondřej Surý ]
