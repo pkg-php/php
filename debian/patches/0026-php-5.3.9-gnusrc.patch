@@ -16,10 +16,10 @@ Subject: php-5.3.9-gnusrc
  10 files changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/Zend/zend_language_parser.c b/Zend/zend_language_parser.c
-index 2f3c0e9..f72fef5 100644
+index e1b7073..2f280e5d 100644
 --- a/Zend/zend_language_parser.c
 +++ b/Zend/zend_language_parser.c
-@@ -70,6 +70,8 @@
+@@ -69,6 +69,8 @@
  
  /* Copy the first part of user declarations.  */
  
@@ -29,7 +29,7 @@ index 2f3c0e9..f72fef5 100644
  /*
     +----------------------------------------------------------------------+
 diff --git a/configure.in b/configure.in
-index 7abb021..00f06d9 100644
+index f8e0c79..90c5349 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -136,6 +136,8 @@ AC_DEFUN([PHP_EXT_DIR],[$config_m4_dir])dnl

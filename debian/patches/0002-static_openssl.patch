@@ -7,7 +7,7 @@ Subject: static_openssl
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/acinclude.m4 b/acinclude.m4
-index db146aa..5ce15a1 100644
+index e6d84e5..7616260 100644
 --- a/acinclude.m4
 +++ b/acinclude.m4
 @@ -2393,9 +2393,7 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[

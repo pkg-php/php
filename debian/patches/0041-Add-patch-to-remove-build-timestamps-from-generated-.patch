@@ -51,7 +51,7 @@ index f286b1a..fba92b8 100644
    case $host_alias in
    *aix*)
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index b4ba497..7894c6b 100644
+index 0b6deb1..bb9014a 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
 @@ -2342,9 +2342,9 @@ consult the installation file that came with this distribution, or visit \n\
@@ -67,7 +67,7 @@ index b4ba497..7894c6b 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index 594f3ff..1ca7a84 100644
+index dc92045..bb28364 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -690,8 +690,8 @@ static int do_cli(int argc, char **argv) /* {{{ */
@@ -82,7 +82,7 @@ index 594f3ff..1ca7a84 100644
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index e378607..ff1e399 100644
+index 15f4da7..b41a0ea 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1756,9 +1756,9 @@ int main(int argc, char *argv[])
@@ -98,7 +98,7 @@ index e378607..ff1e399 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index 7c8c474..950b41a 100644
+index 2182a33..b0938df 100644
 --- a/sapi/litespeed/lsapi_main.c
 +++ b/sapi/litespeed/lsapi_main.c
 @@ -804,9 +804,9 @@ static int cli_main( int argc, char * argv[] )
@@ -114,10 +114,10 @@ index 7c8c474..950b41a 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index ecd3f39..0824c40 100644
+index 1e0b214..89e59c2 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1515,10 +1515,8 @@ phpdbg_main:
+@@ -1543,10 +1543,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(
