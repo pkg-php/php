@@ -23,7 +23,7 @@ socket=$datadir/mysql.sock
 # Commands:
 mysql="mysql --no-defaults --user root --socket=$socket --no-beep"
 mysqladmin="mysqladmin --no-defaults --user root --port $port --host 127.0.0.1 --socket=$socket --no-beep"
-mysqld="/usr/sbin/mysqld --no-defaults --user=$user --bind-address=127.0.0.1 --port=$port --socket=$socket --datadir=$datadir"
+mysqld="/usr/sbin/mysqld --no-defaults --user=$user --bind-address=127.0.0.1 --port=$port --socket=$socket --datadir=$datadir/data"
 
 mysqld_version=$($mysqld -V 2>/dev/null | sed -ne 's/.*Ver \([0-9]\+\.[0-9]\+\).*/\1/p')
 
@@ -48,7 +48,7 @@ case "$mysqld_version" in
 	$mysqld --initialize-insecure
 	;;
     5.5|5.6|*)
-	mysql_install_db --no-defaults --user=$user --datadir=$datadir
+	mysql_install_db --no-defaults --user=$user --datadir=$datadir/data
 	;;
 esac
 
