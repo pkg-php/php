@@ -1,3 +1,11 @@
+php5.5 (5.5.38-2) experimental; urgency=medium
+
+  * Remove PHP 5 references from README.Debian
+  * Disable tests and libnss-hostname build dependency on kfreebsd-any and
+    hurd-any (Closes: #833699)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 08 Aug 2016 16:12:05 +0200
+
 php5.5 (5.5.38-1) experimental; urgency=medium
 
   * Revert the changes to setup-mysql.sh as they work only with MySQL 5.7
