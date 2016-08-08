@@ -1,3 +1,12 @@
+php7.0 (7.0.9-2) unstable; urgency=medium
+
+  * Remove PHP 5 references from README.Debian
+  * Disable tests on arm* architectures
+  * Disable tests and libnss-hostname build dependency on kfreebsd-any and
+    hurd-any (Closes: #833699)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 08 Aug 2016 16:09:31 +0200
+
 php7.0 (7.0.9-1) unstable; urgency=medium
 
   * Imported Upstream version 7.0.9
