@@ -95,7 +95,7 @@ ifeq (nocheck,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
   $(warning Disabling checks due DEB_BUILD_OPTIONS)
   RUN_TESTS := no
 endif
-ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),hurd-i386 mips mipsel ppc64 ppc64el))
+ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),hurd-i386 mips mipsel ppc64 ppc64el armel armhf arm64 kfreebsd-amd64 kfreebsd-i386))
   $(warning Disabling checks on $(DEB_HOST_ARCH))
   RUN_TESTS := no
 endif
