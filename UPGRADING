@@ -49,6 +49,9 @@ PHP 7.1 UPGRADE NOTES
     the notice level only.
   . Don't call destructors of incompletely constructed objects, even if they
     are kept referenced. See bug #29368 and Zend/tests/bug29368_1.phpt.
+  . call_user_func() will now consistently fail to perform calls to functions
+    that accept reference arguments. Previously this sometimes worked if
+    call_user_func() was used outside a namespace.
   . rand() and srand() are now aliases of mt_rand() and mt_srand().
     Consequently the output of the following functions has changed:
      . rand()
@@ -156,6 +159,12 @@ PHP 7.1 UPGRADE NOTES
 - Core:
   . Added sapi_windows_cp_set(), sapi_windows_cp_get(), sapi_windows_cp_is_utf8(),
     sapi_windows_cp_conv() for codepage handling.
+
+- cURL:
+  . Added curl_multi_errno() and curl_share_errno() to return the last error
+    number of curl_multi and curl_share resources.
+  . Added curl_share_strerror() to convert error code to error message text
+    describing the error.
 
 - pcntl:
   . Added pcntl_signal_get_handler() that returns the current signal handler
