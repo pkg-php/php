@@ -82,6 +82,7 @@ Package: libapache2-mod-php@PHP_VERSION@
 Section: httpd
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (= ${binary:Version}),
@@ -108,6 +109,7 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
 Package: libphp@PHP_VERSION@-embed
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (= ${binary:Version}),
@@ -153,6 +155,7 @@ Description: server-side, HTML-embedded scripting language (metapackage)
 Package: php@PHP_VERSION@-cgi
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (= ${binary:Version}),
@@ -180,6 +183,7 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
 Package: php@PHP_VERSION@-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-4),
+         libpcre3 (>= 1:8.20),
          libmagic1,
          mime-support,
          php@PHP_VERSION@-common (= ${binary:Version}),
@@ -206,7 +210,7 @@ Description: command-line interpreter for the PHP scripting language
 Package: php@PHP_VERSION@-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
-         libpcre3-dev,
+         libpcre3-dev (>= 1:8.20),
          libssl-dev,
          php@PHP_VERSION@-cli (>= ${binary:Version}),
          php@PHP_VERSION@-common (= ${binary:Version}),
@@ -229,6 +233,7 @@ Description: Files for PHP@PHP_VERSION@ module development
 Package: php@PHP_VERSION@-fpm
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (= ${binary:Version}),
@@ -256,6 +261,7 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
 Package: php@PHP_VERSION@-phpdbg
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php@PHP_VERSION@-cli,
          php@PHP_VERSION@-common (= ${binary:Version}),
