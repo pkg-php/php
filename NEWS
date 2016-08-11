@@ -1,5 +1,95 @@
 PHP                                                                        NEWS
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+04 Aug 2016, PHP 7.1.0beta2
+
+- Core:
+  . Implemented FR #72614 (Support "nmake test" on building extensions by
+    phpize). (Yuji Uchiyama)
+  . Fixed bug #72641 (phpize (on Windows) ignores PHP_PREFIX).
+    (Yuji Uchiyama)
+  . Fixed bug #72683 (getmxrr broken). (Anatol)
+
+- Calendar:
+  . Fixed bug #67976 (cal_days_month() fails for final month of the French
+    calendar). (cmb)
+  . Fixed bug #71894 (AddressSanitizer: global-buffer-overflow in
+    zif_cal_from_jd). (cmb)
+
+- CURL:
+  . Fixed bug #71709 (curl_setopt segfault with empty CURLOPT_HTTPHEADER).
+    (Pierrick)
+  . Fixed bug #71929 (CURLINFO_CERTINFO data parsing error). (Pierrick)
+
+- Intl:
+  . Fixed bug #72639 (Segfault when instantiating class that extends
+    IntlCalendar and adds a property). (Laruence)
+  . Fixed bug #72658 (Locale::lookup() / locale_lookup() hangs if no match
+    found). (Anatol)
+
+- GD:
+  . Fixed bug #72709 (imagesetstyle() causes OOB read for empty $styles). (cmb)
+
+- mbstring:
+  . Fixed bug #72691 (mb_ereg_search raises a warning if a match zero-width).
+    (cmb)
+  . Fixed bug #72693 (mb_ereg_search increments search position when a match
+    zero-width). (cmb)
+  . Fixed bug #72694 (mb_ereg_search_setpos does not accept a string's last
+    position). (cmb)
+  . Fixed bug #72710 (`mb_ereg` causes buffer overflow on regexp compile error).
+    (ju1ius)
+
+- Mysqlnd:
+  . Fixed bug #71863 (Segfault when EXPLAIN with "Unknown column" error when
+    using MariaDB). (Andrey)
+  . Fixed bug #72701 (mysqli_get_host_info() wrong output). (Anatol)
+
+- PCRE:
+  . Fixed bug #72688 (preg_match missing group names in matches). (cmb)
+  . Downgraded to PCRE 8.38. (Anatol)
+
+- Reflection:
+  . Fixed bug #72661 (ReflectionType::__toString crashes with iterable).
+    (Laruence)
+
+- SPL:
+  . Fixed bug #72646 (SplFileObject::getCsvControl does not return the escape
+    character). (cmb)
+  . Fixed bug #72684 (AppendIterator segfault with closed generator). (Pierrick)
+
+- SQLite3:
+  . Fixed bug #72668 (Spurious warning when exception is thrown in user defined
+    function). (Laruence)
+  . Implemented FR #72653 (SQLite should allow opening with empty filename).
+    (cmb)
+
+- Standard:
+  . Fixed bug #61967 (unset array item in array_walk_recursive cause
+    inconsistent array). (Nikita)
+  . Fixed bug #62607 (array_walk_recursive move internal pointer). (Nikita)
+  . Fixed bug #69068 (Exchanging array during array_walk -> memory errors).
+    (Nikita)
+  . Fixed bug #70713 (Use After Free Vulnerability in array_walk()/
+    array_walk_recursive()). (Nikita)
+
+- Streams:
+  . Fixed bug #41021 (Problems with the ftps wrapper). (vhuk)
+  . Fixed bug #54431 (opendir() does not work with ftps:// wrapper). (vhuk)
+  . Fixed bug #72667 (opendir() with ftp:// attempts to open data stream for
+    non-existent directories). (vhuk)
+
+- Wddx:
+  . Fixed bug #72142 (WDDX Packet Injection Vulnerability in
+    wddx_serialize_value()). (Taoguang Chen)
+
+- XMLRPC:
+  . Fixed bug #72647 (xmlrpc_encode() unexpected output after referencing
+    array elements). (Laruence)
+
+- Zip:
+  . Fixed bug #72660 (NULL Pointer dereference in zend_virtual_cwd).
+    (Laruence)
+
 21 Jul 2016, PHP 7.1.0beta1
 
 - Core:
@@ -106,6 +196,8 @@ PHP                                                                        NEWS
   . Fixed bug #70313 (PDO statement fails to throw exception). (Matteo)
   . Fixed bug #72570 (Segmentation fault when binding parameters on a query
     without placeholders). (Matteo)
+  . Implemented FR #72633 (Postgres PDO lastInsertId() should work without
+    specifying a sequence). (Pablo Santiago Sánchez)
 
 - Pcntl
   . Implemented asynchronous signal handling without TICKS. (Dmitry)
@@ -124,6 +216,8 @@ PHP                                                                        NEWS
 - Standard:
   . Fixed bug #72622 (array_walk + array_replace_recursive create references
     from nothing). (Laruence)
+  . Fixed bug #72330 (CSV fields incorrectly split if escape char followed by
+    UTF chars). (cmb)
 
 - Tidy:
   . Implemented support for libtidy 5.0.0 and above. (Michael Orlitzky, Anatol)
