@@ -45,6 +45,7 @@
 #include "basic_functions.h"
 #include "php_string.h"
 #include "php_rand.h"
+#include "php_math.h"
 #include "zend_smart_str.h"
 #include "zend_bitset.h"
 #include "ext/spl/spl_array.h"
@@ -2141,7 +2142,7 @@ PHP_FUNCTION(array_fill_keys)
 			php_error_docref(NULL, E_WARNING, "The supplied range exceeds the maximum array size: start=%0.0f end=%0.0f", end, start); \
 			RETURN_FALSE; \
 		} \
-		size = (uint32_t)round(__calc_size); \
+		size = (uint32_t)_php_math_round(__calc_size, 0, PHP_ROUND_HALF_UP); \
 		array_init_size(return_value, size); \
 		zend_hash_real_init(Z_ARRVAL_P(return_value), 1); \
 	} while (0)
@@ -3592,7 +3593,7 @@ PHP_FUNCTION(array_column)
 		RETURN_FALSE;
 	}
 
-	array_init(return_value);
+	array_init_size(return_value, zend_hash_num_elements(arr_hash));
 	if (!zkey) {
 		zend_hash_real_init(Z_ARRVAL_P(return_value), 1);
 		ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
@@ -3729,31 +3730,56 @@ PHP_FUNCTION(array_pad)
 	}
 
 	num_pads = pad_size_abs - input_size;
-	array_init_size(return_value, pad_size_abs);
 	if (Z_REFCOUNTED_P(pad_value)) {
 		GC_REFCOUNT(Z_COUNTED_P(pad_value)) += num_pads;
 	}
 
-	if (pad_size < 0) {
-		for (i = 0; i < num_pads; i++) {
-			zend_hash_next_index_insert_new(Z_ARRVAL_P(return_value), pad_value);
-		}
-	}
+	array_init_size(return_value, pad_size_abs);
+	if (Z_ARRVAL_P(input)->u.flags & HASH_FLAG_PACKED) {
+		zend_hash_real_init(Z_ARRVAL_P(return_value), 1);
 
-	ZEND_HASH_FOREACH_STR_KEY_VAL_IND(Z_ARRVAL_P(input), key, value) {
-		if (Z_REFCOUNTED_P(value)) {
-			Z_ADDREF_P(value);
+		if (pad_size < 0) {
+			ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
+				for (i = 0; i < num_pads; i++) {
+					ZEND_HASH_FILL_ADD(pad_value);
+				}
+			} ZEND_HASH_FILL_END();
 		}
-		if (key) {
-			zend_hash_add_new(Z_ARRVAL_P(return_value), key, value);
-		} else {
-			zend_hash_next_index_insert_new(Z_ARRVAL_P(return_value), value);
-		}
-	} ZEND_HASH_FOREACH_END();
 
-	if (pad_size > 0) {
-		for (i = 0; i < num_pads; i++) {
-			zend_hash_next_index_insert_new(Z_ARRVAL_P(return_value), pad_value);
+		ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
+			ZEND_HASH_FOREACH_VAL(Z_ARRVAL_P(input), value) {
+				Z_TRY_ADDREF_P(value);
+				ZEND_HASH_FILL_ADD(value);
+			} ZEND_HASH_FOREACH_END();
+		} ZEND_HASH_FILL_END();
+
+		if (pad_size > 0) {
+			ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
+				for (i = 0; i < num_pads; i++) {
+					ZEND_HASH_FILL_ADD(pad_value);
+				}
+			} ZEND_HASH_FILL_END();
+		}
+	} else {
+		if (pad_size < 0) {
+			for (i = 0; i < num_pads; i++) {
+				zend_hash_next_index_insert_new(Z_ARRVAL_P(return_value), pad_value);
+			}
+		}
+
+		ZEND_HASH_FOREACH_STR_KEY_VAL_IND(Z_ARRVAL_P(input), key, value) {
+			Z_TRY_ADDREF_P(value);
+			if (key) {
+				zend_hash_add_new(Z_ARRVAL_P(return_value), key, value);
+			} else {
+				zend_hash_next_index_insert_new(Z_ARRVAL_P(return_value), value);
+			}
+		} ZEND_HASH_FOREACH_END();
+
+		if (pad_size > 0) {
+			for (i = 0; i < num_pads; i++) {
+				zend_hash_next_index_insert_new(Z_ARRVAL_P(return_value), pad_value);
+			}
 		}
 	}
 }
@@ -5086,6 +5112,7 @@ PHP_FUNCTION(array_rand)
 	zend_bitset bitset;
 	int negative_bitset = 0;
 	uint32_t bitset_len;
+	ALLOCA_FLAG(use_heap)
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "a|l", &input, &num_req) == FAILURE) {
 		return;
@@ -5139,7 +5166,6 @@ PHP_FUNCTION(array_rand)
 		num_req = num_avail - num_req;
 	}
 
-	ALLOCA_FLAG(use_heap);
 	bitset_len = zend_bitset_len(num_avail);
 	bitset = ZEND_BITSET_ALLOCA(bitset_len, use_heap);
 	zend_bitset_clear(bitset, bitset_len);
@@ -5152,19 +5178,25 @@ PHP_FUNCTION(array_rand)
 			i--;
 		}
 	}
+	/* i = 0; */
 
-	/* We can't use zend_hash_index_find() because the array may have string keys or gaps. */
-	i = 0;
-	ZEND_HASH_FOREACH_KEY(Z_ARRVAL_P(input), num_key, string_key) {
-		if (zend_bitset_in(bitset, i) ^ negative_bitset) {
-			if (string_key) {
-				add_next_index_str(return_value, zend_string_copy(string_key));
-			} else {
-				add_next_index_long(return_value, num_key);
+	zend_hash_real_init(Z_ARRVAL_P(return_value), 1);
+	ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
+		zval zv;
+		/* We can't use zend_hash_index_find()
+		 * because the array may have string keys or gaps. */
+		ZEND_HASH_FOREACH_KEY(Z_ARRVAL_P(input), num_key, string_key) {
+			if (zend_bitset_in(bitset, i) ^ negative_bitset) {
+				if (string_key) {
+					ZVAL_STR_COPY(&zv, string_key);
+				} else {
+					ZVAL_LONG(&zv, num_key);
+				}
+				ZEND_HASH_FILL_ADD(&zv);
 			}
-		}
-		i++;
-	} ZEND_HASH_FOREACH_END();
+			i++;
+		} ZEND_HASH_FOREACH_END();
+	} ZEND_HASH_FILL_END();
 
 	free_alloca(bitset, use_heap);
 }

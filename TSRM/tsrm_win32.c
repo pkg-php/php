@@ -208,14 +208,13 @@ TSRM_API int tsrm_win32_access(const char *pathname, int mode)
 	DWORD sec_desc_length = 0, desired_access = 0, granted_access = 0;
 	BYTE * psec_desc = NULL;
 	BOOL fAccess = FALSE;
+	realpath_cache_bucket * bucket = NULL;
+	char * real_path = NULL;
 
 	PHP_WIN32_IOUTIL_INIT_W(pathname)
 	if (!pathw) {
 		return -1;
 	}
-
-	realpath_cache_bucket * bucket = NULL;
-	char * real_path = NULL;
 
 	if (mode == 1 /*X_OK*/) {
 		DWORD type;
@@ -716,16 +715,23 @@ TSRM_API int shmget(int key, int size, int flags)
 TSRM_API void *shmat(int key, const void *shmaddr, int flags)
 {
 	shm_pair *shm = shm_get(key, NULL);
+	int err;
 
 	if (!shm->segment) {
+		return (void*)-1;
+	}
+
+	shm->addr = MapViewOfFileEx(shm->segment, FILE_MAP_ALL_ACCESS, 0, 0, 0, NULL);
+
+	err = GetLastError();
+	if (err) {
+		SET_ERRNO_FROM_WIN32_CODE(err);
 		return (void*)-1;
 	}
 
 	shm->descriptor->shm_atime = time(NULL);
 	shm->descriptor->shm_lpid  = getpid();
 	shm->descriptor->shm_nattch++;
-
-	shm->addr = MapViewOfFileEx(shm->segment, FILE_MAP_ALL_ACCESS, 0, 0, 0, NULL);
 
 	return shm->addr;
 }
