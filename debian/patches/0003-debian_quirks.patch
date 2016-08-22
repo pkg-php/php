@@ -14,7 +14,7 @@ Subject: debian_quirks
  8 files changed, 22 insertions(+), 17 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index c5b0035..82ca42c 100644
+index 0c316b8..b197da8 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1094,7 +1094,7 @@ if test "$PHP_CLI" = "no"; then
@@ -65,10 +65,10 @@ index a1c6464..ebe5cd1 100755
  
  ## convert skel_dir to full path
 diff --git a/php.ini-development b/php.ini-development
-index 604efc4..8d843c5 100644
+index fe9942d..7af0c22 100644
 --- a/php.ini-development
 +++ b/php.ini-development
-@@ -696,7 +696,7 @@ default_charset = "UTF-8"
+@@ -695,7 +695,7 @@ default_charset = "UTF-8"
  ;;;;;;;;;;;;;;;;;;;;;;;;;
  
  ; UNIX: "/path1:/path2"
@@ -78,10 +78,10 @@ index 604efc4..8d843c5 100644
  ; Windows: "\path1;\path2"
  ;include_path = ".;c:\php\includes"
 diff --git a/php.ini-production b/php.ini-production
-index f2723f6..7914036 100644
+index 35a4ddd..6af78ba 100644
 --- a/php.ini-production
 +++ b/php.ini-production
-@@ -696,7 +696,7 @@ default_charset = "UTF-8"
+@@ -695,7 +695,7 @@ default_charset = "UTF-8"
  ;;;;;;;;;;;;;;;;;;;;;;;;;
  
  ; UNIX: "/path1:/path2"
