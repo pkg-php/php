@@ -7,7 +7,7 @@ Subject: fpm-config
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/sapi/fpm/php-fpm.conf.in b/sapi/fpm/php-fpm.conf.in
-index 9e5b593..e4fd6aa 100644
+index 56c18e8..4741195 100644
 --- a/sapi/fpm/php-fpm.conf.in
 +++ b/sapi/fpm/php-fpm.conf.in
 @@ -14,14 +14,14 @@
@@ -19,7 +19,7 @@ index 9e5b593..e4fd6aa 100644
  
  ; Error log file
  ; If it's set to "syslog", log is sent to syslogd instead of being written
- ; in a local file.
+ ; into a local file.
  ; Note: the default prefix is @EXPANDED_LOCALSTATEDIR@
  ; Default Value: log/php-fpm.log
 -;error_log = log/php-fpm.log
