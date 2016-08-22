@@ -1,3 +1,12 @@
+php7.1 (7.1.0~beta3-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.1.0~beta3
+  * Rebase patches on top of 7.1.0~beta3 release
+  * Declare dependency on mpm_prefork in apache2 phpX.Y.load file
+    (Closes: #834092)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 22 Aug 2016 14:33:41 +0200
+
 php7.1 (7.1.0~beta2-1) experimental; urgency=medium
 
   [ Ondřej Surý ]
