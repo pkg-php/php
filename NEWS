@@ -1,5 +1,97 @@
 PHP                                                                        NEWS
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+18 Aug 2016, PHP 7.1.0beta3
+
+- Core:
+  . Fixed bug #72813 (Segfault with __get returned by ref). (Laruence)
+  . Fixed bug #72767 (PHP Segfaults when trying to expand an infinite operator).
+    (Nikita)
+  . TypeError messages for arg_info type checks will now say "must be ...
+    or null" where the parameter or return type accepts null. (Andrea)
+  . Fixed bug #72857 (stream_socket_recvfrom read access violation). (Anatol)
+  . Fixed bug #72663 (Create an Unexpected Object and Don't Invoke
+    __wakeup() in Deserialization). (Stas)
+  . Fixed bug #72681 (PHP Session Data Injection Vulnerability). (Stas)
+  . Fixed bug #72742 (memory allocator fails to realloc small block to large
+    one). (Stas)
+
+- Bz2:
+  . Fixed bug #72837 (integer overflow in bzdecompress caused heap
+    corruption). (Stas)
+
+- Curl
+  . Fixed bug #72674 (Heap overflow in curl_escape). (Stas)
+
+- EXIF:
+  . Fixed bug #72735 (Samsung picture thumb not read (zero size)). (Kalle, Remi)
+  . Fixed bug #72627 (Memory Leakage In exif_process_IFD_in_TIFF). (Stas)
+
+- FTP:
+  . Fixed bug #70195 (Cannot upload file using ftp_put to FTPES with
+    require_ssl_reuse). (Benedict Singer)
+
+- mbstring:
+  . Fixed bug #72711 (`mb_ereg` does not clear the `$regs` parameter on
+    failure). (ju1ius)
+
+- Mcrypt:
+  . Fixed bug #72782 (Heap Overflow due to integer overflows). (Stas)
+
+- OCI8
+  . Fixed invalid handle error with Implicit Result Sets. (Chris Jones)
+  . Fixed bug #72524 (Binding null values triggers ORA-24816 error). (Chris Jones)
+
+- Opcache:
+  . Fixed bug #72762 (Infinite loop while parsing a file with opcache enabled).
+    (Nikita)
+
+- PDO:
+  . Fixed bug #72788 (Invalid memory access when using persistent PDO
+    connection). (Keyur)
+  . Fixed bug #72791 (Memory leak in PDO persistent connection handling). (Keyur)
+  . Fixed bug #60665 (call to empty() on NULL result using PDO::FETCH_LAZY
+    returns false). (cmb)
+
+- Reflection:
+  . Implemented request #38992 (invoke() and invokeArgs() static method calls
+    should match). (cmb).
+  . Add ReflectionNamedType::getName() and return leading "?" for nullable types
+    from ReflectionType::__toString(). (Trowski)
+
+- Session:
+  . Implemented RFC: Session ID without hashing. (Yasuo)
+    https://wiki.php.net/rfc/session-id-without-hashing
+
+- SPL:
+  . Fixed bug #72888 (Segfault on clone on splFileObject). (Laruence)
+
+- SQLite3:
+  . Updated to SQLite3 3.14.0. (cmb)
+
+- Standard:
+  . Fixed bug #55451 (substr_compare NULL length interpreted as 0). (Lauri
+    Kenttä)
+  . Fixed bug #72278 (getimagesize returning FALSE on valid jpg). (cmb)
+
+- Stream: 
+  . Fixed bug #72853 (stream_set_blocking doesn't work). (Laruence)
+  . Fixed bug #72743 (Out-of-bound read in php_stream_filter_create).
+    (Loianhtuan)
+  . Implemented FR #27814 (Multiple small packets send for HTTP request).
+    (vhuk)
+  . Fixed bug #72764 (ftps:// opendir wrapper data channel encryption fails
+    with IIS FTP 7.5, 8.5). (vhuk)
+  . Fixed bug #72810 (Missing SKIP_ONLINE_TESTS checks). (vhuk)
+
+- sysvshm:
+  . Fixed bug #72858 (shm_attach null dereference). (Anatol)
+
+- XML:
+  . Fixed bug #72085 (SEGV on unknown address zif_xml_parse). (cmb)
+
+- ZIP:
+  . Fixed bug #68302 (impossible to compile php with zip support). (cmb)
+
 04 Aug 2016, PHP 7.1.0beta2
 
 - Core:
@@ -28,6 +120,8 @@ PHP                                                                        NEWS
 
 - GD:
   . Fixed bug #72709 (imagesetstyle() causes OOB read for empty $styles). (cmb)
+  . Fixed bug #72697 (select_colors write out-of-bounds). (Stas)
+  . Fixed bug #72730 (imagegammacorrect allows arbitrary write access). (Stas)
 
 - mbstring:
   . Fixed bug #72691 (mb_ereg_search raises a warning if a match zero-width).
@@ -51,6 +145,10 @@ PHP                                                                        NEWS
 - Reflection:
   . Fixed bug #72661 (ReflectionType::__toString crashes with iterable).
     (Laruence)
+
+- SNMP:
+  . Fixed bug #72708 (php_snmp_parse_oid integer overflow in memory
+    allocation). (djodjo at gmail dot com)
 
 - SPL:
   . Fixed bug #72646 (SplFileObject::getCsvControl does not return the escape
@@ -77,10 +175,18 @@ PHP                                                                        NEWS
   . Fixed bug #54431 (opendir() does not work with ftps:// wrapper). (vhuk)
   . Fixed bug #72667 (opendir() with ftp:// attempts to open data stream for
     non-existent directories). (vhuk)
+  . Fixed bug #72771 (ftps:// wrapper is vulnerable to protocol downgrade
+    attack). (Stas)
 
 - Wddx:
   . Fixed bug #72142 (WDDX Packet Injection Vulnerability in
     wddx_serialize_value()). (Taoguang Chen)
+  . Fixed bug #72749 (wddx_deserialize allows illegal memory access) (Stas)
+  . Fixed bug #72750 (wddx_deserialize null dereference). (Stas)
+  . Fixed bug #72790 (wddx_deserialize null dereference with invalid xml).
+    (Stas)
+  . Fixed bug #72799 (wddx_deserialize null dereference in
+    php_wddx_pop_element). (Stas)
 
 - XMLRPC:
   . Fixed bug #72647 (xmlrpc_encode() unexpected output after referencing
@@ -197,7 +303,7 @@ PHP                                                                        NEWS
   . Fixed bug #72570 (Segmentation fault when binding parameters on a query
     without placeholders). (Matteo)
   . Implemented FR #72633 (Postgres PDO lastInsertId() should work without
-    specifying a sequence). (Pablo Santiago Sánchez)
+    specifying a sequence). (Pablo Santiago Sánchez, Matteo)
 
 - Pcntl
   . Implemented asynchronous signal handling without TICKS. (Dmitry)

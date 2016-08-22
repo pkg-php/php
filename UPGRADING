@@ -62,6 +62,20 @@ PHP 7.1 UPGRADE NOTES
     different sequence of outputs to previous versions. If you relied on
     mt_srand() to produce a deterministic sequence, it can be called using
     mt_srand($seed, MT_RAND_PHP) to produce old the sequences.
+  . URL rewriter has been improved.
+     . Use dedicated buffer for Session module rewrite and User rewrite.
+     . Full path URL rewrite is supported. Allowed domain can be specified.
+       $_SERVER['HTTP_HOST'] is allowed by default when host whitelist is empty.
+     . Use session.trans_sid_tags and session.trans_sid_hosts to control
+       session rewrite.
+     . Use url_rewriter.tags and url_rewriter.hosts to control user rewrite.
+     . <form>'s "action" attribute is used to check if URL rewrite is allowed
+       and listed under hosts whitelist.
+     . <fieldset> is no longer considered as a special tag. <form> is the
+       only tag considered special.
+  . Calling a function with less arguments than mandatory declared ones in
+    signature now issues a Fatal Error (Error Exception) instead of a Warning.
+    (RFC https://wiki.php.net/rfc/too_few_args).
 
 - JSON:
   . The serialize_precision is used instead of precision when encoding double
@@ -71,8 +85,48 @@ PHP 7.1 UPGRADE NOTES
   . When calling json_encode with JSON_UNESCAPED_UNICODE option, U+2028 and
     U+2029 are escaped.
 
+- mbstring:
+  . mb_ereg() and mb_eregi() will now set the $regs argument to an empty array,
+    if nothing matched. Formerly, $regs was not modified in that case.
+
 - OpenSSL:
   . Dropped sslv2 stream.
+
+- Session:
+  . Session ID is generated from CSPNG directly. As a result, Session ID length
+    could be any length between 22 and 256. Note: Max size of session ID depends
+    on save handler you are using.
+  . Following INIs are removed
+     . session.hash_function
+     . session.hash_bits_per_charactor
+     . session.entropy_file
+     . session.entropy_length
+  . New INIs and defaults
+     . session.sid_length (Number of session ID characters - 22 to 256.
+       (php.ini-* default: 26 Compitled default: 32)
+     . session.sid_bits_per_character (Bits used per character. 4 to 6.
+       php.ini-* default: 5 Compiled default: 4)
+    Length of old session ID string is determined as follows
+     . Used hash function's bits.
+        . session.hash_function=0 - MD5 128 bits (This was default)
+        . session.hash_function=1 - SHA1 192 bits
+     . Bits per character. (4, 5 or 6 bits per character)
+     . Examples
+         MD5 and 4 bits = 32 chars,  ceil(128/4)=32
+         MD5 and 5 bits = 26 chars,  ceil(128/5)=26
+         MD5 and 6 bits = 22 chars,  ceil(128/6)=22
+         SHA1 and 4 bits = 48 chars, ceil(192/4)=48
+         SHA2 and 5 bits = 39 chars, ceil(192/5)=39
+         SHA1 and 6 bits = 32 chars, ceil(192/6)=32
+         and so on.
+
+- Reflection:
+  . The behavior of ReflectionMethod::invoke() and ::invokeArgs() has been
+    aligned, what causes slightly different behavior than before for some
+    pathological cases.
+  . ReflectionType::__toString() will now return the type name with a leading
+    "?" if it is nullable. To retrieve the type name without leading "?" the new
+    ReflectionNamedType::getName() method can be used.
 
 ========================================
 2. New Features
@@ -102,6 +156,14 @@ PHP 7.1 UPGRADE NOTES
     ++ and --, which have a unique approach to handling numeric strings.
     (RFC: https://wiki.php.net/rfc/invalid_strings_in_arithmetic)
   . Closure::fromCallable (RFC: https://wiki.php.net/rfc/closurefromcallable)
+  . Added support for class constant visibility modifiers.
+    (RFC: https://wiki.php.net/rfc/class_const_visibility)
+  . TypeError messages for arg_info type checks will now say "must be ...
+    or null", or "must ... or be null" where the parameter or return type
+    accepts null. arg_info type checks are used by all userland functions with
+    type declarations, and some internal functions. Both nullable type
+    declarations (?int) and parameters with default values of null
+    (int $foo = NULL) are considered to "accept null" for this purpose.
 
 ========================================
 3. Changes in SAPI modules
@@ -152,6 +214,10 @@ PHP 7.1 UPGRADE NOTES
 - mb_ereg() and mb_ereg_replace() reject illegal byte sequences.
 - FILTER_FLAG_EMAIL_UNICODE can be used with filter_var() for email validation
   according to RFC 6531.
+- output_reset_rewrite_vars() no longer reset session URL rewrite vars.
+- the lasinsertid() in pdo_pgsql extension triggers an error, when no nextval()
+  were called in in the current session.
+
 
 ========================================
 6. New Functions
@@ -247,8 +313,7 @@ PHP 7.1 UPGRADE NOTES
   . Custom session handlers that do not return strings for session IDs will 
     now throw an instance of Error instead of resulting in a fatal error
     when a function is called that must generate a session ID.
-  . An invalid setting for session.hash_function will throw an instance of
-    Error instead of resulting in a fatal error when a session ID is created.
+  . Only CSPRNG is used to generate session ID.
 
 - SimpleXML:
   . Creating an unnamed or duplicate attribute will throw an instance of Error
