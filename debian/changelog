@@ -1,3 +1,12 @@
+php5.6 (5.6.25-1) experimental; urgency=medium
+
+  * Declare dependency on mpm_prefork in apache2 phpX.Y.load file
+    (Closes: #834092)
+  * Imported Upstream version 5.6.25
+  * Rebase patches on top of 5.6.25
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 22 Aug 2016 14:32:48 +0200
+
 php5.6 (5.6.24-2) experimental; urgency=medium
 
   * Remove PHP 5 references from README.Debian
