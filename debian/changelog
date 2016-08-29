@@ -1,3 +1,9 @@
+php7.1 (7.1.0~beta3-2) experimental; urgency=medium
+
+  * Use ${Package} instead of ${binary:Package} for dpkg-query output
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 29 Aug 2016 12:44:29 +0200
+
 php7.1 (7.1.0~beta3-1) experimental; urgency=medium
 
   * Imported Upstream version 7.1.0~beta3
