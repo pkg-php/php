@@ -1,3 +1,9 @@
+php7.0 (7.0.10-2) unstable; urgency=medium
+
+  * Use ${Package} instead of ${binary:Package} for dpkg-query output
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 29 Aug 2016 12:41:07 +0200
+
 php7.0 (7.0.10-1) unstable; urgency=medium
 
   * Declare dependency on mpm_prefork in apache2 phpX.Y.load file
