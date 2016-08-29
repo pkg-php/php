@@ -1,3 +1,9 @@
+php5.6 (5.6.25-2) experimental; urgency=medium
+
+  * Use ${Package} instead of ${binary:Package} for dpkg-query output
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 29 Aug 2016 12:43:00 +0200
+
 php5.6 (5.6.25-1) experimental; urgency=medium
 
   * Declare dependency on mpm_prefork in apache2 phpX.Y.load file
