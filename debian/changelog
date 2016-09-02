@@ -1,3 +1,10 @@
+php7.1 (7.1.0~rc1-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.1.0~rc1
+  * Rebase patches on top of PHP 7.1.0~rc1
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 02 Sep 2016 10:21:19 +0200
+
 php7.1 (7.1.0~beta3-2) experimental; urgency=medium
 
   * Use ${Package} instead of ${binary:Package} for dpkg-query output
