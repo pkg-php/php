@@ -7,7 +7,7 @@ Subject: proc_open
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/ext/standard/proc_open.c b/ext/standard/proc_open.c
-index e443ec6..2d4cf90 100644
+index 95803c9..5b83972 100644
 --- a/ext/standard/proc_open.c
 +++ b/ext/standard/proc_open.c
 @@ -62,7 +62,7 @@
