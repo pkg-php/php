@@ -1,1 +1,1 @@
-php-snmp:Depends=snmp
+php-snmp:Recommends=snmp
