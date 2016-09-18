@@ -9,7 +9,7 @@ Subject: session_save_path
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ext/session/session.c b/ext/session/session.c
-index 8e5caf9..dd96322 100644
+index a47e78c..6522e25 100644
 --- a/ext/session/session.c
 +++ b/ext/session/session.c
 @@ -831,7 +831,7 @@ static PHP_INI_MH(OnUpdateRfc1867Freq) /* {{{ */
