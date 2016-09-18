@@ -1,3 +1,10 @@
+php7.1 (7.1.0~rc2-1) experimental; urgency=medium
+
+  * Imported Upstream version 7.1.0~rc2
+  * Rebase patches on top of PHP 7.1.0~rc2
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 18 Sep 2016 10:45:28 +0200
+
 php7.1 (7.1.0~rc1-1) experimental; urgency=medium
 
   * Imported Upstream version 7.1.0~rc1
