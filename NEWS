@@ -1,5 +1,44 @@
 PHP                                                                        NEWS
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+15 Sep 2016, PHP 7.1.0RC2
+
+- Core:
+  . Fixed bug #73067 (__debugInfo crashes when throwing an exception).
+    (Laruence)
+  . Fixed bug #73025 (Heap Buffer Overflow in virtual_popen of
+    zend_virtual_cwd.c). (cmb)
+  . Fixed bug #73058 (crypt broken when salt is 'too' long). (Anatol)
+
+- Filter:
+  . Fixed bug #72972 (Bad filter for the flags FILTER_FLAG_NO_RES_RANGE and
+    FILTER_FLAG_NO_PRIV_RANGE). (julien)
+  . Fixed bug #73054 (default option ignored when object passed to int filter).
+    (cmb)
+
+-GD:
+  . Fixed bug #67325 (imagetruecolortopalette: white is duplicated in palette).
+    (cmb)
+
+- Mbstring
+  . Fixed bug #66964 (mb_convert_variables() cannot detect recursion) (Yasuo)
+  . Fixed bug #72992 (mbstring.internal_encoding doesn't inherit default_charset).
+    (Yasuo)
+
+- Opcache:
+  . Fixed bug #72982 (Memory leak in zend_accel_blacklist_update_regexp()
+    function). (Laruence)
+
+- OpenSSL:
+  . Fixed bug #73072 (Invalid path SNI_server_certs causes segfault).
+    (Jakub Zelenka)
+
+- Session:
+  . Fixed bug #68015 (Session does not report invalid uid for files save handler).
+    (Yasuo)
+
+- SQLite3:
+  . Updated to SQLite3 3.14.2. (cmb)
+
 01 Sep 2016, PHP 7.1.0RC1
 
 - Core:
@@ -31,6 +70,7 @@ PHP                                                                        NEWS
 - Intl:
   . Fixed bug #65732 (grapheme_*() is not Unicode compliant on CR LF
     sequence). (cmb)
+  . Fixed bug #73007 (add locale length check). (Stas)
 
 - JSON:
   . Implemented earlier return when json_encode fails, fixes bugs #68992
@@ -47,13 +87,22 @@ PHP                                                                        NEWS
   . Implemented stringify 'uniqueidentifier' fields.
     (Alexander Zhuravlev, Adam Baratz)
 
+- Phar:
+  . Fixed bug #72928 (Out of bound when verify signature of zip phar in
+    phar_parse_zipfile). (Stas)
+  . Fixed bug #73035 (Out of bound when verify signature of tar phar in
+    phar_parse_tarfile). (Stas)
+
 - Reflection:
   . Reverted prepending \ for class names. (Trowski)
 
 - Session:
   . Fixed bug #72940 (SID always return "name=ID", even if session
     cookie exist). (Yasuo)
-  . Implemented session_gc() and session_create_id() functions. (Yasuo)
+  . Implemented session_gc() (Yasuo)
+    https://wiki.php.net/rfc/session-create-id
+  . Implemented session_create_id() (Yasuo)
+    https://wiki.php.net/rfc/session-gc
 
 - SimpleXML:
   . Fixed bug #72971 (SimpleXML isset/unset do not respect namespace). (Nikita)
@@ -144,6 +193,7 @@ PHP                                                                        NEWS
 
 - SPL:
   . Fixed bug #72888 (Segfault on clone on splFileObject). (Laruence)
+  . Fixed bug #73029 (Missing type check when unserializing SplArray). (Stas)
 
 - SQLite3:
   . Updated to SQLite3 3.14.0. (cmb)
@@ -267,6 +317,8 @@ PHP                                                                        NEWS
     (Stas)
   . Fixed bug #72799 (wddx_deserialize null dereference in
     php_wddx_pop_element). (Stas)
+  . Fixed bug #72860 (wddx_deserialize use-after-free). (Stas)
+  . Fixed bug #73065 (Out-Of-Bounds Read in php_wddx_push_element). (Stas)
 
 - XMLRPC:
   . Fixed bug #72647 (xmlrpc_encode() unexpected output after referencing
