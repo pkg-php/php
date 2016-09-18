@@ -61,7 +61,7 @@ PHP 7.1 UPGRADE NOTES
   . Fixes to random number generators mean that mt_rand() now produces a
     different sequence of outputs to previous versions. If you relied on
     mt_srand() to produce a deterministic sequence, it can be called using
-    mt_srand($seed, MT_RAND_PHP) to produce old the sequences.
+    mt_srand($seed, MT_RAND_PHP) to produce the old sequences.
   . URL rewriter has been improved.
      . Use dedicated buffer for Session module rewrite and User rewrite.
      . Full path URL rewrite is supported. Allowed domain can be specified.
@@ -76,6 +76,10 @@ PHP 7.1 UPGRADE NOTES
   . Calling a function with less arguments than mandatory declared ones in
     signature now issues a Fatal Error (Error Exception) instead of a Warning.
     (RFC https://wiki.php.net/rfc/too_few_args).
+  . The error message for E_RECOVERABLE errors has been changed from "Catchable
+    fatal error" to "Recoverable fatal error".
+  . The empty index operator (e.g. $str[] = $x) is not supported for strings
+    anymore, and throws a fatal error instead of silently converting to array.
 
 - JSON:
   . The serialize_precision is used instead of precision when encoding double
@@ -103,7 +107,7 @@ PHP 7.1 UPGRADE NOTES
      . session.entropy_length
   . New INIs and defaults
      . session.sid_length (Number of session ID characters - 22 to 256.
-       (php.ini-* default: 26 Compitled default: 32)
+       (php.ini-* default: 26 Compiled default: 32)
      . session.sid_bits_per_character (Bits used per character. 4 to 6.
        php.ini-* default: 5 Compiled default: 4)
     Length of old session ID string is determined as follows
@@ -122,7 +126,7 @@ PHP 7.1 UPGRADE NOTES
 
 - Reflection:
   . The behavior of ReflectionMethod::invoke() and ::invokeArgs() has been
-    aligned, what causes slightly different behavior than before for some
+    aligned, which causes slightly different behavior than before for some
     pathological cases.
   . ReflectionType::__toString() will now return the type name with a leading
     "?" if it is nullable. To retrieve the type name without leading "?" the new
@@ -236,6 +240,12 @@ PHP 7.1 UPGRADE NOTES
   . Added pcntl_signal_get_handler() that returns the current signal handler
     for a particular signal.
 
+- Session:
+  . Added session_gc() that performs session data garbage collection.
+    https://wiki.php.net/rfc/session-gc
+  . Added session_create_id() for creating custom session ID.
+    https://wiki.php.net/rfc/session-create-id
+
 - Standard:
   . Added is_iterable() that determines if a value will be accepted by the new
     iterable pseudo-type.
@@ -262,7 +272,7 @@ PHP 7.1 UPGRADE NOTES
 
 - DBA:
   . Data modification functions (e.g.: dba_insert()) now throw an instance of
-    Error instead of triggering a catchable fatal error if the key is does not
+    Error instead of triggering a catchable fatal error if the key does not
     contain exactly two elements.
 
 - DOM:
