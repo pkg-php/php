@@ -1,5 +1,62 @@
 PHP                                                                        NEWS
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+29 Sep 2016, PHP 7.1.0RC3
+
+- Core:
+  . Fixed bug #73156 (segfault on undefined function). (Dmitry)
+  . Fixed bug #73163 (PHP hangs if error handler throws while accessing undef
+    const in default value). (Nikita)
+  . Fixed bug #73172 (parse error: Invalid numeric literal). (Nikita, Anatol)
+  . Fixed bug #73181 (parse_str() without a second argument leads to crash).
+    (Nikita)
+
+- COM:
+  . Fixed bug #73126 (Cannot pass parameter 1 by reference). (Anatol)
+  . Fixed bug #69579 (Invalid free in extension trait). (John Boehr)
+
+- GD:
+  . Fixed bug #50194 (imagettftext broken on transparent background w/o
+    alphablending). (cmb)
+  . Fixed bug #73003 (Integer Overflow in gdImageWebpCtx of gd_webp.c). (trylab,
+    cmb)
+  . Fixed bug #53504 (imagettfbbox gives incorrect values for bounding box).
+    (Mark Plomer, cmb)
+  . Fixed bug #73157 (imagegd2() ignores 3rd param if 4 are given). (cmb)
+  . Fixed bug #73155 (imagegd2() writes wrong chunk sizes on boundaries). (cmb)
+  . Fixed bug #73159 (imagegd2(): unrecognized formats may result in corrupted
+    files). (cmb)
+  . Fixed bug #73161 (imagecreatefromgd2() may leak memory). (cmb)
+
+- JSON:
+  . Fixed bug #73113 (Segfault with throwing JsonSerializable). (julien)
+
+- PCRE:
+  . Fixed bug #73121 (Bundled PCRE doesn't compile because JIT isn't supported
+    on s390). (Anatol)
+
+- PDO_DBlib:
+  . Fixed bug #72414 (Never quote values as raw binary data). (Adam Baratz)
+  . Allow \PDO::setAttribute() to set query timeouts. (Adam Baratz)
+  . Handle SQLDECIMAL/SQLNUMERIC types, which are used by later TDS versions.
+    (Adam Baratz)
+  . Add common PDO test suite. (Adam Baratz)
+  . Free error and message strings when cleaning up PDO instances.
+    (Adam Baratz)
+  . Fixed bug #67130 (\PDOStatement::nextRowset() should succeed when all rows
+    in current rowset haven't been fetched). (Peter LeBrun)
+  . Ignore potentially misleading dberr values. (Chris Kings-Lynne)
+
+- phpdbg:
+  . Added generator command for inspection of currently alive generators. (Bob)
+
+- Reflection
+  . Undo backwards compatiblity break in ReflectionType->__toString() and
+    deprecate via documentation instead. (Nikita)
+
+- Session:
+  . Fixed bug #73100 (session_destroy null dereference in ps_files_path_create).
+    (cmb)
+
 15 Sep 2016, PHP 7.1.0RC2
 
 - Core:
