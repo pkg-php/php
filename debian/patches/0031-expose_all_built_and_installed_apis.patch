@@ -21,7 +21,7 @@ index ae2ee56..05e5e2d 100644
  .PD 0
  .B \-\-configure-options
 diff --git a/scripts/php-config.in b/scripts/php-config.in
-index 746a58e..10a4fae 100644
+index 746a58e..bcbbe22 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
 @@ -18,9 +18,12 @@ exe_extension="@EXEEXT@"
