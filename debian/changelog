@@ -1,3 +1,9 @@
+php5.5 (5.5.38-4) experimental; urgency=medium
+
+  * Ignore .list files from timezone database (Closes: #805591)
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 07 Oct 2016 14:14:38 +0200
+
 php5.5 (5.5.38-3) experimental; urgency=medium
 
   * Declare dependency on mpm_prefork in apache2 phpX.Y.load file
