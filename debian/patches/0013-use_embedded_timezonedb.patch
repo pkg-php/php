@@ -21,12 +21,12 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 ---
- ext/date/lib/parse_tz.c | 529 +++++++++++++++++++++++++++++++++++++++++++++++-
+ ext/date/lib/parse_tz.c | 530 +++++++++++++++++++++++++++++++++++++++++++++++-
  ext/date/lib/timelib.m4 |  14 ++
- 2 files changed, 539 insertions(+), 4 deletions(-)
+ 2 files changed, 540 insertions(+), 4 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 20d7eea..78b5d28 100644
+index 20d7eea..cc06494 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -22,8 +22,22 @@
@@ -77,7 +77,7 @@ index 20d7eea..78b5d28 100644
  	/* read ID */
  	version = (*tzf)[3] - '0';
  	*tzf += 4;
-@@ -302,7 +326,406 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
+@@ -302,7 +326,407 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
  	}
  }
  
@@ -296,6 +296,7 @@ index 20d7eea..78b5d28 100644
 +		&& strcmp(ent->d_name, "posix") != 0
 +		&& strcmp(ent->d_name, "posixrules") != 0
 +		&& strcmp(ent->d_name, "right") != 0
++		&& strstr(ent->d_name, ".list") == NULL
 +		&& strstr(ent->d_name, ".tab") == NULL;
 +}
 +
@@ -485,7 +486,7 @@ index 20d7eea..78b5d28 100644
  {
  	int left = 0, right = tzdb->index_size - 1;
  #ifdef HAVE_SETLOCALE
-@@ -341,21 +764,90 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
+@@ -341,21 +765,90 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
  	return 0;
  }
  
@@ -577,7 +578,7 @@ index 20d7eea..78b5d28 100644
  }
  
  static void skip_64bit_preamble(const unsigned char **tzf, timelib_tzinfo *tz)
-@@ -380,10 +872,12 @@ static void read_64bit_header(const unsigned char **tzf, timelib_tzinfo *tz)
+@@ -380,10 +873,12 @@ static void read_64bit_header(const unsigned char **tzf, timelib_tzinfo *tz)
  timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
  {
  	const unsigned char *tzf;
@@ -591,7 +592,7 @@ index 20d7eea..78b5d28 100644
  		tmp = timelib_tzinfo_ctor(timezone);
  
  		version = read_preamble(&tzf, tmp);
-@@ -397,7 +891,34 @@ timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
+@@ -397,7 +892,34 @@ timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
  			skip_64bit_types(&tzf, tmp);
  			skip_posix_string(&tzf, tmp);
  		}
