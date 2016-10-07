@@ -1,3 +1,9 @@
+php7.1 (7.1.0~rc3-2) experimental; urgency=medium
+
+  * Ignore .list files from timezone database (Closes: #805591)
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 07 Oct 2016 14:17:18 +0200
+
 php7.1 (7.1.0~rc3-1) experimental; urgency=medium
 
   * Imported Upstream version 7.1.0~rc3
