@@ -25,12 +25,12 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 ---
- ext/date/lib/parse_tz.c | 549 +++++++++++++++++++++++++++++++++++++++++++++++-
+ ext/date/lib/parse_tz.c | 550 +++++++++++++++++++++++++++++++++++++++++++++++-
  ext/date/lib/timelib.m4 |  14 ++
- 2 files changed, 552 insertions(+), 11 deletions(-)
+ 2 files changed, 553 insertions(+), 11 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 20d7eea..6301dc5 100644
+index 20d7eea..7a9fdee 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -24,6 +24,16 @@
@@ -75,7 +75,7 @@ index 20d7eea..6301dc5 100644
  	/* read ID */
  	version = (*tzf)[3] - '0';
  	*tzf += 4;
-@@ -302,7 +321,418 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
+@@ -302,7 +321,419 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
  	}
  }
  
@@ -294,6 +294,7 @@ index 20d7eea..6301dc5 100644
 +		&& strcmp(ent->d_name, "posix") != 0
 +		&& strcmp(ent->d_name, "posixrules") != 0
 +		&& strcmp(ent->d_name, "right") != 0
++		&& strstr(ent->d_name, ".list") == NULL
 +		&& strstr(ent->d_name, ".tab") == NULL;
 +}
 +
@@ -495,7 +496,7 @@ index 20d7eea..6301dc5 100644
  {
  	int left = 0, right = tzdb->index_size - 1;
  #ifdef HAVE_SETLOCALE
-@@ -341,21 +771,88 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
+@@ -341,21 +772,88 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
  	return 0;
  }
  
@@ -585,7 +586,7 @@ index 20d7eea..6301dc5 100644
  }
  
  static void skip_64bit_preamble(const unsigned char **tzf, timelib_tzinfo *tz)
-@@ -380,24 +877,54 @@ static void read_64bit_header(const unsigned char **tzf, timelib_tzinfo *tz)
+@@ -380,24 +878,54 @@ static void read_64bit_header(const unsigned char **tzf, timelib_tzinfo *tz)
  timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
  {
  	const unsigned char *tzf;
