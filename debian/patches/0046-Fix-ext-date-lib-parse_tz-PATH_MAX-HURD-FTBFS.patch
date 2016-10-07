@@ -7,7 +7,7 @@ Subject: Fix ext/date/lib/parse_tz PATH_MAX HURD FTBFS
  1 file changed, 42 insertions(+), 15 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 6301dc5..2f66a04 100644
+index 7a9fdee..8f2e5ab 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -428,13 +428,19 @@ static char *parse_iso6709(char *p, double *result)
@@ -32,7 +32,7 @@ index 6301dc5..2f66a04 100644
      if (!fp) {
          return NULL;
      }
-@@ -568,12 +574,14 @@ static void create_zone_index(timelib_tzdb *db)
+@@ -569,12 +575,14 @@ static void create_zone_index(timelib_tzdb *db)
  
  	do {
  		struct dirent **ents;
@@ -50,7 +50,7 @@ index 6301dc5..2f66a04 100644
  
  		count = php_scandir(name, &ents, index_filter, php_alphasort);
  
-@@ -581,7 +589,9 @@ static void create_zone_index(timelib_tzdb *db)
+@@ -582,7 +590,9 @@ static void create_zone_index(timelib_tzdb *db)
  			struct stat st;
  			const char *leaf = ents[count - 1]->d_name;
  
@@ -61,7 +61,7 @@ index 6301dc5..2f66a04 100644
  				 top, leaf);
  			
  			if (strlen(name) && stat(name, &st) == 0) {
-@@ -590,7 +600,9 @@ static void create_zone_index(timelib_tzdb *db)
+@@ -591,7 +601,9 @@ static void create_zone_index(timelib_tzdb *db)
  
  				if (root[0] == '/') root++;
  
@@ -72,7 +72,7 @@ index 6301dc5..2f66a04 100644
  					 *root ? "/": "", leaf);
  
  				if (S_ISDIR(st.st_mode)) {
-@@ -616,6 +628,7 @@ static void create_zone_index(timelib_tzdb *db)
+@@ -617,6 +629,7 @@ static void create_zone_index(timelib_tzdb *db)
  		}
  		
  		if (count != -1) free(ents);
@@ -80,7 +80,7 @@ index 6301dc5..2f66a04 100644
  		free(top);
  	} while (dirstack_top);
  
-@@ -704,18 +717,24 @@ static const char *canonical_tzname(const char *timezone)
+@@ -705,18 +718,24 @@ static const char *canonical_tzname(const char *timezone)
   * length of the mapped data is placed in *length. */
  static char *map_tzfile(const char *timezone, size_t *length)
  {
@@ -110,7 +110,7 @@ index 6301dc5..2f66a04 100644
  	if (fd == -1) {
  		return NULL;
  	} else if (fstat(fd, &st) != 0 || !is_valid_tzfile(&st)) {
-@@ -832,7 +851,9 @@ int timelib_timezone_id_is_valid(char *timezone, const timelib_tzdb *tzdb)
+@@ -833,7 +852,9 @@ int timelib_timezone_id_is_valid(char *timezone, const timelib_tzdb *tzdb)
  
  #ifdef HAVE_SYSTEM_TZDATA
  	if (tzdb == timezonedb_system) {
@@ -121,7 +121,7 @@ index 6301dc5..2f66a04 100644
  		struct stat st;
  
  		if (timezone[0] == '\0' || strstr(timezone, "..") != NULL) {
-@@ -846,9 +867,15 @@ int timelib_timezone_id_is_valid(char *timezone, const timelib_tzdb *tzdb)
+@@ -847,9 +868,15 @@ int timelib_timezone_id_is_valid(char *timezone, const timelib_tzdb *tzdb)
  			}
  		}
  
