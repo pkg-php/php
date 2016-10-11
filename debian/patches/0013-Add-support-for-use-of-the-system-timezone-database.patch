@@ -6,6 +6,7 @@ Add support for use of the system timezone database, rather
 than embedding a copy.  Discussed upstream but was not desired.
 
 History:
+r14: improve check for valid tz file
 r13: adapt for upstream changes to use PHP allocator
 r12: adapt for upstream changes for new zic
 r11: use canonical names to avoid more case sensitivity issues
@@ -25,12 +26,12 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 ---
- ext/date/lib/parse_tz.c | 550 +++++++++++++++++++++++++++++++++++++++++++++++-
+ ext/date/lib/parse_tz.c | 560 +++++++++++++++++++++++++++++++++++++++++++++++-
  ext/date/lib/timelib.m4 |  14 ++
- 2 files changed, 553 insertions(+), 11 deletions(-)
+ 2 files changed, 563 insertions(+), 11 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 20d7eea..7a9fdee 100644
+index 20d7eea..ed7717e 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -24,6 +24,16 @@
@@ -75,7 +76,7 @@ index 20d7eea..7a9fdee 100644
  	/* read ID */
  	version = (*tzf)[3] - '0';
  	*tzf += 4;
-@@ -302,7 +321,419 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
+@@ -302,7 +321,429 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
  	}
  }
  
@@ -435,8 +436,18 @@ index 20d7eea..7a9fdee 100644
 +
 +/* Returns true if the passed-in stat structure describes a
 + * probably-valid timezone file. */
-+static int is_valid_tzfile(const struct stat *st)
++static int is_valid_tzfile(const struct stat *st, int fd)
 +{
++	if (fd) {
++		char buf[20];
++		if (read(fd, buf, 20)!=20) {
++			return 0;
++		}
++		lseek(fd, SEEK_SET, 0);
++		if (memcmp(buf, "TZif", 4)) {
++			return 0;
++		}
++	}
 +	return S_ISREG(st->st_mode) && st->st_size > 20;
 +}
 +
@@ -474,11 +485,11 @@ index 20d7eea..7a9fdee 100644
 +	}
 +
 +	snprintf(fname, sizeof fname, ZONEINFO_PREFIX "/%s", canonical_tzname(timezone));
-+	
++
 +	fd = open(fname, O_RDONLY);
 +	if (fd == -1) {
 +		return NULL;
-+	} else if (fstat(fd, &st) != 0 || !is_valid_tzfile(&st)) {
++	} else if (fstat(fd, &st) != 0 || !is_valid_tzfile(&st, fd)) {
 +		close(fd);
 +		return NULL;
 +	}
@@ -496,7 +507,7 @@ index 20d7eea..7a9fdee 100644
  {
  	int left = 0, right = tzdb->index_size - 1;
  #ifdef HAVE_SETLOCALE
-@@ -341,21 +772,88 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
+@@ -341,21 +782,88 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
  	return 0;
  }
  
@@ -578,7 +589,7 @@ index 20d7eea..7a9fdee 100644
 +
 +		snprintf(fname, sizeof fname, ZONEINFO_PREFIX "/%s", canonical_tzname(timezone));
 +
-+		return stat(fname, &st) == 0 && is_valid_tzfile(&st);
++		return stat(fname, &st) == 0 && is_valid_tzfile(&st, 0);
 +	}
 +#endif
 +
@@ -586,7 +597,7 @@ index 20d7eea..7a9fdee 100644
  }
  
  static void skip_64bit_preamble(const unsigned char **tzf, timelib_tzinfo *tz)
-@@ -380,24 +878,54 @@ static void read_64bit_header(const unsigned char **tzf, timelib_tzinfo *tz)
+@@ -380,24 +888,54 @@ static void read_64bit_header(const unsigned char **tzf, timelib_tzinfo *tz)
  timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
  {
  	const unsigned char *tzf;
