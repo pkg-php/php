@@ -80,7 +80,7 @@ index 947cebc..b2da7b4 100644
      PHP_ADD_LIBRARY_WITH_PATH(ldap, $LDAP_LIBDIR, LDAP_SHARED_LIBADD)
  
 diff --git a/ext/pcre/config0.m4 b/ext/pcre/config0.m4
-index 7749bb6..590ee1f 100644
+index 35fc585..b34c9a8 100644
 --- a/ext/pcre/config0.m4
 +++ b/ext/pcre/config0.m4
 @@ -21,7 +21,7 @@ PHP_ARG_WITH(pcre-regex,,
