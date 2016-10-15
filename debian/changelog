@@ -1,3 +1,14 @@
+php7.0 (7.0.12-1) unstable; urgency=medium
+
+  [ Remi Collet ]
+  * Update systz patch to r14 (Courtesy of Remi Collet)
+
+  [ Ondřej Surý ]
+  * Imported Upstream version 7.0.12
+  * Rebase patches on top of 7.0.12
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 15 Oct 2016 17:11:40 +0200
+
 php7.0 (7.0.11-2) unstable; urgency=medium
 
   * Ignore .list files from timezone database (Closes: #805591)
