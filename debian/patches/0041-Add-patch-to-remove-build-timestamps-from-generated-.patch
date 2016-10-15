@@ -24,10 +24,10 @@ index e39eb37..aba164d 100644
  		php_info_print_table_row(2, "Compiler", COMPILER);
  #endif
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index bf2c3d2..16a1bbe 100644
+index a735056..7c3fb8f 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
-@@ -2233,9 +2233,9 @@ consult the installation file that came with this distribution, or visit \n\
+@@ -2237,9 +2237,9 @@ consult the installation file that came with this distribution, or visit \n\
  								SG(request_info).no_headers = 1;
  							}
  #if ZEND_DEBUG
@@ -40,10 +40,10 @@ index bf2c3d2..16a1bbe 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index 40a41e5..7115720 100644
+index a80e21c..ce850b9 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
-@@ -693,8 +693,8 @@ static int do_cli(int argc, char **argv TSRMLS_DC) /* {{{ */
+@@ -697,8 +697,8 @@ static int do_cli(int argc, char **argv TSRMLS_DC) /* {{{ */
  				goto out;
  
  			case 'v': /* show php version & quit */
@@ -84,10 +84,10 @@ index d285944..c91e176 100644
  				exit(1);
  				break;
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 01a4b5e..8206c5e 100644
+index 0e9b30e..e414f0b 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1199,10 +1199,8 @@ phpdbg_main:
+@@ -1203,10 +1203,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(

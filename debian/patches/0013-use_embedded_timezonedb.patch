@@ -26,7 +26,7 @@ r1: initial revision
  2 files changed, 540 insertions(+), 4 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 20d7eea..cc06494 100644
+index 20d7eea..eafbdb2 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -22,8 +22,22 @@
