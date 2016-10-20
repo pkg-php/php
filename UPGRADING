@@ -80,6 +80,16 @@ PHP 7.1 UPGRADE NOTES
     fatal error" to "Recoverable fatal error".
   . The empty index operator (e.g. $str[] = $x) is not supported for strings
     anymore, and throws a fatal error instead of silently converting to array.
+  . Array elements or object properties that are automatically created during
+    by-reference assignments will now result in a different order. For example
+  
+        $array = [];
+        $array["a"] =& $array["b"];
+        $array["b"] = 1;
+        var_dump($array);
+  
+    now results in the array ["b" => 1, "a" => 1], while for PHP 7.0 the result
+    was ["a" => 1, "b" => 1].
 
 - JSON:
   . The serialize_precision is used instead of precision when encoding double
@@ -123,6 +133,8 @@ PHP 7.1 UPGRADE NOTES
          SHA2 and 5 bits = 39 chars, ceil(192/5)=39
          SHA1 and 6 bits = 32 chars, ceil(192/6)=32
          and so on.
+  . session_start() returns FALSE and no longer initializes $_SESSION when
+    it failed to start session.
 
 - Reflection:
   . The behavior of ReflectionMethod::invoke() and ::invokeArgs() has been
@@ -165,6 +177,8 @@ PHP 7.1 UPGRADE NOTES
     type declarations, and some internal functions. Both nullable type
     declarations (?int) and parameters with default values of null
     (int $foo = NULL) are considered to "accept null" for this purpose.
+  . The simple syntax for variable parsing inside of string literals now
+    supports negative offsets.
 
 ========================================
 3. Changes in SAPI modules
@@ -372,6 +386,9 @@ PHP 7.1 UPGRADE NOTES
   PGSQL_NOTICE_LAST
   PGSQL_NOTICE_ALL
   PGSQL_NOTICE_CLEAR
+
+- Standard:
+  . IMAGETYPE_WEBP
 
 ========================================
 11. Changes to INI File Handling
