@@ -1,3 +1,11 @@
+php7.1 (7.1.0~rc4-1) experimental; urgency=medium
+
+  * Update systz database patch (Courtesy of Remi Collet)
+  * Imported Upstream version 7.1.0~rc4
+  * Rebase patches on top of PHP 7.1.0~rc4
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 20 Oct 2016 11:48:13 +0200
+
 php7.1 (7.1.0~rc3-2) experimental; urgency=medium
 
   * Ignore .list files from timezone database (Closes: #805591)
