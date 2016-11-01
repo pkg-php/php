@@ -1,3 +1,9 @@
+php7.0 (7.0.12-2) unstable; urgency=medium
+
+  * Merge OpenSSL 1.1.0 support from PHP 7.1 (Closes: #828499)
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 01 Nov 2016 12:55:45 +0100
+
 php7.0 (7.0.12-1) unstable; urgency=medium
 
   [ Remi Collet ]
