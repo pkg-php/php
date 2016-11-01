@@ -1,11 +1,27 @@
 PHP                                                                        NEWS
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+27 Oct 2016, PHP 7.1.0RC5
+
+- Core:
+  . Fixed bug #73350 (Exception::__toString() cause circular references).
+    (Laruence)
+  . Fixed bug #73329 ((Float)"Nano" == NAN). (Anatol)
+
+- CLI Server:
+  . Fixed bug #73360 (Unable to work in root with unicode chars). (Anatol)
+
+- SQLite3:
+  . Fixed bug #73333 (2147483647 is fetched as string). (cmb)
+
 19 Oct 2016, PHP 7.1.0RC4
 
 - Core:
   . Fixed bug #73288 (Segfault in __clone > Exception.toString > __get).
     (Laruence)
   . Fixed for #73240 (Write out of bounds at number_format). (Stas)
+  . Fix pthreads detection when cross-compiling (ffontaine)
+  . Fixed bug #73337 (try/catch not working with two exceptions inside a same
+    operation). (Dmitry)
 
 - BCmath:
   . Fix bug #73190 (memcpy negative parameter _bc_new_num_ex). (Stas)
@@ -55,6 +71,8 @@ PHP                                                                        NEWS
 - SOAP:
   . Fixed bug #73037 (SoapServer reports Bad Request when gzipped). (Anatol)
   . Fixed bug #73237 (Nested object in "any" element overwrites other fields).
+    (Keith Smiley)
+  . Fixed bug #69137 (Peer verification fails when using a proxy with SoapClient)
     (Keith Smiley)
 
 - SimpleXML:
@@ -528,7 +546,8 @@ PHP                                                                        NEWS
     (Pierre)
   . Fixed bug #72482 (Ilegal write/read access caused by gdImageAALine
     overflow). (Pierre)
-  . Fixed bug #72494 (imagecropauto out-of-bounds access). (Pierre)
+  . Fixed bug #72494 (imagecropauto out-of-bounds access). (Fernando, Pierre,
+    cmb)
 
 - Intl:
   . Partially fixed #72506 (idn_to_ascii for UTS #46 incorrect for long domain
