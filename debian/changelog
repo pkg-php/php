@@ -1,3 +1,11 @@
+php7.1 (7.1.0~rc6-1) experimental; urgency=medium
+
+  * Really remove Thijs from Uploaders
+  * Imported Upstream version 7.1.0~rc6
+  * Rebase patches on top of 7.1.0~rc6 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 14 Nov 2016 04:35:30 +0100
+
 php7.1 (7.1.0~rc5-1) experimental; urgency=medium
 
   * Imported Upstream version 7.1.0~rc5
