@@ -97,10 +97,10 @@ index 15f4da7..b41a0ea 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index b800f06..5df2917 100644
+index 3c6101c..384861b 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1693,10 +1693,8 @@ phpdbg_main:
+@@ -1697,10 +1697,8 @@ phpdbg_main:
  				phpdbg_do_help(NULL);
  			} else if (show_version) {
  				phpdbg_out(
