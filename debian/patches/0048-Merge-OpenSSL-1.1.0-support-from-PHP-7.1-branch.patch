@@ -21,7 +21,6 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ext/openssl/tests/openssl_encrypt_error.phpt       |    7 +
  ext/openssl/tests/openssl_encrypt_gcm.phpt         |   60 +
  ext/openssl/tests/openssl_error_string_basic.phpt  |    6 +-
- ext/openssl/tests/openssl_free_key.phpt            |   77 +
  ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt |    4 +-
  ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt |    4 +-
  ext/openssl/tests/openssl_pkcs7_sign_basic.phpt    |    2 +-
@@ -29,7 +28,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  .../tests/openssl_pkey_get_details_basic.phpt      |    7 +-
  ext/openssl/xp_ssl.c                               |  112 +-
  ext/phar/util.c                                    |   13 +-
- 26 files changed, 1982 insertions(+), 602 deletions(-)
+ 25 files changed, 1905 insertions(+), 602 deletions(-)
  delete mode 100644 ext/openssl/tests/bug69882.phpt
  create mode 100644 ext/openssl/tests/cipher_tests.inc
  create mode 100644 ext/openssl/tests/ecc.phpt
@@ -37,7 +36,6 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  create mode 100644 ext/openssl/tests/openssl_decrypt_gcm.phpt
  create mode 100644 ext/openssl/tests/openssl_encrypt_ccm.phpt
  create mode 100644 ext/openssl/tests/openssl_encrypt_gcm.phpt
- create mode 100644 ext/openssl/tests/openssl_free_key.phpt
 
 diff --git a/ext/openssl/config0.m4 b/ext/openssl/config0.m4
 index 01fc89b..a7bbf05 100644
@@ -4185,89 +4183,6 @@ index 82f3099..04cc550 100644
  // file or str csr is not correct PEM - failing PEM_read_bio_X509_REQ
  @openssl_csr_get_subject($crt_file);
  expect_openssl_errors('openssl_csr_get_subjec pem', ['0906D06C']);
-diff --git a/ext/openssl/tests/openssl_free_key.phpt b/ext/openssl/tests/openssl_free_key.phpt
-new file mode 100644
-index 0000000..18219a2
---- /dev/null
-+++ b/ext/openssl/tests/openssl_free_key.phpt
-@@ -0,0 +1,77 @@
-+--TEST--
-+void openssl_free_key ( resource $key_identifier );
-+--CREDITS--
-+marcosptf - <marcosptf@yahoo.com.br> - @phpsp - sao paulo - br
-+--SKIPIF--
-+<?php
-+if (!extension_loaded("openssl"))
-+    die("skip");
-+if (!@openssl_pkey_new())
-+    die("skip cannot create private key");
-+?>
-+--FILE--
-+<?php
-+echo "Creating private key\n";
-+
-+/* stack up some entropy; performance is not critical,
-+ * and being slow will most likely even help the test.
-+ */
-+for ($z = "", $i = 0; $i < 1024; $i++) {
-+    $z .= $i * $i;
-+    if (function_exists("usleep"))
-+        usleep($i);
-+}
-+
-+$privkey = openssl_pkey_new();
-+
-+if ($privkey === false)
-+    die("failed to create private key");
-+
-+$passphrase = "banana";
-+$key_file_name = tempnam("/tmp", "ssl");
-+if ($key_file_name === false)
-+    die("failed to get a temporary filename!");
-+
-+echo "Export key to file\n";
-+
-+openssl_pkey_export_to_file($privkey, $key_file_name, $passphrase) or die("failed to export to file $key_file_name");
-+
-+echo "Load key from file - array syntax\n";
-+
-+$loaded_key = openssl_pkey_get_private(array("file://$key_file_name", $passphrase));
-+
-+if ($loaded_key === false)
-+    die("failed to load key using array syntax");
-+
-+openssl_free_key($loaded_key);
-+
-+echo "Load key using direct syntax\n";
-+
-+$loaded_key = openssl_pkey_get_private("file://$key_file_name", $passphrase);
-+
-+if ($loaded_key === false)
-+    die("failed to load key using direct syntax");
-+
-+openssl_free_key($loaded_key);
-+
-+echo "Load key manually and use string syntax\n";
-+
-+$key_content = file_get_contents($key_file_name);
-+$loaded_key = openssl_pkey_get_private($key_content, $passphrase);
-+
-+if ($loaded_key === false)
-+    die("failed to load key using string syntax");
-+
-+openssl_free_key($loaded_key);
-+
-+echo "OK!\n";
-+
-+@unlink($key_file_name);
-+?>
-+--EXPECT--
-+Creating private key
-+Export key to file
-+Load key from file - array syntax
-+Load key using direct syntax
-+Load key manually and use string syntax
-+OK!
 diff --git a/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt b/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
 index 5589abb..27ca4d2 100644
 --- a/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
