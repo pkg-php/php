@@ -1,3 +1,9 @@
+php7.0 (7.0.13-2) unstable; urgency=medium
+
+  * Build-Depend on default-libmysqlclient-dev (Closes: #845891)
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 27 Nov 2016 15:47:50 +0100
+
 php7.0 (7.0.13-1) unstable; urgency=medium
 
   [ Thijs Kinkhorst ]
