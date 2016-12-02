@@ -1,2 +1,2 @@
 php7.1 source: license-problem-json-evil README.REDIST.BINS
-php7.1 source: missing-build-dependency-for-dh_-command dh_systemd_start => dh-systemd
+php7.1 source: missing-build-dependency-for-dh_-command dh_systemd_start *
