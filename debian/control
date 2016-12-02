@@ -11,6 +11,7 @@ Build-Depends: apache2-dev (>= 2.4),
                chrpath,
                debhelper (>= 9),
                default-libmysqlclient-dev | libmysqlclient-dev,
+               default-mysql-server | mysql-server | virtual-mysql-server,
                dh-apache2,
                dh-systemd (>= 1.3) [linux-any] | base-files (<< 7.2ubuntu5~) [linux-any],
                dpkg-dev (>= 1.16.1~),
@@ -63,7 +64,6 @@ Build-Depends: apache2-dev (>= 2.4),
                libxslt1-dev (>= 1.0.18),
                libzip-dev (>= 1.0.0),
                locales-all | language-pack-de,
-               mysql-server | virtual-mysql-server,
                netbase,
                netcat-traditional,
                re2c,
@@ -299,11 +299,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-odbc:Depends},
          ${php:Depends},
-	 ${php-odbc:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-odbc:Pre-Depends}
+             ${php-odbc:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-odbc:Replaces}
 Breaks: ${php-odbc:Breaks}
@@ -321,11 +321,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-readline:Depends},
          ${php:Depends},
-	 ${php-readline:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-readline:Pre-Depends}
+             ${php-readline:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-readline:Replaces}
 Breaks: ${php-readline:Breaks}
@@ -343,11 +343,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-recode:Depends},
          ${php:Depends},
-	 ${php-recode:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-recode:Pre-Depends}
+             ${php-recode:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-recode:Replaces}
 Breaks: ${php-recode:Breaks}
@@ -365,11 +365,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-sqlite3:Depends},
          ${php:Depends},
-	 ${php-sqlite3:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-sqlite3:Pre-Depends}
+             ${php-sqlite3:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-sqlite3:Replaces}
 Breaks: ${php-sqlite3:Breaks}
@@ -387,11 +387,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-xml:Depends},
          ${php:Depends},
-	 ${php-xml:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-xml:Pre-Depends}
+             ${php-xml:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-xml:Replaces}
 Breaks: ${php-xml:Breaks}
@@ -409,11 +409,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-zip:Depends},
          ${php:Depends},
-	 ${php-zip:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-zip:Pre-Depends}
+             ${php-zip:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-zip:Replaces}
 Breaks: ${php-zip:Breaks}
@@ -431,11 +431,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-sybase:Depends},
          ${php:Depends},
-	 ${php-sybase:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-sybase:Pre-Depends}
+             ${php-sybase:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-sybase:Replaces}
 Breaks: ${php-sybase:Breaks}
@@ -453,11 +453,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-gd:Depends},
          ${php:Depends},
-	 ${php-gd:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-gd:Pre-Depends}
+             ${php-gd:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-gd:Replaces}
 Breaks: ${php-gd:Breaks}
@@ -475,11 +475,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-gmp:Depends},
          ${php:Depends},
-	 ${php-gmp:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-gmp:Pre-Depends}
+             ${php-gmp:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-gmp:Replaces}
 Breaks: ${php-gmp:Breaks}
@@ -497,11 +497,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-ldap:Depends},
          ${php:Depends},
-	 ${php-ldap:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-ldap:Pre-Depends}
+             ${php-ldap:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-ldap:Replaces}
 Breaks: ${php-ldap:Breaks}
@@ -519,11 +519,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-common:Depends},
          ${php:Depends},
-	 ${php-common:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-common:Pre-Depends}
+             ${php-common:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-common:Replaces}
 Breaks: ${php-common:Breaks}
@@ -541,11 +541,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-intl:Depends},
          ${php:Depends},
-	 ${php-intl:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-intl:Pre-Depends}
+             ${php-intl:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-intl:Replaces}
 Breaks: ${php-intl:Breaks}
@@ -563,11 +563,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-mysql:Depends},
          ${php:Depends},
-	 ${php-mysql:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-mysql:Pre-Depends}
+             ${php-mysql:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-mysql:Replaces}
 Breaks: ${php-mysql:Breaks}
@@ -585,11 +585,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-mcrypt:Depends},
          ${php:Depends},
-	 ${php-mcrypt:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-mcrypt:Pre-Depends}
+             ${php-mcrypt:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-mcrypt:Replaces}
 Breaks: ${php-mcrypt:Breaks}
@@ -607,11 +607,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-snmp:Depends},
          ${php:Depends},
-	 ${php-snmp:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-snmp:Pre-Depends}
+             ${php-snmp:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-snmp:Replaces}
 Breaks: ${php-snmp:Breaks}
@@ -629,11 +629,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-curl:Depends},
          ${php:Depends},
-	 ${php-curl:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-curl:Pre-Depends}
+             ${php-curl:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-curl:Replaces}
 Breaks: ${php-curl:Breaks}
@@ -651,11 +651,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-json:Depends},
          ${php:Depends},
-	 ${php-json:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-json:Pre-Depends}
+             ${php-json:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-json:Replaces}
 Breaks: ${php-json:Breaks}
@@ -673,11 +673,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-pgsql:Depends},
          ${php:Depends},
-	 ${php-pgsql:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-pgsql:Pre-Depends}
+             ${php-pgsql:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-pgsql:Replaces}
 Breaks: ${php-pgsql:Breaks}
@@ -695,11 +695,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-mbstring:Depends},
          ${php:Depends},
-	 ${php-mbstring:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-mbstring:Pre-Depends}
+             ${php-mbstring:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-mbstring:Replaces}
 Breaks: ${php-mbstring:Breaks}
@@ -717,11 +717,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-enchant:Depends},
          ${php:Depends},
-	 ${php-enchant:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-enchant:Pre-Depends}
+             ${php-enchant:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-enchant:Replaces}
 Breaks: ${php-enchant:Breaks}
@@ -739,11 +739,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-opcache:Depends},
          ${php:Depends},
-	 ${php-opcache:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-opcache:Pre-Depends}
+             ${php-opcache:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-opcache:Replaces}
 Breaks: ${php-opcache:Breaks}
@@ -761,11 +761,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-imap:Depends},
          ${php:Depends},
-	 ${php-imap:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-imap:Pre-Depends}
+             ${php-imap:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-imap:Replaces}
 Breaks: ${php-imap:Breaks}
@@ -783,11 +783,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-bcmath:Depends},
          ${php:Depends},
-	 ${php-bcmath:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-bcmath:Pre-Depends}
+             ${php-bcmath:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-bcmath:Replaces}
 Breaks: ${php-bcmath:Breaks}
@@ -805,11 +805,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-tidy:Depends},
          ${php:Depends},
-	 ${php-tidy:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-tidy:Pre-Depends}
+             ${php-tidy:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-tidy:Replaces}
 Breaks: ${php-tidy:Breaks}
@@ -827,11 +827,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-soap:Depends},
          ${php:Depends},
-	 ${php-soap:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-soap:Pre-Depends}
+             ${php-soap:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-soap:Replaces}
 Breaks: ${php-soap:Breaks}
@@ -849,11 +849,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-dba:Depends},
          ${php:Depends},
-	 ${php-dba:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-dba:Pre-Depends}
+             ${php-dba:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-dba:Replaces}
 Breaks: ${php-dba:Breaks}
@@ -871,11 +871,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-interbase:Depends},
          ${php:Depends},
-	 ${php-interbase:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-interbase:Pre-Depends}
+             ${php-interbase:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-interbase:Replaces}
 Breaks: ${php-interbase:Breaks}
@@ -893,11 +893,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-xmlrpc:Depends},
          ${php:Depends},
-	 ${php-xmlrpc:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-xmlrpc:Pre-Depends}
+             ${php-xmlrpc:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-xmlrpc:Replaces}
 Breaks: ${php-xmlrpc:Breaks}
@@ -915,11 +915,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-pspell:Depends},
          ${php:Depends},
-	 ${php-pspell:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-pspell:Pre-Depends}
+             ${php-pspell:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-pspell:Replaces}
 Breaks: ${php-pspell:Breaks}
@@ -937,11 +937,11 @@ Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
+         ${php-bz2:Depends},
          ${php:Depends},
-	 ${php-bz2:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-bz2:Pre-Depends}
+             ${php-bz2:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Replaces: ${php-bz2:Replaces}
 Breaks: ${php-bz2:Breaks}
