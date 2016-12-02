@@ -835,6 +835,7 @@ ac_ct_CXX
 CXXFLAGS
 CXX
 ICU_CONFIG
+FB_CONFIG
 OPENSSL_INCDIR_OPT
 KRB5_CONFIG
 LTP_GENHTML
@@ -3444,10 +3445,14 @@ $as_echo "$SED" >&6; }
 
 EOF
 
+  clean_configure_args=$ac_configure_args
   for var in CFLAGS CXXFLAGS CPPFLAGS LDFLAGS EXTRA_LDFLAGS_PROGRAM LIBS CC CXX; do
     eval val=\$$var
     if test -n "$val"; then
       echo "$var='$val' \\" >> config.nice
+      if test `expr "X$ac_configure_args" : ".*${var}.*"` != 0; then
+        clean_configure_args=$(echo $clean_configure_args | sed -e "s#'$var=$val'##")
+      fi
     fi
   done
 
@@ -3457,7 +3462,7 @@ EOF
   else
     CONFIGURE_COMMAND="$CONFIGURE_COMMAND $0"
   fi
-  CONFIGURE_ARGS="$ac_configure_args"
+  CONFIGURE_ARGS="$clean_configure_args"
   while test "X$CONFIGURE_ARGS" != "X";
   do
    if CURRENT_ARG=`expr "X$CONFIGURE_ARGS" : "X *\('[^']*'\)"`
@@ -3470,12 +3475,6 @@ EOF
    else
     break
    fi
-   for var in CFLAGS CXXFLAGS CPPFLAGS LDFLAGS EXTRA_LDFLAGS_PROGRAM LIBS CC CXX; do
-    if test `expr "X$CURRENT_ARG" : "X.*${var}.*"` != 0;
-	then
-      continue 2
-	fi
-   done
    $as_echo "$CURRENT_ARG \\" >>config.nice
    CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS $CURRENT_ARG"
   done
@@ -3652,7 +3651,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
 PHP_MAJOR_VERSION=7
 PHP_MINOR_VERSION=1
 PHP_RELEASE_VERSION=0
-PHP_EXTRA_VERSION="RC6"
+PHP_EXTRA_VERSION=""
 PHP_VERSION="$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION.$PHP_RELEASE_VERSION$PHP_EXTRA_VERSION"
 PHP_VERSION_ID=`expr $PHP_MAJOR_VERSION \* 10000 + $PHP_MINOR_VERSION \* 100 + $PHP_RELEASE_VERSION`
 
@@ -17846,7 +17845,7 @@ fi
 
   fi
 
-    if test "$PHP_KERBEROS" = "yes" && test -x "$KRB5_CONFIG"; then
+    if test "$PHP_KERBEROS" != "no" && test -x "$KRB5_CONFIG"; then
     KERBEROS_LIBS=`$KRB5_CONFIG --libs gssapi`
     KERBEROS_CFLAGS=`$KRB5_CONFIG --cflags gssapi`
 
@@ -42087,7 +42086,7 @@ fi
 
   fi
 
-    if test "$PHP_KERBEROS" = "yes" && test -x "$KRB5_CONFIG"; then
+    if test "$PHP_KERBEROS" != "no" && test -x "$KRB5_CONFIG"; then
     KERBEROS_LIBS=`$KRB5_CONFIG --libs gssapi`
     KERBEROS_CFLAGS=`$KRB5_CONFIG --cflags gssapi`
 
@@ -43511,19 +43510,201 @@ $as_echo "$ext_output" >&6; }
 
 
 if test "$PHP_INTERBASE" != "no"; then
-  if test "$PHP_INTERBASE" = "yes"; then
-    IBASE_INCDIR=/opt/firebird/include
-    IBASE_LIBDIR=/opt/firebird/lib
-  else
-    IBASE_INCDIR=$PHP_INTERBASE/include
-    IBASE_LIBDIR=$PHP_INTERBASE/$PHP_LIBDIR
+
+  # Extract the first word of "fb_config", so it can be a program name with args.
+set dummy fb_config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_FB_CONFIG+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $FB_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_FB_CONFIG="$FB_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_FB_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
   fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_FB_CONFIG" && ac_cv_path_FB_CONFIG="no"
+  ;;
+esac
+fi
+FB_CONFIG=$ac_cv_path_FB_CONFIG
+if test -n "$FB_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $FB_CONFIG" >&5
+$as_echo "$FB_CONFIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+
+  if test -x "$FB_CONFIG" && test "$PHP_INTERBASE" = "yes"; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libfbconfig" >&5
+$as_echo_n "checking for libfbconfig... " >&6; }
+    FB_CFLAGS=`$FB_CONFIG --cflags`
+    FB_LIBDIR=`$FB_CONFIG --libs`
+    FB_VERSION=`$FB_CONFIG --version`
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: version $FB_VERSION" >&5
+$as_echo "version $FB_VERSION" >&6; }
+
+  for ac_i in $FB_LIBDIR; do
+    case $ac_i in
+    -pthread)
+      if test "$ext_shared" = "yes"; then
+        INTERBASE_SHARED_LIBADD="$INTERBASE_SHARED_LIBADD -pthread"
+      else
+
+
+  unique=`echo $ac_i|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$EXTRA_LDFLAGS$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "EXTRA_LDFLAGS$unique=set"
+    EXTRA_LDFLAGS="$EXTRA_LDFLAGS $ac_i"
+  fi
+
+      fi
+    ;;
+    -l*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+
+  case $ac_ii in
+  c|c_r|pthread*) ;;
+  *)
+    if test "$ext_shared" = "yes"; then
+        INTERBASE_SHARED_LIBADD="$INTERBASE_SHARED_LIBADD -l$ac_ii"
+    else
+
+
+  case $ac_ii in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="$LIBS -l$ac_ii"
+   ;;
+  esac
+
+
+    fi
+   ;;
+  esac
+
+
+    ;;
+    -L*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+  if test "$ac_ii" != "/usr/$PHP_LIBDIR" && test "$ac_ii" != "/usr/lib"; then
+
+  if test -z "$ac_ii" || echo "$ac_ii" | grep '^/' >/dev/null ; then
+    ai_p=$ac_ii
+  else
+
+    ep_dir=`echo $ac_ii|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$ac_ii"`
+  fi
+
+
+      if test "$ext_shared" = "yes"; then
+        INTERBASE_SHARED_LIBADD="-L$ai_p $INTERBASE_SHARED_LIBADD"
+        test -n "$ld_runpath_switch" && INTERBASE_SHARED_LIBADD="$ld_runpath_switch$ai_p $INTERBASE_SHARED_LIBADD"
+      else
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "LIBPATH$unique=set"
+
+    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
+    LDFLAGS="$LDFLAGS -L$ai_p"
+    PHP_RPATHS="$PHP_RPATHS $ai_p"
+
+  fi
+
+
+      fi
+
+  fi
+
+    ;;
+    esac
+  done
+
+
+  for ac_i in $FB_CFLAGS; do
+    case $ac_i in
+    -I*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+  if test "$ac_ii" != "/usr/include"; then
+
+  if test -z "$ac_ii" || echo "$ac_ii" | grep '^/' >/dev/null ; then
+    ai_p=$ac_ii
+  else
+
+    ep_dir=`echo $ac_ii|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$ac_ii"`
+  fi
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$INCLUDEPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "INCLUDEPATH$unique=set"
+
+      if test ""; then
+        INCLUDES="-I$ai_p $INCLUDES"
+      else
+        INCLUDES="$INCLUDES -I$ai_p"
+      fi
+
+  fi
+
+  fi
+
+    ;;
+    esac
+  done
+
+
+  else
+    if test "$PHP_INTERBASE" = "yes"; then
+      IBASE_INCDIR=/opt/firebird/include
+      IBASE_LIBDIR=/opt/firebird/lib
+    else
+      IBASE_INCDIR=$PHP_INTERBASE/include
+      IBASE_LIBDIR=$PHP_INTERBASE/$PHP_LIBDIR
+    fi
 
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff="
-    -L$IBASE_LIBDIR
-  "
+      -L$IBASE_LIBDIR
+    "
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -43657,7 +43838,7 @@ if test "x$ac_cv_lib_fbclient_isc_detach_database" = xyes; then :
     LDFLAGS=$save_old_LDFLAGS
     ext_shared=$save_ext_shared
 
-    IBASE_LIBNAME=fbclient
+      IBASE_LIBNAME=fbclient
 
 
 else
@@ -43669,8 +43850,8 @@ else
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff="
-      -L$IBASE_LIBDIR
-    "
+        -L$IBASE_LIBDIR
+      "
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -43804,7 +43985,7 @@ if test "x$ac_cv_lib_gds_isc_detach_database" = xyes; then :
     LDFLAGS=$save_old_LDFLAGS
     ext_shared=$save_ext_shared
 
-      IBASE_LIBNAME=gds
+        IBASE_LIBNAME=gds
 
 
 else
@@ -43816,8 +43997,8 @@ else
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff="
-        -L$IBASE_LIBDIR
-      "
+          -L$IBASE_LIBDIR
+        "
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -43951,7 +44132,7 @@ if test "x$ac_cv_lib_ib_util_isc_detach_database" = xyes; then :
     LDFLAGS=$save_old_LDFLAGS
     ext_shared=$save_ext_shared
 
-        IBASE_LIBNAME=ib_util
+          IBASE_LIBNAME=ib_util
 
 
 else
@@ -43960,7 +44141,7 @@ else
     ext_shared=$save_ext_shared
     unset ac_cv_lib_ib_util_isc_detach_database
 
-        as_fn_error $? "libfbclient, libgds or libib_util not found! Check config.log for more information." "$LINENO" 5
+          as_fn_error $? "libfbclient, libgds or libib_util not found! Check config.log for more information." "$LINENO" 5
 
 
 fi
@@ -44097,6 +44278,8 @@ fi
       else
         INCLUDES="$INCLUDES -I$ai_p"
       fi
+
+  fi
 
   fi
 
@@ -60039,21 +60222,202 @@ if test "$PHP_PDO_FIREBIRD" != "no"; then
     as_fn_error $? "PDO is not enabled! Add --enable-pdo to your configure line." "$LINENO" 5
   fi
 
-  if test "$PHP_PDO_FIREBIRD" = "yes"; then
-    FIREBIRD_INCDIR=
-    FIREBIRD_LIBDIR=
-    FIREBIRD_LIBDIR_FLAG=
-  else
-    FIREBIRD_INCDIR=$PHP_PDO_FIREBIRD/include
-    FIREBIRD_LIBDIR=$PHP_PDO_FIREBIRD/$PHP_LIBDIR
-    FIREBIRD_LIBDIR_FLAG=-L$FIREBIRD_LIBDIR
+  # Extract the first word of "fb_config", so it can be a program name with args.
+set dummy fb_config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_FB_CONFIG+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $FB_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_FB_CONFIG="$FB_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_FB_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
   fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_FB_CONFIG" && ac_cv_path_FB_CONFIG="no"
+  ;;
+esac
+fi
+FB_CONFIG=$ac_cv_path_FB_CONFIG
+if test -n "$FB_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $FB_CONFIG" >&5
+$as_echo "$FB_CONFIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+
+  if test -x "$FB_CONFIG" && test "$PHP_PDO_FIREBIRD" = "yes"; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libfbconfig" >&5
+$as_echo_n "checking for libfbconfig... " >&6; }
+    FB_CFLAGS=`$FB_CONFIG --cflags`
+    FB_LIBDIR=`$FB_CONFIG --libs`
+    FB_VERSION=`$FB_CONFIG --version`
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: version $FB_VERSION" >&5
+$as_echo "version $FB_VERSION" >&6; }
+
+  for ac_i in $FB_LIBDIR; do
+    case $ac_i in
+    -pthread)
+      if test "$ext_shared" = "yes"; then
+        PDO_FIREBIRD_SHARED_LIBADD="$PDO_FIREBIRD_SHARED_LIBADD -pthread"
+      else
+
+
+  unique=`echo $ac_i|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$EXTRA_LDFLAGS$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "EXTRA_LDFLAGS$unique=set"
+    EXTRA_LDFLAGS="$EXTRA_LDFLAGS $ac_i"
+  fi
+
+      fi
+    ;;
+    -l*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+
+  case $ac_ii in
+  c|c_r|pthread*) ;;
+  *)
+    if test "$ext_shared" = "yes"; then
+        PDO_FIREBIRD_SHARED_LIBADD="$PDO_FIREBIRD_SHARED_LIBADD -l$ac_ii"
+    else
+
+
+  case $ac_ii in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="$LIBS -l$ac_ii"
+   ;;
+  esac
+
+
+    fi
+   ;;
+  esac
+
+
+    ;;
+    -L*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+  if test "$ac_ii" != "/usr/$PHP_LIBDIR" && test "$ac_ii" != "/usr/lib"; then
+
+  if test -z "$ac_ii" || echo "$ac_ii" | grep '^/' >/dev/null ; then
+    ai_p=$ac_ii
+  else
+
+    ep_dir=`echo $ac_ii|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$ac_ii"`
+  fi
+
+
+      if test "$ext_shared" = "yes"; then
+        PDO_FIREBIRD_SHARED_LIBADD="-L$ai_p $PDO_FIREBIRD_SHARED_LIBADD"
+        test -n "$ld_runpath_switch" && PDO_FIREBIRD_SHARED_LIBADD="$ld_runpath_switch$ai_p $PDO_FIREBIRD_SHARED_LIBADD"
+      else
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "LIBPATH$unique=set"
+
+    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
+    LDFLAGS="$LDFLAGS -L$ai_p"
+    PHP_RPATHS="$PHP_RPATHS $ai_p"
+
+  fi
+
+
+      fi
+
+  fi
+
+    ;;
+    esac
+  done
+
+
+  for ac_i in $FB_CFLAGS; do
+    case $ac_i in
+    -I*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+  if test "$ac_ii" != "/usr/include"; then
+
+  if test -z "$ac_ii" || echo "$ac_ii" | grep '^/' >/dev/null ; then
+    ai_p=$ac_ii
+  else
+
+    ep_dir=`echo $ac_ii|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$ac_ii"`
+  fi
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$INCLUDEPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "INCLUDEPATH$unique=set"
+
+      if test ""; then
+        INCLUDES="-I$ai_p $INCLUDES"
+      else
+        INCLUDES="$INCLUDES -I$ai_p"
+      fi
+
+  fi
+
+  fi
+
+    ;;
+    esac
+  done
+
+
+  else
+    if test "$PHP_PDO_FIREBIRD" = "yes"; then
+      FIREBIRD_INCDIR=
+      FIREBIRD_LIBDIR=
+      FIREBIRD_LIBDIR_FLAG=
+    else
+      FIREBIRD_INCDIR=$PHP_PDO_FIREBIRD/include
+      FIREBIRD_LIBDIR=$PHP_PDO_FIREBIRD/$PHP_LIBDIR
+      FIREBIRD_LIBDIR_FLAG=-L$FIREBIRD_LIBDIR
+    fi
 
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff="
-    $FIREBIRD_LIBDIR_FLAG
-  "
+      $FIREBIRD_LIBDIR_FLAG
+    "
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -60187,7 +60551,7 @@ if test "x$ac_cv_lib_fbclient_isc_detach_database" = xyes; then :
     LDFLAGS=$save_old_LDFLAGS
     ext_shared=$save_ext_shared
 
-    FIREBIRD_LIBNAME=fbclient
+      FIREBIRD_LIBNAME=fbclient
 
 
 else
@@ -60199,8 +60563,8 @@ else
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff="
-      $FIREBIRD_LIBDIR_FLAG
-    "
+        $FIREBIRD_LIBDIR_FLAG
+      "
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -60334,7 +60698,7 @@ if test "x$ac_cv_lib_gds_isc_detach_database" = xyes; then :
     LDFLAGS=$save_old_LDFLAGS
     ext_shared=$save_ext_shared
 
-      FIREBIRD_LIBNAME=gds
+        FIREBIRD_LIBNAME=gds
 
 
 else
@@ -60346,8 +60710,8 @@ else
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff="
-        $FIREBIRD_LIBDIR_FLAG
-      "
+          $FIREBIRD_LIBDIR_FLAG
+        "
 
   save_ext_shared=$ext_shared
   ext_shared=yes
@@ -60481,7 +60845,7 @@ if test "x$ac_cv_lib_ib_util_isc_detach_database" = xyes; then :
     LDFLAGS=$save_old_LDFLAGS
     ext_shared=$save_ext_shared
 
-        FIREBIRD_LIBNAME=ib_util
+          FIREBIRD_LIBNAME=ib_util
 
 
 else
@@ -60490,7 +60854,7 @@ else
     ext_shared=$save_ext_shared
     unset ac_cv_lib_ib_util_isc_detach_database
 
-        as_fn_error $? "libfbclient, libgds or libib_util not found! Check config.log for more information." "$LINENO" 5
+          as_fn_error $? "libfbclient, libgds or libib_util not found! Check config.log for more information." "$LINENO" 5
 
 
 fi
@@ -60502,34 +60866,6 @@ fi
 
 
 fi
-
-
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PDO includes" >&5
-$as_echo_n "checking for PDO includes... " >&6; }
-if ${pdo_cv_inc_path+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PDO includes" >&5
-$as_echo_n "checking for PDO includes... " >&6; }
-    if test -f $abs_srcdir/include/php/ext/pdo/php_pdo_driver.h; then
-      pdo_cv_inc_path=$abs_srcdir/ext
-    elif test -f $abs_srcdir/ext/pdo/php_pdo_driver.h; then
-      pdo_cv_inc_path=$abs_srcdir/ext
-    elif test -f $phpincludedir/ext/pdo/php_pdo_driver.h; then
-      pdo_cv_inc_path=$phpincludedir/ext
-    fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $pdo_cv_inc_path" >&5
-$as_echo "$pdo_cv_inc_path" >&6; }
-  if test -n "$pdo_cv_inc_path"; then
-:
-  else
-as_fn_error $? "Cannot find php_pdo_driver.h." "$LINENO" 5
-  fi
-
 
 
 
@@ -60658,6 +60994,35 @@ as_fn_error $? "Cannot find php_pdo_driver.h." "$LINENO" 5
   fi
 
   fi
+
+  fi
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PDO includes" >&5
+$as_echo_n "checking for PDO includes... " >&6; }
+if ${pdo_cv_inc_path+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PDO includes" >&5
+$as_echo_n "checking for PDO includes... " >&6; }
+    if test -f $abs_srcdir/include/php/ext/pdo/php_pdo_driver.h; then
+      pdo_cv_inc_path=$abs_srcdir/ext
+    elif test -f $abs_srcdir/ext/pdo/php_pdo_driver.h; then
+      pdo_cv_inc_path=$abs_srcdir/ext
+    elif test -f $phpincludedir/ext/pdo/php_pdo_driver.h; then
+      pdo_cv_inc_path=$phpincludedir/ext
+    fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $pdo_cv_inc_path" >&5
+$as_echo "$pdo_cv_inc_path" >&6; }
+  if test -n "$pdo_cv_inc_path"; then
+:
+  else
+as_fn_error $? "Cannot find php_pdo_driver.h." "$LINENO" 5
+  fi
+
 
 
 $as_echo "#define HAVE_PDO_FIREBIRD 1" >>confdefs.h
@@ -83668,135 +84033,7 @@ $as_echo "#define HAVE_TIDYBUFFIO_H 1" >>confdefs.h
 
   TIDY_LIBDIR=$TIDY_DIR/$PHP_LIBDIR
 
-
-
-  if test "$ext_shared" = "yes"; then
-    TIDY_SHARED_LIBADD="-ltidy $TIDY_SHARED_LIBADD"
-    if test -n "$TIDY_LIBDIR"; then
-
-  if test "$TIDY_LIBDIR" != "/usr/$PHP_LIBDIR" && test "$TIDY_LIBDIR" != "/usr/lib"; then
-
-  if test -z "$TIDY_LIBDIR" || echo "$TIDY_LIBDIR" | grep '^/' >/dev/null ; then
-    ai_p=$TIDY_LIBDIR
-  else
-
-    ep_dir=`echo $TIDY_LIBDIR|$SED 's%/*[^/][^/]*/*$%%'`
-
-    ep_realdir=`(cd "$ep_dir" && pwd)`
-    ai_p="$ep_realdir"/`basename "$TIDY_LIBDIR"`
-  fi
-
-
-      if test "$ext_shared" = "yes"; then
-        TIDY_SHARED_LIBADD="-L$ai_p $TIDY_SHARED_LIBADD"
-        test -n "$ld_runpath_switch" && TIDY_SHARED_LIBADD="$ld_runpath_switch$ai_p $TIDY_SHARED_LIBADD"
-      else
-
-
-
-  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
-
-  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
-  if test -n "$unique" && test "`eval $cmd`" = "" ; then
-    eval "LIBPATH$unique=set"
-
-    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
-    LDFLAGS="$LDFLAGS -L$ai_p"
-    PHP_RPATHS="$PHP_RPATHS $ai_p"
-
-  fi
-
-
-      fi
-
-  fi
-
-    fi
-  else
-
-
-  if test -n "$TIDY_LIBDIR"; then
-
-  if test "$TIDY_LIBDIR" != "/usr/$PHP_LIBDIR" && test "$TIDY_LIBDIR" != "/usr/lib"; then
-
-  if test -z "$TIDY_LIBDIR" || echo "$TIDY_LIBDIR" | grep '^/' >/dev/null ; then
-    ai_p=$TIDY_LIBDIR
-  else
-
-    ep_dir=`echo $TIDY_LIBDIR|$SED 's%/*[^/][^/]*/*$%%'`
-
-    ep_realdir=`(cd "$ep_dir" && pwd)`
-    ai_p="$ep_realdir"/`basename "$TIDY_LIBDIR"`
-  fi
-
-
-
-
-
-  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
-
-  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
-  if test -n "$unique" && test "`eval $cmd`" = "" ; then
-    eval "LIBPATH$unique=set"
-
-    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
-    LDFLAGS="$LDFLAGS -L$ai_p"
-    PHP_RPATHS="$PHP_RPATHS $ai_p"
-
-  fi
-
-
-
-  fi
-
-  fi
-
-
-  case tidy in
-  c|c_r|pthread*) ;;
-  *)
-      LIBS="-ltidy $LIBS"
-   ;;
-  esac
-
-
-
-
-  fi
-
-
-
-  if test "$TIDY_INCDIR" != "/usr/include"; then
-
-  if test -z "$TIDY_INCDIR" || echo "$TIDY_INCDIR" | grep '^/' >/dev/null ; then
-    ai_p=$TIDY_INCDIR
-  else
-
-    ep_dir=`echo $TIDY_INCDIR|$SED 's%/*[^/][^/]*/*$%%'`
-
-    ep_realdir=`(cd "$ep_dir" && pwd)`
-    ai_p="$ep_realdir"/`basename "$TIDY_INCDIR"`
-  fi
-
-
-
-  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
-
-  cmd="echo $ac_n \"\$INCLUDEPATH$unique$ac_c\""
-  if test -n "$unique" && test "`eval $cmd`" = "" ; then
-    eval "INCLUDEPATH$unique=set"
-
-      if test ""; then
-        INCLUDES="-I$ai_p $INCLUDES"
-      else
-        INCLUDES="$INCLUDES -I$ai_p"
-      fi
-
-  fi
-
-  fi
-
-
+  TIDY_LIB_NAME=tidy
 
   save_old_LDFLAGS=$LDFLAGS
   ac_stuff=""
@@ -83945,7 +84182,288 @@ else
     unset ac_cv_lib_tidy_tidyOptGetDoc
 
 
+  save_old_LDFLAGS=$LDFLAGS
+  ac_stuff=""
+
+  save_ext_shared=$ext_shared
+  ext_shared=yes
+
+  for ac_i in $ac_stuff; do
+    case $ac_i in
+    -pthread)
+      if test "$ext_shared" = "yes"; then
+        LDFLAGS="$LDFLAGS -pthread"
+      else
+
+
+  unique=`echo $ac_i|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$EXTRA_LDFLAGS$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "EXTRA_LDFLAGS$unique=set"
+    EXTRA_LDFLAGS="$EXTRA_LDFLAGS $ac_i"
+  fi
+
+      fi
+    ;;
+    -l*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+
+  case $ac_ii in
+  c|c_r|pthread*) ;;
+  *)
+    if test "$ext_shared" = "yes"; then
+        LDFLAGS="$LDFLAGS -l$ac_ii"
+    else
+
+
+  case $ac_ii in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="$LIBS -l$ac_ii"
+   ;;
+  esac
+
+
+    fi
+   ;;
+  esac
+
+
+    ;;
+    -L*)
+      ac_ii=`echo $ac_i|cut -c 3-`
+
+  if test "$ac_ii" != "/usr/$PHP_LIBDIR" && test "$ac_ii" != "/usr/lib"; then
+
+  if test -z "$ac_ii" || echo "$ac_ii" | grep '^/' >/dev/null ; then
+    ai_p=$ac_ii
+  else
+
+    ep_dir=`echo $ac_ii|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$ac_ii"`
+  fi
+
+
+      if test "$ext_shared" = "yes"; then
+        LDFLAGS="-L$ai_p $LDFLAGS"
+        test -n "$ld_runpath_switch" && LDFLAGS="$ld_runpath_switch$ai_p $LDFLAGS"
+      else
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "LIBPATH$unique=set"
+
+    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
+    LDFLAGS="$LDFLAGS -L$ai_p"
+    PHP_RPATHS="$PHP_RPATHS $ai_p"
+
+  fi
+
+
+      fi
+
+  fi
+
+    ;;
+    esac
+  done
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for tidyOptGetDoc in -ltidy5" >&5
+$as_echo_n "checking for tidyOptGetDoc in -ltidy5... " >&6; }
+if ${ac_cv_lib_tidy5_tidyOptGetDoc+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ltidy5  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char tidyOptGetDoc ();
+int
+main ()
+{
+return tidyOptGetDoc ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_tidy5_tidyOptGetDoc=yes
+else
+  ac_cv_lib_tidy5_tidyOptGetDoc=no
 fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_tidy5_tidyOptGetDoc" >&5
+$as_echo "$ac_cv_lib_tidy5_tidyOptGetDoc" >&6; }
+if test "x$ac_cv_lib_tidy5_tidyOptGetDoc" = xyes; then :
+
+    LDFLAGS=$save_old_LDFLAGS
+    ext_shared=$save_ext_shared
+
+      TIDY_LIB_NAME=tidy5
+
+$as_echo "#define HAVE_TIDYOPTGETDOC 1" >>confdefs.h
+
+
+
+else
+
+    LDFLAGS=$save_old_LDFLAGS
+    ext_shared=$save_ext_shared
+    unset ac_cv_lib_tidy5_tidyOptGetDoc
+
+
+fi
+
+
+
+fi
+
+
+
+
+  if test "$ext_shared" = "yes"; then
+    TIDY_SHARED_LIBADD="-l$TIDY_LIB_NAME $TIDY_SHARED_LIBADD"
+    if test -n "$TIDY_LIBDIR"; then
+
+  if test "$TIDY_LIBDIR" != "/usr/$PHP_LIBDIR" && test "$TIDY_LIBDIR" != "/usr/lib"; then
+
+  if test -z "$TIDY_LIBDIR" || echo "$TIDY_LIBDIR" | grep '^/' >/dev/null ; then
+    ai_p=$TIDY_LIBDIR
+  else
+
+    ep_dir=`echo $TIDY_LIBDIR|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$TIDY_LIBDIR"`
+  fi
+
+
+      if test "$ext_shared" = "yes"; then
+        TIDY_SHARED_LIBADD="-L$ai_p $TIDY_SHARED_LIBADD"
+        test -n "$ld_runpath_switch" && TIDY_SHARED_LIBADD="$ld_runpath_switch$ai_p $TIDY_SHARED_LIBADD"
+      else
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "LIBPATH$unique=set"
+
+    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
+    LDFLAGS="$LDFLAGS -L$ai_p"
+    PHP_RPATHS="$PHP_RPATHS $ai_p"
+
+  fi
+
+
+      fi
+
+  fi
+
+    fi
+  else
+
+
+  if test -n "$TIDY_LIBDIR"; then
+
+  if test "$TIDY_LIBDIR" != "/usr/$PHP_LIBDIR" && test "$TIDY_LIBDIR" != "/usr/lib"; then
+
+  if test -z "$TIDY_LIBDIR" || echo "$TIDY_LIBDIR" | grep '^/' >/dev/null ; then
+    ai_p=$TIDY_LIBDIR
+  else
+
+    ep_dir=`echo $TIDY_LIBDIR|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$TIDY_LIBDIR"`
+  fi
+
+
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$LIBPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "LIBPATH$unique=set"
+
+    test -n "$ld_runpath_switch" && LDFLAGS="$LDFLAGS $ld_runpath_switch$ai_p"
+    LDFLAGS="$LDFLAGS -L$ai_p"
+    PHP_RPATHS="$PHP_RPATHS $ai_p"
+
+  fi
+
+
+
+  fi
+
+  fi
+
+
+  case $TIDY_LIB_NAME in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="-l$TIDY_LIB_NAME $LIBS"
+   ;;
+  esac
+
+
+
+
+  fi
+
+
+
+  if test "$TIDY_INCDIR" != "/usr/include"; then
+
+  if test -z "$TIDY_INCDIR" || echo "$TIDY_INCDIR" | grep '^/' >/dev/null ; then
+    ai_p=$TIDY_INCDIR
+  else
+
+    ep_dir=`echo $TIDY_INCDIR|$SED 's%/*[^/][^/]*/*$%%'`
+
+    ep_realdir=`(cd "$ep_dir" && pwd)`
+    ai_p="$ep_realdir"/`basename "$TIDY_INCDIR"`
+  fi
+
+
+
+  unique=`echo $ai_p|$SED 's/[^a-zA-Z0-9]/_/g'`
+
+  cmd="echo $ac_n \"\$INCLUDEPATH$unique$ac_c\""
+  if test -n "$unique" && test "`eval $cmd`" = "" ; then
+    eval "INCLUDEPATH$unique=set"
+
+      if test ""; then
+        INCLUDES="-I$ai_p $INCLUDES"
+      else
+        INCLUDES="$INCLUDES -I$ai_p"
+      fi
+
+  fi
+
+  fi
 
 
 
@@ -94868,7 +95386,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 94871 "configure"
+#line 95389 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -96921,7 +97439,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 96924 "configure"' > conftest.$ac_ext
+  echo '#line 97442 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -98319,7 +98837,7 @@ else
       LDFLAGS="$LDFLAGS -Wl,-exported_symbols_list,conftest.sym"
 
 cat > conftest.$ac_ext <<EOF
-#line 98322 "configure"
+#line 98840 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -98477,11 +98995,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:98480: $lt_compile\"" >&5)
+   (eval echo "\"configure:98998: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "configure:98484: \$? = $ac_status" >&5
+   echo "configure:99002: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -98775,11 +99293,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:98778: $lt_compile\"" >&5)
+   (eval echo "\"configure:99296: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "configure:98782: \$? = $ac_status" >&5
+   echo "configure:99300: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -98879,11 +99397,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:98882: $lt_compile\"" >&5)
+   (eval echo "\"configure:99400: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "configure:98886: \$? = $ac_status" >&5
+   echo "configure:99404: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -99343,7 +99861,7 @@ _LT_EOF
        # Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 99346 "configure"
+#line 99864 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -99385,7 +99903,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	 # Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 99388 "configure"
+#line 99906 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -100902,7 +101420,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 100905 "configure"
+#line 101423 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -101002,7 +101520,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 101005 "configure"
+#line 101523 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -102067,7 +102585,7 @@ case $host_os in
       # Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 102070 "configure"
+#line 102588 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -102110,7 +102628,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	# Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 102113 "configure"
+#line 102631 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -103362,11 +103880,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:103365: $lt_compile\"" >&5)
+   (eval echo "\"configure:103883: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "configure:103369: \$? = $ac_status" >&5
+   echo "configure:103887: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -103466,11 +103984,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:103469: $lt_compile\"" >&5)
+   (eval echo "\"configure:103987: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "configure:103473: \$? = $ac_status" >&5
+   echo "configure:103991: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
