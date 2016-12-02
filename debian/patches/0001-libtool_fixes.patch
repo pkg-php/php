@@ -22,7 +22,7 @@ index 6f10f5a..2bcff8d 100644
  dnl TSRM_PTHREAD
  
 diff --git a/configure.in b/configure.in
-index 595235f..203a4e5 100644
+index 7d65b63..5dc879c 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1426,8 +1426,6 @@ AC_PROVIDE_IFELSE([PHP_REQUIRE_CXX], [], [
