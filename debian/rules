@@ -99,10 +99,6 @@ ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),hurd-i386 mips mipsel ppc64 ppc
   $(warning Disabling checks on $(DEB_HOST_ARCH))
   RUN_TESTS := no
 endif
-ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),arm64))
-  $(warning Disabling parallel builds on $(DEB_HOST_ARCH))
-  PARALLEL := 
-endif
 
 ifeq (yes,$(RUN_TESTS))
   MYSQL_PORT := $(shell for i in $$(seq 1025 3600 | sort -R); do nc -z localhost $$i || { echo $$i; exit; } ; done)
