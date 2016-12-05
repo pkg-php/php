@@ -44,3 +44,4 @@
 0044-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0045-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0046-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
+0047-Simpler-overflow-check.patch
