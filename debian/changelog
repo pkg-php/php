@@ -1,3 +1,11 @@
+php7.1 (7.1.0-2) unstable; urgency=medium
+
+  * Fix couple of lintian errors
+  * Add support for MariaDB in setup-mysql.sh test script
+  * Pull upstream fix for overflow check to fix arm64 builds
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 05 Dec 2016 13:34:22 +0100
+
 php7.1 (7.1.0-1) unstable; urgency=medium
 
   * Imported Upstream version 7.1.0
