@@ -40,14 +40,10 @@ chmod go-rx $datadir
 chown $user: $datadir
 
 case "$mysqld_version" in
-    10.0)
-	echo "MariaDB is not supported yet in the test script"
-	exit 1
-	;;
     5.7)
 	$mysqld --initialize-insecure
 	;;
-    5.5|5.6|*)
+    5.5|5.6|10.0|*)
 	mysql_install_db --no-defaults --user=$user --datadir=$datadir/data
 	;;
 esac
