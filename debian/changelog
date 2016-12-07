@@ -1,3 +1,9 @@
+php5.6 (5.6.28-3) experimental; urgency=medium
+
+  * Build with OpenSSL 1.0
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 07 Dec 2016 12:19:18 +0100
+
 php5.6 (5.6.28-2) experimental; urgency=medium
 
   * Fix couple of lintian errors
