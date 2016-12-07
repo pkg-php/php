@@ -1,3 +1,11 @@
+php7.0 (7.0.13-3) unstable; urgency=medium
+
+  * Fix couple of lintian errors
+  * Add support for MariaDB in setup-mysql.sh test script
+  * Use --skip-grant-tables for mysqld instance running PHP tests
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 07 Dec 2016 10:38:22 +0100
+
 php7.0 (7.0.13-2) unstable; urgency=medium
 
   * Build-Depend on default-libmysqlclient-dev (Closes: #845891)
