@@ -137,11 +137,7 @@ QUILT_NO_DIFF_TIMESTAMPS := 1
 export QUILT_DIFF_OPTS QUILT_NO_DIFF_TIMESTAMPS
 
 export PROG_SENDMAIL := /usr/sbin/sendmail
-ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-  DEB_CFLAGS_MAINT_APPEND += -O2
-else
-  DEB_CFLAGS_MAINT_APPEND += -O0
-endif
+DEB_CFLAGS_MAINT_APPEND += -O1 -g -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls
 DEB_CFLAGS_MAINT_APPEND += -Wall -pedantic -fsigned-char -fno-strict-aliasing 
 DEB_CFLAGS_MAINT_APPEND += $(shell getconf LFS_CFLAGS)
 
