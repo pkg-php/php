@@ -81,7 +81,7 @@ index 978c8b3..3ee61a4 100644
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 5adeb63..5e60255 100644
+index c0b4b1c..40f504d 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1757,9 +1757,9 @@ int main(int argc, char *argv[])
@@ -97,11 +97,11 @@ index 5adeb63..5e60255 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index de73c69..a56c3bb 100644
+index 148e18a..ca2fa17 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1657,10 +1657,8 @@ phpdbg_main:
- 				phpdbg_do_help(NULL);
+@@ -1662,10 +1662,8 @@ phpdbg_main:
+ 				phpdbg_do_help_cmd(exec);
  			} else if (show_version) {
  				phpdbg_out(
 -					"phpdbg %s (built: %s %s)\nPHP %s, Copyright (c) 1997-2016 The PHP Group\n%s",
