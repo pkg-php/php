@@ -1,3 +1,9 @@
+php7.0 (7.0.14-2) unstable; urgency=medium
+
+  * Pull upstream fix for overflow check to fix arm64 builds
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 13 Dec 2016 17:04:26 +0100
+
 php7.0 (7.0.14-1) unstable; urgency=medium
 
   * Imported Upstream version 7.0.14
