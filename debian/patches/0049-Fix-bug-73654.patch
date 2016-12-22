@@ -1,0 +1,49 @@
+From: Nikita Popov <nikic@php.net>
+Date: Mon, 5 Dec 2016 20:39:45 +0100
+Subject: Fix bug #73654
+
+---
+ ext/opcache/Optimizer/zend_optimizer.c |  5 +++++
+ ext/opcache/tests/bug73654.phpt        | 17 +++++++++++++++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 ext/opcache/tests/bug73654.phpt
+
+diff --git a/ext/opcache/Optimizer/zend_optimizer.c b/ext/opcache/Optimizer/zend_optimizer.c
+index c88821e..b6506e0 100644
+--- a/ext/opcache/Optimizer/zend_optimizer.c
++++ b/ext/opcache/Optimizer/zend_optimizer.c
+@@ -200,6 +200,11 @@ int zend_optimizer_update_op1_const(zend_op_array *op_array,
+ 		case ZEND_SEND_VAR_NO_REF_EX:
+ 			zval_ptr_dtor(val);
+ 			return 0;
++		case ZEND_VERIFY_RETURN_TYPE:
++			/* This would require a non-local change.
++			 * zend_optimizer_replace_by_const() supports this. */
++			zval_ptr_dtor(val);
++			return 0;
+ 		case ZEND_CONCAT:
+ 		case ZEND_FAST_CONCAT:
+ 		case ZEND_FETCH_R:
+diff --git a/ext/opcache/tests/bug73654.phpt b/ext/opcache/tests/bug73654.phpt
+new file mode 100644
+index 0000000..164e108
+--- /dev/null
++++ b/ext/opcache/tests/bug73654.phpt
+@@ -0,0 +1,17 @@
++--TEST--
++Bug #73654: Segmentation fault in zend_call_function
++--FILE--
++<?php
++echo xyz();
++
++function x () : string {
++    return 'x';
++}
++
++function xyz() : string {
++    return x().'yz';
++}
++
++?>
++--EXPECT--
++xyz
