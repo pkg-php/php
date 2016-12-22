@@ -1,3 +1,9 @@
+php7.1 (7.1.0-4) unstable; urgency=medium
+
+  * Pull upstream opcache fixes
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 22 Dec 2016 09:56:43 +0100
+
 php7.1 (7.1.0-3) unstable; urgency=medium
 
   * Use --skip-grant-tables for mysqld instance running PHP tests
