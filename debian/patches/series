@@ -47,3 +47,4 @@
 0047-Simpler-overflow-check.patch
 0048-Fixed-bug-73789-Strange-behavior-of-class-constants-.patch
 0049-Fix-bug-73654.patch
+0050-Fix-propagation-of-QM_ASSIGN-into-VERIFY_RETURN_TYPE.patch
