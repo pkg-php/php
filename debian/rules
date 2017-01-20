@@ -180,8 +180,7 @@ COMMON_CONFIG := \
 		--with-layout=GNU \
 		--without-pear \
 		--enable-filter \
-		--without-openssl \
-		--with-openssl-dir=/usr \
+		--with-openssl=yes \
 		--with-pcre-regex=/usr \
 		--enable-hash \
 		  --with-mhash=/usr \
