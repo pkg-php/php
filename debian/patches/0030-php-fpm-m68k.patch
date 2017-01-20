@@ -7,7 +7,7 @@ Subject: php-fpm-m68k
  1 file changed, 34 insertions(+)
 
 diff --git a/sapi/fpm/fpm/fpm_atomic.h b/sapi/fpm/fpm/fpm_atomic.h
-index 662dd47..a50272f 100644
+index 662dd4726..a50272f7c 100644
 --- a/sapi/fpm/fpm/fpm_atomic.h
 +++ b/sapi/fpm/fpm/fpm_atomic.h
 @@ -5,6 +5,12 @@

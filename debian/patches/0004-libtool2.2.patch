@@ -7,7 +7,7 @@ Subject: libtool2.2
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 9bd3b9a..7a0e599 100644
+index 9bd3b9a5d..7a0e599cc 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -9,7 +9,9 @@ includedir="$prefix/include/php/@DEBIAN_PHP_API@"

@@ -12,7 +12,7 @@ Subject: temporary-path-fixes-for-multiarch
  6 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/acinclude.m4 b/acinclude.m4
-index adfceea..62def28 100644
+index ca0322428..9e7e91c17 100644
 --- a/acinclude.m4
 +++ b/acinclude.m4
 @@ -2283,7 +2283,7 @@ AC_DEFUN([PHP_SETUP_KERBEROS],[
@@ -34,7 +34,7 @@ index adfceea..62def28 100644
        fi
        test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
 diff --git a/ext/dba/config.m4 b/ext/dba/config.m4
-index d2e6fd9..f3aec83 100644
+index d2e6fd943..f3aec83d6 100644
 --- a/ext/dba/config.m4
 +++ b/ext/dba/config.m4
 @@ -239,7 +239,7 @@ AC_DEFUN([PHP_DBA_DB_CHECK],[
@@ -47,7 +47,7 @@ index d2e6fd9..f3aec83 100644
        PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/$PHP_LIBDIR, -l$LIB,[
          AC_TRY_LINK([
 diff --git a/ext/gmp/config.m4 b/ext/gmp/config.m4
-index 8265fb8..00469df 100644
+index 8265fb8df..00469df9a 100644
 --- a/ext/gmp/config.m4
 +++ b/ext/gmp/config.m4
 @@ -5,6 +5,7 @@ if test "$PHP_GMP" != "no"; then
@@ -67,7 +67,7 @@ index 8265fb8..00469df 100644
    PHP_NEW_EXTENSION(gmp, gmp.c, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
    PHP_SUBST(GMP_SHARED_LIBADD)
 diff --git a/ext/ldap/config.m4 b/ext/ldap/config.m4
-index 947cebc..b2da7b4 100644
+index 947cebca3..b2da7b4ee 100644
 --- a/ext/ldap/config.m4
 +++ b/ext/ldap/config.m4
 @@ -117,7 +117,7 @@ if test "$PHP_LDAP" != "no"; then
@@ -80,7 +80,7 @@ index 947cebc..b2da7b4 100644
      PHP_ADD_LIBRARY_WITH_PATH(ldap, $LDAP_LIBDIR, LDAP_SHARED_LIBADD)
  
 diff --git a/ext/pcre/config0.m4 b/ext/pcre/config0.m4
-index 35fc585..b34c9a8 100644
+index 35fc585d5..b34c9a896 100644
 --- a/ext/pcre/config0.m4
 +++ b/ext/pcre/config0.m4
 @@ -21,7 +21,7 @@ PHP_ARG_WITH(pcre-regex,,
@@ -93,7 +93,7 @@ index 35fc585..b34c9a8 100644
      done
      
 diff --git a/ext/pdo_dblib/config.m4 b/ext/pdo_dblib/config.m4
-index 407c3fe..17eb11a 100644
+index 407c3fe4d..17eb11a48 100644
 --- a/ext/pdo_dblib/config.m4
 +++ b/ext/pdo_dblib/config.m4
 @@ -46,7 +46,7 @@ if test "$PHP_PDO_DBLIB" != "no"; then

@@ -38,7 +38,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  create mode 100644 ext/openssl/tests/openssl_encrypt_gcm.phpt
 
 diff --git a/ext/openssl/config0.m4 b/ext/openssl/config0.m4
-index 01fc89b..a7bbf05 100644
+index 01fc89b28..a7bbf05f6 100644
 --- a/ext/openssl/config0.m4
 +++ b/ext/openssl/config0.m4
 @@ -3,7 +3,7 @@ dnl $Id$
@@ -51,7 +51,7 @@ index 01fc89b..a7bbf05 100644
  PHP_ARG_WITH(kerberos, for Kerberos support,
  [  --with-kerberos[=DIR]     OPENSSL: Include Kerberos support], no, no)
 diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
-index 6bf1d6b..4bfc03f 100644
+index be42f76de..7ab85c43f 100644
 --- a/ext/openssl/openssl.c
 +++ b/ext/openssl/openssl.c
 @@ -17,6 +17,7 @@
@@ -3506,7 +3506,7 @@ index 6bf1d6b..4bfc03f 100644
  #endif
  
 diff --git a/ext/openssl/php_openssl.h b/ext/openssl/php_openssl.h
-index 92e0124..c4aada4 100644
+index a324a7330..08f240e8e 100644
 --- a/ext/openssl/php_openssl.h
 +++ b/ext/openssl/php_openssl.h
 @@ -46,11 +46,33 @@ extern zend_module_entry openssl_module_entry;
@@ -3552,7 +3552,7 @@ index 92e0124..c4aada4 100644
  
  /*
 diff --git a/ext/openssl/tests/001.phpt b/ext/openssl/tests/001.phpt
-index 4ca9970..d62612b 100644
+index 4ca9970bc..d62612b73 100644
 --- a/ext/openssl/tests/001.phpt
 +++ b/ext/openssl/tests/001.phpt
 @@ -24,7 +24,7 @@ if ($privkey === false)
@@ -3565,7 +3565,7 @@ index 4ca9970..d62612b 100644
  	die("failed to get a temporary filename!");
  
 diff --git a/ext/openssl/tests/bug38261.phpt b/ext/openssl/tests/bug38261.phpt
-index b06fa4f..66de8b8 100644
+index b06fa4f8f..66de8b876 100644
 --- a/ext/openssl/tests/bug38261.phpt
 +++ b/ext/openssl/tests/bug38261.phpt
 @@ -31,4 +31,4 @@ Warning: openssl_x509_parse() expects at least 1 parameter, 0 given in %sbug3826
@@ -3575,7 +3575,7 @@ index b06fa4f..66de8b8 100644
 -Catchable fatal error: Object of class stdClass could not be converted to string in %sbug38261.php on line %d 
 +Recoverable fatal error: Object of class stdClass could not be converted to string in %sbug38261.php on line %d 
 diff --git a/ext/openssl/tests/bug41033.phpt b/ext/openssl/tests/bug41033.phpt
-index 4aeae66..4e9bea3 100644
+index 4aeae66f4..4e9bea3e3 100644
 --- a/ext/openssl/tests/bug41033.phpt
 +++ b/ext/openssl/tests/bug41033.phpt
 @@ -13,11 +13,11 @@ $pub = 'file://' . dirname(__FILE__) . '/' . 'bug41033pub.pem';
@@ -3593,7 +3593,7 @@ index 4aeae66..4e9bea3 100644
  
  
 diff --git a/ext/openssl/tests/bug61124.phpt b/ext/openssl/tests/bug61124.phpt
-index 2fc192d..9b21da5 100644
+index 2fc192d43..9b21da504 100644
 --- a/ext/openssl/tests/bug61124.phpt
 +++ b/ext/openssl/tests/bug61124.phpt
 @@ -8,5 +8,5 @@ if (!extension_loaded("openssl")) die("skip");
@@ -3606,7 +3606,7 @@ index 2fc192d..9b21da5 100644
 +Warning: openssl_decrypt(): IV passed is only 4 bytes long, cipher expects an IV of precisely 16 bytes, padding with \0 in %s on line %d
 +bool(false)
 diff --git a/ext/openssl/tests/bug66501.phpt b/ext/openssl/tests/bug66501.phpt
-index 7ad5e21..99ac4f5 100644
+index 7ad5e2174..99ac4f55d 100644
 --- a/ext/openssl/tests/bug66501.phpt
 +++ b/ext/openssl/tests/bug66501.phpt
 @@ -16,7 +16,7 @@ AwEHoUQDQgAEPq4hbIWHvB51rdWr8ejrjWo4qVNWVugYFtPg/xLQw0mHkIPZ4DvK
@@ -3620,7 +3620,7 @@ index 7ad5e21..99ac4f5 100644
  bool(true)
 diff --git a/ext/openssl/tests/bug69882.phpt b/ext/openssl/tests/bug69882.phpt
 deleted file mode 100644
-index 6963f8d..0000000
+index 6963f8db7..000000000
 --- a/ext/openssl/tests/bug69882.phpt
 +++ /dev/null
 @@ -1,17 +0,0 @@
@@ -3643,7 +3643,7 @@ index 6963f8d..0000000
 -bool(false)
 diff --git a/ext/openssl/tests/cipher_tests.inc b/ext/openssl/tests/cipher_tests.inc
 new file mode 100644
-index 0000000..b9e84af
+index 000000000..b9e84af8f
 --- /dev/null
 +++ b/ext/openssl/tests/cipher_tests.inc
 @@ -0,0 +1,111 @@
@@ -3760,7 +3760,7 @@ index 0000000..b9e84af
 +}
 diff --git a/ext/openssl/tests/ecc.phpt b/ext/openssl/tests/ecc.phpt
 new file mode 100644
-index 0000000..5df0130
+index 000000000..5df01304f
 --- /dev/null
 +++ b/ext/openssl/tests/ecc.phpt
 @@ -0,0 +1,110 @@
@@ -3876,7 +3876,7 @@ index 0000000..5df0130
 +Found secp384r1 in curve names
 diff --git a/ext/openssl/tests/openssl_decrypt_ccm.phpt b/ext/openssl/tests/openssl_decrypt_ccm.phpt
 new file mode 100644
-index 0000000..2107fea
+index 000000000..2107fea1f
 --- /dev/null
 +++ b/ext/openssl/tests/openssl_decrypt_ccm.phpt
 @@ -0,0 +1,41 @@
@@ -3922,7 +3922,7 @@ index 0000000..2107fea
 +bool(false)
 +bool(false)
 diff --git a/ext/openssl/tests/openssl_decrypt_error.phpt b/ext/openssl/tests/openssl_decrypt_error.phpt
-index 40debbd..b34397a 100644
+index 40debbd04..b34397a65 100644
 --- a/ext/openssl/tests/openssl_decrypt_error.phpt
 +++ b/ext/openssl/tests/openssl_decrypt_error.phpt
 @@ -7,7 +7,7 @@ openssl_decrypt() error tests
@@ -3953,7 +3953,7 @@ index 40debbd..b34397a 100644
 +string(44) "yof6cPPH4mLee6TOc0YQSrh4dvywMqxGUyjp0lV6+aM="
 diff --git a/ext/openssl/tests/openssl_decrypt_gcm.phpt b/ext/openssl/tests/openssl_decrypt_gcm.phpt
 new file mode 100644
-index 0000000..d8c4643
+index 000000000..d8c464346
 --- /dev/null
 +++ b/ext/openssl/tests/openssl_decrypt_gcm.phpt
 @@ -0,0 +1,51 @@
@@ -4010,7 +4010,7 @@ index 0000000..d8c4643
 +bool(false)
 diff --git a/ext/openssl/tests/openssl_encrypt_ccm.phpt b/ext/openssl/tests/openssl_encrypt_ccm.phpt
 new file mode 100644
-index 0000000..1606044
+index 000000000..160604499
 --- /dev/null
 +++ b/ext/openssl/tests/openssl_encrypt_ccm.phpt
 @@ -0,0 +1,39 @@
@@ -4054,7 +4054,7 @@ index 0000000..1606044
 +string(8) "p/lvgA=="
 +int(1024)
 diff --git a/ext/openssl/tests/openssl_encrypt_error.phpt b/ext/openssl/tests/openssl_encrypt_error.phpt
-index 7376f48..791c431 100644
+index 7376f4870..791c43121 100644
 --- a/ext/openssl/tests/openssl_encrypt_error.phpt
 +++ b/ext/openssl/tests/openssl_encrypt_error.phpt
 @@ -7,10 +7,12 @@ openssl_encrypt() error tests
@@ -4088,7 +4088,7 @@ index 7376f48..791c431 100644
 +string(44) "iPR4HulskuaP5Z6me5uImk6BqVyJG73+63tkPauVZYk="
 diff --git a/ext/openssl/tests/openssl_encrypt_gcm.phpt b/ext/openssl/tests/openssl_encrypt_gcm.phpt
 new file mode 100644
-index 0000000..91fe23a
+index 000000000..91fe23a63
 --- /dev/null
 +++ b/ext/openssl/tests/openssl_encrypt_gcm.phpt
 @@ -0,0 +1,60 @@
@@ -4153,7 +4153,7 @@ index 0000000..91fe23a
 +Warning: openssl_encrypt(): A tag should be provided when using AEAD mode in %s on line %d
 +bool(false)
 diff --git a/ext/openssl/tests/openssl_error_string_basic.phpt b/ext/openssl/tests/openssl_error_string_basic.phpt
-index 82f3099..04cc550 100644
+index 82f309926..04cc5508a 100644
 --- a/ext/openssl/tests/openssl_error_string_basic.phpt
 +++ b/ext/openssl/tests/openssl_error_string_basic.phpt
 @@ -89,7 +89,7 @@ expect_openssl_errors('openssl_pkey_export_to_file opening', ['02001002', '2006D
@@ -4184,7 +4184,7 @@ index 82f3099..04cc550 100644
  @openssl_csr_get_subject($crt_file);
  expect_openssl_errors('openssl_csr_get_subjec pem', ['0906D06C']);
 diff --git a/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt b/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
-index 5589abb..27ca4d2 100644
+index 5589abb03..27ca4d232 100644
 --- a/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
 +++ b/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
 @@ -6,10 +6,10 @@ openssl_pkcs7_decrypt() tests
@@ -4201,7 +4201,7 @@ index 5589abb..27ca4d2 100644
  	unlink($outfile);
  	die("failed to get a temporary filename!");
 diff --git a/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt b/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
-index 5f74f97..09a7093 100644
+index 5f74f97b0..09a7093b8 100644
 --- a/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
 +++ b/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
 @@ -5,10 +5,10 @@ openssl_pkcs7_encrypt() tests
@@ -4218,7 +4218,7 @@ index 5f74f97..09a7093 100644
  	die("failed to get a temporary filename!");
  
 diff --git a/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt b/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
-index ac8edf1..e06553f 100644
+index ac8edf19a..e06553f4b 100644
 --- a/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
 +++ b/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
 @@ -5,7 +5,7 @@ openssl_pkcs7_sign() tests
@@ -4231,7 +4231,7 @@ index ac8edf1..e06553f 100644
  	die("failed to get a temporary filename!");
  }
 diff --git a/ext/openssl/tests/openssl_pkey_export_basic.phpt b/ext/openssl/tests/openssl_pkey_export_basic.phpt
-index d229d6b..530158d 100644
+index d229d6b13..530158d7d 100644
 --- a/ext/openssl/tests/openssl_pkey_export_basic.phpt
 +++ b/ext/openssl/tests/openssl_pkey_export_basic.phpt
 @@ -2,8 +2,10 @@
@@ -4280,7 +4280,7 @@ index d229d6b..530158d 100644
  bool(true)
  bool(true)
 diff --git a/ext/openssl/tests/openssl_pkey_get_details_basic.phpt b/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
-index 8e0cef4..3c239af 100644
+index 8e0cef46c..3c239af2a 100644
 --- a/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
 +++ b/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
 @@ -3,11 +3,11 @@ openssl_pkey_get_details() with EC key
@@ -4308,7 +4308,7 @@ index 8e0cef4..3c239af 100644
  
      [type] => 3
 diff --git a/ext/openssl/xp_ssl.c b/ext/openssl/xp_ssl.c
-index 208aafc..144adc0 100644
+index 4c6ef9f82..afc3c5a8c 100644
 --- a/ext/openssl/xp_ssl.c
 +++ b/ext/openssl/xp_ssl.c
 @@ -56,28 +56,19 @@
@@ -4558,7 +4558,7 @@ index 208aafc..144adc0 100644
  
  	if (GET_VER_OPT("verify_peer") && !zend_is_true(val)) {
  		disable_peer_verification(sslsock->ctx, stream);
-@@ -1680,6 +1649,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
+@@ -1687,6 +1656,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  	char *proto_str;
  	long proto = SSL_version(ssl_handle);
  	const SSL_CIPHER *cipher = SSL_get_current_cipher(ssl_handle);
@@ -4566,7 +4566,7 @@ index 208aafc..144adc0 100644
  
  	switch (proto) {
  #ifdef HAVE_TLS12
-@@ -1700,11 +1670,6 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
+@@ -1707,11 +1677,6 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  			proto_str = "SSLv3";
  			break;
  #endif
@@ -4578,7 +4578,7 @@ index 208aafc..144adc0 100644
  		default: proto_str = "UNKNOWN";
  	}
  
-@@ -1712,7 +1677,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
+@@ -1719,7 +1684,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  	add_assoc_string(&meta_arr, "protocol", proto_str);
  	add_assoc_string(&meta_arr, "cipher_name", (char *) SSL_CIPHER_get_name(cipher));
  	add_assoc_long(&meta_arr, "cipher_bits", SSL_CIPHER_get_bits(cipher, NULL));
@@ -4587,7 +4587,7 @@ index 208aafc..144adc0 100644
  
  	return Z_ARR(meta_arr);
  }
-@@ -2272,6 +2237,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
+@@ -2285,6 +2250,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  			if (sslsock->ssl_active) {
  				zval tmp;
  				char *proto_str;
@@ -4595,7 +4595,7 @@ index 208aafc..144adc0 100644
  				const SSL_CIPHER *cipher;
  
  				array_init(&tmp);
-@@ -2287,9 +2253,6 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
+@@ -2300,9 +2266,6 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  #ifdef HAVE_SSL3
  					case SSL3_VERSION: proto_str = "SSLv3"; break;
  #endif
@@ -4605,7 +4605,7 @@ index 208aafc..144adc0 100644
  					default: proto_str = "UNKNOWN";
  				}
  
-@@ -2298,7 +2261,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
+@@ -2311,7 +2274,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  				add_assoc_string(&tmp, "protocol", proto_str);
  				add_assoc_string(&tmp, "cipher_name", (char *) SSL_CIPHER_get_name(cipher));
  				add_assoc_long(&tmp, "cipher_bits", SSL_CIPHER_get_bits(cipher, NULL));
@@ -4614,7 +4614,7 @@ index 208aafc..144adc0 100644
  
  #ifdef HAVE_TLS_ALPN
  				{
-@@ -2583,14 +2546,9 @@ php_stream *php_openssl_ssl_socket_factory(const char *proto, size_t protolen,
+@@ -2596,14 +2559,9 @@ php_stream *php_openssl_ssl_socket_factory(const char *proto, size_t protolen,
  		sslsock->enable_on_connect = 1;
  		sslsock->method = get_crypto_method(context, STREAM_CRYPTO_METHOD_ANY_CLIENT);
  	} else if (strncmp(proto, "sslv2", protolen) == 0) {
@@ -4631,7 +4631,7 @@ index 208aafc..144adc0 100644
  #ifdef HAVE_SSL3
  		sslsock->enable_on_connect = 1;
 diff --git a/ext/phar/util.c b/ext/phar/util.c
-index 08d58b9..bc267c9 100644
+index 9f7fcaed7..f571429be 100644
 --- a/ext/phar/util.c
 +++ b/ext/phar/util.c
 @@ -1494,7 +1494,7 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
