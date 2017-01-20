@@ -12,7 +12,7 @@ Subject: Add patch to remove build timestamps from generated binaries.
  6 files changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/ext/standard/info.c b/ext/standard/info.c
-index e39eb37..aba164d 100644
+index e39eb37c8..aba164de1 100644
 --- a/ext/standard/info.c
 +++ b/ext/standard/info.c
 @@ -942,7 +942,6 @@ PHPAPI void php_print_info(int flag TSRMLS_DC)
@@ -24,7 +24,7 @@ index e39eb37..aba164d 100644
  		php_info_print_table_row(2, "Compiler", COMPILER);
  #endif
 diff --git a/sapi/cgi/cgi_main.c b/sapi/cgi/cgi_main.c
-index a735056..7c3fb8f 100644
+index a735056e9..7c3fb8fc4 100644
 --- a/sapi/cgi/cgi_main.c
 +++ b/sapi/cgi/cgi_main.c
 @@ -2237,9 +2237,9 @@ consult the installation file that came with this distribution, or visit \n\
@@ -40,7 +40,7 @@ index a735056..7c3fb8f 100644
  							php_request_shutdown((void *) 0);
  							fcgi_shutdown();
 diff --git a/sapi/cli/php_cli.c b/sapi/cli/php_cli.c
-index a80e21c..ce850b9 100644
+index a80e21c49..ce850b972 100644
 --- a/sapi/cli/php_cli.c
 +++ b/sapi/cli/php_cli.c
 @@ -697,8 +697,8 @@ static int do_cli(int argc, char **argv TSRMLS_DC) /* {{{ */
@@ -55,7 +55,7 @@ index a80e21c..ce850b9 100644
  					"(DEBUG GCOV)",
  #elif ZEND_DEBUG
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index d12ac01..0848fd8 100644
+index d12ac0185..0848fd881 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1777,9 +1777,9 @@ int main(int argc, char *argv[])
@@ -71,7 +71,7 @@ index d12ac01..0848fd8 100644
  				php_request_shutdown((void *) 0);
  				fcgi_shutdown();
 diff --git a/sapi/milter/php_milter.c b/sapi/milter/php_milter.c
-index d285944..c91e176 100644
+index d285944f0..c91e17614 100644
 --- a/sapi/milter/php_milter.c
 +++ b/sapi/milter/php_milter.c
 @@ -1113,7 +1113,7 @@ int main(int argc, char *argv[])
@@ -84,7 +84,7 @@ index d285944..c91e176 100644
  				exit(1);
  				break;
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 0e9b30e..e414f0b 100644
+index 0e9b30e3a..e414f0bd5 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
 @@ -1203,10 +1203,8 @@ phpdbg_main:

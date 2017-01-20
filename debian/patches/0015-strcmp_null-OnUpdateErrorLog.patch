@@ -9,7 +9,7 @@ Subject: strcmp_null-OnUpdateErrorLog
 
 diff --git a/tests/func/null-new_val.phpt b/tests/func/null-new_val.phpt
 new file mode 100644
-index 0000000..412da39
+index 000000000..412da39f1
 --- /dev/null
 +++ b/tests/func/null-new_val.phpt
 @@ -0,0 +1,10 @@
