@@ -8,7 +8,7 @@ Subject: php-5.3.9-mysqlnd
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ext/mysqlnd/mysqlnd_connection.c b/ext/mysqlnd/mysqlnd_connection.c
-index 10addf0..87d78fd 100644
+index d15147ba6..3f95495fa 100644
 --- a/ext/mysqlnd/mysqlnd_connection.c
 +++ b/ext/mysqlnd/mysqlnd_connection.c
 @@ -559,7 +559,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, get_scheme)(MYSQLND_CONN_DATA * conn, MYSQLND_
@@ -21,7 +21,7 @@ index 10addf0..87d78fd 100644
  		}
  		transport.l = mnd_sprintf(&transport.s, 0, "unix://%s", socket_or_pipe->s);
 diff --git a/ext/pdo_mysql/pdo_mysql.c b/ext/pdo_mysql/pdo_mysql.c
-index fdf7062..6e7601c 100644
+index bf6d765aa..49cbb44c6 100644
 --- a/ext/pdo_mysql/pdo_mysql.c
 +++ b/ext/pdo_mysql/pdo_mysql.c
 @@ -53,7 +53,7 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_mysql)

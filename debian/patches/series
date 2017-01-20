@@ -44,7 +44,3 @@
 0044-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
 0045-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0046-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
-0047-Simpler-overflow-check.patch
-0048-Fixed-bug-73789-Strange-behavior-of-class-constants-.patch
-0049-Fix-bug-73654.patch
-0050-Fix-propagation-of-QM_ASSIGN-into-VERIFY_RETURN_TYPE.patch
