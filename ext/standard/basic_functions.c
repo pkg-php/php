@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2016 The PHP Group                                |
+   | Copyright (c) 1997-2017 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -1813,6 +1813,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO(arginfo_unpack, 0)
 	ZEND_ARG_INFO(0, format)
 	ZEND_ARG_INFO(0, input)
+	ZEND_ARG_INFO(0, offset)
 ZEND_END_ARG_INFO()
 /* }}} */
 /* {{{ pageinfo.c */

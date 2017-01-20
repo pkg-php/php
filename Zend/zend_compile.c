@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | Zend Engine                                                          |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1998-2016 Zend Technologies Ltd. (http://www.zend.com) |
+   | Copyright (c) 1998-2017 Zend Technologies Ltd. (http://www.zend.com) |
    +----------------------------------------------------------------------+
    | This source file is subject to version 2.00 of the Zend license,     |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -1830,6 +1830,28 @@ zend_ast *zend_ast_append_str(zend_ast *left_ast, zend_ast *right_ast) /* {{{ */
 }
 /* }}} */
 
+zend_ast *zend_negate_num_string(zend_ast *ast) /* {{{ */
+{
+	zval *zv = zend_ast_get_zval(ast);
+	if (Z_TYPE_P(zv) == IS_LONG) {
+		if (Z_LVAL_P(zv) == 0) {
+			ZVAL_NEW_STR(zv, zend_string_init("-0", sizeof("-0")-1, 0));
+		} else {
+			ZEND_ASSERT(Z_LVAL_P(zv) > 0);
+			Z_LVAL_P(zv) *= -1;
+		}
+	} else if (Z_TYPE_P(zv) == IS_STRING) {
+		size_t orig_len = Z_STRLEN_P(zv);
+		Z_STR_P(zv) = zend_string_extend(Z_STR_P(zv), orig_len + 1, 0);
+		memmove(Z_STRVAL_P(zv) + 1, Z_STRVAL_P(zv), orig_len + 1);
+		Z_STRVAL_P(zv)[0] = '-';
+	} else {
+		ZEND_ASSERT(0);
+	}
+	return ast;
+}
+/* }}} */
+
 void zend_verify_namespace(void) /* {{{ */
 {
 	if (FC(has_bracketed_namespaces) && !FC(in_namespace)) {
@@ -3184,7 +3206,6 @@ uint32_t zend_compile_args(zend_ast *ast, zend_function *fbc) /* {{{ */
 			}
 		} else {
 			zend_compile_expr(&arg_node, arg);
-			ZEND_ASSERT(arg_node.op_type != IS_CV);
 			if (arg_node.op_type == IS_VAR) {
 				/* pass ++$a or something similar */
 				if (fbc) {
@@ -3197,6 +3218,16 @@ uint32_t zend_compile_args(zend_ast *ast, zend_function *fbc) /* {{{ */
 					}
 				} else {
 					opcode = ZEND_SEND_VAR_NO_REF_EX;
+				}
+			} else if (arg_node.op_type == IS_CV) {
+				if (fbc) {
+					if (ARG_SHOULD_BE_SENT_BY_REF(fbc, arg_num)) {
+						opcode = ZEND_SEND_REF;
+					} else {
+						opcode = ZEND_SEND_VAR;
+					}
+				} else {
+					opcode = ZEND_SEND_VAR_EX;
 				}
 			} else {
 				if (fbc) {
