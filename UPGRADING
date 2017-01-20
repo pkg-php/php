@@ -90,6 +90,11 @@ PHP 7.1 UPGRADE NOTES
   
     now results in the array ["b" => 1, "a" => 1], while for PHP 7.0 the result
     was ["a" => 1, "b" => 1].
+  . The allowed_classes element of the $options parameter of unserialize() is
+    now strictly typed, i.e. if anything other than an array or a boolean is
+    given, unserialize() returns FALSE and issues an E_WARNING.
+  . $this, autoglobals, and variables with the same name as a parameter can no
+    longer be bound to a closure via the use construct.
 
 - JSON:
   . The serialize_precision is used instead of precision when encoding double
@@ -112,26 +117,26 @@ PHP 7.1 UPGRADE NOTES
     on save handler you are using.
   . Following INIs are removed
      . session.hash_function
-     . session.hash_bits_per_charactor
+     . session.hash_bits_per_character
      . session.entropy_file
      . session.entropy_length
   . New INIs and defaults
      . session.sid_length (Number of session ID characters - 22 to 256.
-       (php.ini-* default: 26 Compiled default: 32)
-     . session.sid_bits_per_character (Bits used per character. 4 to 6.
+       php.ini-* default: 26 Compiled default: 32)
+     . session.sid_bits_per_character (Bits used per character - 4 to 6.
        php.ini-* default: 5 Compiled default: 4)
-    Length of old session ID string is determined as follows
+  . Length of old session ID string is determined as follows
      . Used hash function's bits.
         . session.hash_function=0 - MD5 128 bits (This was default)
-        . session.hash_function=1 - SHA1 192 bits
+        . session.hash_function=1 - SHA1 160 bits
      . Bits per character. (4, 5 or 6 bits per character)
      . Examples
          MD5 and 4 bits = 32 chars,  ceil(128/4)=32
          MD5 and 5 bits = 26 chars,  ceil(128/5)=26
          MD5 and 6 bits = 22 chars,  ceil(128/6)=22
-         SHA1 and 4 bits = 48 chars, ceil(192/4)=48
-         SHA2 and 5 bits = 39 chars, ceil(192/5)=39
-         SHA1 and 6 bits = 32 chars, ceil(192/6)=32
+         SHA1 and 4 bits = 40 chars, ceil(160/4)=40
+         SHA1 and 5 bits = 32 chars, ceil(160/5)=32
+         SHA1 and 6 bits = 27 chars, ceil(160/6)=27
          and so on.
   . session_start() returns FALSE and no longer initializes $_SESSION when
     it failed to start session.
@@ -417,7 +422,7 @@ PHP 7.1 UPGRADE NOTES
 - Core:
   . Support for long and UTF-8 path;
 
-    If an application is UTF-8 conform, no further action is required. For
+    If a web application is UTF-8 conform, no further action is required. For
     applications depending on paths in non UTF-8 encodings for I/O, an explicit
     INI directive has to be set. The encoding INI settings check relies on the
     order in the core:
@@ -443,8 +448,26 @@ PHP 7.1 UPGRADE NOTES
     particular console program used. PHP automatically sets the console codepage
     according to the encoding rules from php.ini. Using alternative consoles
     instead of cmd.exe directly might bring better experience in some cases.
+
     Nevertheless be aware, runtime codepage switch after the request start
-    might bring unexpected side effects on CLI. The preferrable way is php.ini.
+    might bring unexpected side effects on CLI. The preferrable way is php.ini,
+    When PHP CLI is used in a console emulator, that doesn't support Unicode,
+    it might possibly be required, to avoid changing the console codepage. The
+    best way to achieve it is by setting the default or internal encoding to
+    correspond the ANSI codepage. Another method is to set the INI directives
+    output_encoding and input_encoding to the required codepage, in which case
+    however the difference between internal and I/O codepage is likely to cause
+    mojibake. In rare cases, if PHP happens to crash gracefully, the original
+    console codepage might be not restored. In this case, the chcp command
+    can be used, to restore it manually.
+
+    Special awareness for the DBCS systems - the codepage switch on runtime
+    using ini_set() is likely to cause display issues. The difference to the
+    non DBCS systems is, that the extended characters require two console cells
+    to be displayed. In certain case, only the mapping of the characters into
+    the glyph set of the font could happen, no actual font change. This is the
+    nature of DBCS systems, the most simple way to prevent display issues is
+    to avoid usage of ini_set() for the codepage change.
 
     As a result of UTF-8 support in the streams, PHP scripts are not limited
     to ASCII or ANSI filenames anymore. This is supported out of the box on
@@ -456,8 +479,10 @@ PHP 7.1 UPGRADE NOTES
     2048 bytes. Be aware, that the path segment limit (basename length) still
     persists.
 
-    The recommended way to handle file paths, I/O and other related topics is
-    by utilizing UTF-8.
+    For the best portability, it is strongely recommended to handle filenames,
+    I/O and other related topics UTF-8. Additionally, for the console applications,
+    the usage of a TrueType font is preferrable and the usage of ini_set() for
+    the codepage change is discouraged.
 
   . Support for ftok()
 

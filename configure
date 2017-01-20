@@ -3650,7 +3650,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
 
 PHP_MAJOR_VERSION=7
 PHP_MINOR_VERSION=1
-PHP_RELEASE_VERSION=0
+PHP_RELEASE_VERSION=1
 PHP_EXTRA_VERSION=""
 PHP_VERSION="$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION.$PHP_RELEASE_VERSION$PHP_EXTRA_VERSION"
 PHP_VERSION_ID=`expr $PHP_MAJOR_VERSION \* 10000 + $PHP_MINOR_VERSION \* 100 + $PHP_RELEASE_VERSION`
@@ -46418,7 +46418,7 @@ EOF
 
 
     header_path=ext/json
-    for header_file in php_json.h; do
+    for header_file in php_json.h php_json_parser.h php_json_scanner.h; do
       hp_hf="$header_path/$header_file"
 
 

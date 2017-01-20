@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2016 The PHP Group                                |
+   | Copyright (c) 1997-2017 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -294,7 +294,7 @@ PHPAPI int php_mail(char *to, char *subject, char *message, char *headers, char 
 		time(&curtime);
 		date_str = php_format_date("d-M-Y H:i:s e", 13, curtime, 1);
 
-		l = spprintf(&tmp, 0, "[%s] mail() on [%s:%d]: To: %s -- Headers: %s\n", ZSTR_VAL(date_str), zend_get_executed_filename(), zend_get_executed_lineno(), to, hdr ? hdr : "");
+		l = spprintf(&tmp, 0, "[%s] mail() on [%s:%d]: To: %s -- Headers: %s -- Subject: %s\n", ZSTR_VAL(date_str), zend_get_executed_filename(), zend_get_executed_lineno(), to, hdr ? hdr : "", subject);
 
 		zend_string_free(date_str);
 
