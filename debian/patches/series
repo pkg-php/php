@@ -46,3 +46,4 @@
 0046-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
 0047-Adjust-tidy-extension-for-tidy-html5.patch
 0048-Merge-OpenSSL-1.1.0-support-from-PHP-7.1-branch.patch
+0049-Fix-check-for-CURL-include-in-M-A-directory.patch
