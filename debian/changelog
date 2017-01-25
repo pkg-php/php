@@ -2,8 +2,9 @@ php7.0 (7.0.15-1) unstable; urgency=medium
 
   * New upstream version 7.0.15
   * Rebase patches on top of 7.0.15
+  * Fix check for CURL include in M-A directory
 
- -- Ondřej Surý <ondrej@debian.org>  Fri, 20 Jan 2017 09:51:23 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 25 Jan 2017 11:17:41 +0100
 
 php7.0 (7.0.14-2) unstable; urgency=medium
 
