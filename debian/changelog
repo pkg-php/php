@@ -1,3 +1,10 @@
+php7.0 (7.0.16-2+asan) unstable; urgency=medium
+
+  * Compile with address sanitizer
+  * Disable RTLD_DEEPBIND for ASAN builds
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 15 Feb 2017 11:15:26 +0100
+
 php7.0 (7.0.16-2) unstable; urgency=medium
 
   * Put the GMP Multi-Arch fix back, it's needed on platforms where
