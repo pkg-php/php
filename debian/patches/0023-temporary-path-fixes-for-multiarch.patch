@@ -47,10 +47,18 @@ index d2e6fd943..f3aec83d6 100644
        PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/$PHP_LIBDIR, -l$LIB,[
          AC_TRY_LINK([
 diff --git a/ext/gmp/config.m4 b/ext/gmp/config.m4
-index 22cca7eaf..1dc9f2cbb 100644
+index 22cca7eaf..0047402f0 100644
 --- a/ext/gmp/config.m4
 +++ b/ext/gmp/config.m4
-@@ -23,6 +23,7 @@ if test "$PHP_GMP" != "no"; then
+@@ -7,6 +7,7 @@ if test "$PHP_GMP" != "no"; then
+ 
+   for i in $PHP_GMP /usr/local /usr; do
+     test -f $i/include/gmp.h && GMP_DIR=$i && break
++    test -f $i/include/$DEB_HOST_MULTIARCH/gmp.h && GMP_DIR=$i && break
+     test -f $i/include/$MACHINE_INCLUDES/gmp.h && GMP_DIR=$i && break
+   done
+ 
+@@ -23,6 +24,7 @@ if test "$PHP_GMP" != "no"; then
  
    PHP_ADD_LIBRARY_WITH_PATH(gmp, $GMP_DIR/$PHP_LIBDIR, GMP_SHARED_LIBADD)
    PHP_ADD_INCLUDE($GMP_DIR/include)
