@@ -901,6 +901,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -1146,6 +1147,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1398,6 +1400,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1535,7 +1546,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1688,6 +1699,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -3650,7 +3662,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
 
 PHP_MAJOR_VERSION=7
 PHP_MINOR_VERSION=1
-PHP_RELEASE_VERSION=1
+PHP_RELEASE_VERSION=2
 PHP_EXTRA_VERSION=""
 PHP_VERSION="$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION.$PHP_RELEASE_VERSION$PHP_EXTRA_VERSION"
 PHP_VERSION_ID=`expr $PHP_MAJOR_VERSION \* 10000 + $PHP_MINOR_VERSION \* 100 + $PHP_RELEASE_VERSION`
@@ -15146,8 +15158,11 @@ main() {
   dir = opendir("/");
   if (!dir)
     exit(1);
-  if (readdir_r(dir, (struct dirent *) entry, &pentry) == 0)
+  if (readdir_r(dir, (struct dirent *) entry, &pentry) == 0) {
+    close(dir);
     exit(0);
+  }
+  close(dir);
   exit(1);
 }
 
@@ -38347,8 +38362,11 @@ $as_echo "$ext_output" >&6; }
 
 if test "$PHP_GMP" != "no"; then
 
+  MACHINE_INCLUDES=$($CC -dumpmachine)
+
   for i in $PHP_GMP /usr/local /usr; do
     test -f $i/include/gmp.h && GMP_DIR=$i && break
+    test -f $i/include/$MACHINE_INCLUDES/gmp.h && GMP_DIR=$i && break
   done
 
   if test -z "$GMP_DIR"; then
@@ -45533,15 +45551,15 @@ EOF
   case $host_alias in
     *aix*)
       suffix=so
-      link_cmd='$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -Wl,-G -o '$ext_builddir'/phpintl.la -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(PHPINTL_SHARED_LIBADD) && mv -f '$ext_builddir'/.libs/phpintl.so '$ext_builddir'/phpintl.so'
+      link_cmd='$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -Wl,-G -o '$ext_builddir'/phpintl.la -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(PHPINTL_SHARED_LIBADD) && mv -f '$ext_builddir'/.libs/phpintl.so '$ext_builddir'/phpintl.so'
       ;;
     *netware*)
       suffix=nlm
-      link_cmd='$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -shared -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) -L$(top_builddir)/netware -lphp7lib $(INTL_SHARED_LIBADD)'
+      link_cmd='$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -shared -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) -L$(top_builddir)/netware -lphp7lib $(INTL_SHARED_LIBADD)'
       ;;
     *)
       suffix=la
-      link_cmd='$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(PHPINTL_SHARED_LIBADD)'
+      link_cmd='$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(PHPINTL_SHARED_LIBADD)'
       ;;
   esac
 
@@ -45570,15 +45588,15 @@ EOF
   case $host_alias in
     *aix*)
       suffix=so
-      link_cmd='$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -Wl,-G -o '$ext_builddir'/intl.la -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(INTL_SHARED_LIBADD) && mv -f '$ext_builddir'/.libs/intl.so '$ext_builddir'/intl.so'
+      link_cmd='$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -Wl,-G -o '$ext_builddir'/intl.la -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(INTL_SHARED_LIBADD) && mv -f '$ext_builddir'/.libs/intl.so '$ext_builddir'/intl.so'
       ;;
     *netware*)
       suffix=nlm
-      link_cmd='$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -shared -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) -L$(top_builddir)/netware -lphp7lib $(L_SHARED_LIBADD)'
+      link_cmd='$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -shared -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) -L$(top_builddir)/netware -lphp7lib $(L_SHARED_LIBADD)'
       ;;
     *)
       suffix=la
-      link_cmd='$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(INTL_SHARED_LIBADD)'
+      link_cmd='$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_intl) $(INTL_SHARED_LIBADD)'
       ;;
   esac
 
@@ -71091,7 +71109,7 @@ int main(int argc, char *argv[])
 {
 	char buf[64];
 
-	return ttyname_r(0, buf, 64) ? 1 : 0;
+	return !ttyname_r(0, buf, 64);
 }
 
 _ACEOF
@@ -80357,6 +80375,444 @@ $as_echo "#define HAVE_LIBSOCKET 1" >>confdefs.h
   esac
 
 
+  unset ac_cv_func_res_ndestroy
+  unset ac_cv_func___res_ndestroy
+  unset found
+
+  ac_fn_c_check_func "$LINENO" "res_ndestroy" "ac_cv_func_res_ndestroy"
+if test "x$ac_cv_func_res_ndestroy" = xyes; then :
+  found=yes
+else
+   ac_fn_c_check_func "$LINENO" "__res_ndestroy" "ac_cv_func___res_ndestroy"
+if test "x$ac_cv_func___res_ndestroy" = xyes; then :
+  found=yes
+else
+  found=no
+fi
+
+fi
+
+
+  case $found in
+  yes)
+
+$as_echo "#define HAVE_RES_NDESTROY 1" >>confdefs.h
+
+    ac_cv_func_res_ndestroy=yes
+  ;;
+
+    *)
+
+  unset ac_cv_lib_resolv_res_ndestroy
+  unset ac_cv_lib_resolv___res_ndestroy
+  unset found
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for res_ndestroy in -lresolv" >&5
+$as_echo_n "checking for res_ndestroy in -lresolv... " >&6; }
+if ${ac_cv_lib_resolv_res_ndestroy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lresolv  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char res_ndestroy ();
+int
+main ()
+{
+return res_ndestroy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_resolv_res_ndestroy=yes
+else
+  ac_cv_lib_resolv_res_ndestroy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_resolv_res_ndestroy" >&5
+$as_echo "$ac_cv_lib_resolv_res_ndestroy" >&6; }
+if test "x$ac_cv_lib_resolv_res_ndestroy" = xyes; then :
+  found=yes
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __res_ndestroy in -lresolv" >&5
+$as_echo_n "checking for __res_ndestroy in -lresolv... " >&6; }
+if ${ac_cv_lib_resolv___res_ndestroy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lresolv  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char __res_ndestroy ();
+int
+main ()
+{
+return __res_ndestroy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_resolv___res_ndestroy=yes
+else
+  ac_cv_lib_resolv___res_ndestroy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_resolv___res_ndestroy" >&5
+$as_echo "$ac_cv_lib_resolv___res_ndestroy" >&6; }
+if test "x$ac_cv_lib_resolv___res_ndestroy" = xyes; then :
+  found=yes
+else
+  found=no
+fi
+
+
+fi
+
+
+  if test "$found" = "yes"; then
+    ac_libs=$LIBS
+    LIBS="$LIBS -lresolv"
+    if test "$cross_compiling" = yes; then :
+  found=no
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+main() { return (0); }
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  found=yes
+else
+  found=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+    LIBS=$ac_libs
+  fi
+
+  if test "$found" = "yes"; then
+
+
+  case resolv in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="-lresolv $LIBS"
+   ;;
+  esac
+
+
+
+$as_echo "#define HAVE_RES_NDESTROY 1" >>confdefs.h
+
+
+$as_echo "#define HAVE_LIBRESOLV 1" >>confdefs.h
+
+    ac_cv_func_res_ndestroy=yes
+  else
+
+
+  unset ac_cv_lib_bind_res_ndestroy
+  unset ac_cv_lib_bind___res_ndestroy
+  unset found
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for res_ndestroy in -lbind" >&5
+$as_echo_n "checking for res_ndestroy in -lbind... " >&6; }
+if ${ac_cv_lib_bind_res_ndestroy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lbind  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char res_ndestroy ();
+int
+main ()
+{
+return res_ndestroy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_bind_res_ndestroy=yes
+else
+  ac_cv_lib_bind_res_ndestroy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bind_res_ndestroy" >&5
+$as_echo "$ac_cv_lib_bind_res_ndestroy" >&6; }
+if test "x$ac_cv_lib_bind_res_ndestroy" = xyes; then :
+  found=yes
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __res_ndestroy in -lbind" >&5
+$as_echo_n "checking for __res_ndestroy in -lbind... " >&6; }
+if ${ac_cv_lib_bind___res_ndestroy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lbind  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char __res_ndestroy ();
+int
+main ()
+{
+return __res_ndestroy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_bind___res_ndestroy=yes
+else
+  ac_cv_lib_bind___res_ndestroy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bind___res_ndestroy" >&5
+$as_echo "$ac_cv_lib_bind___res_ndestroy" >&6; }
+if test "x$ac_cv_lib_bind___res_ndestroy" = xyes; then :
+  found=yes
+else
+  found=no
+fi
+
+
+fi
+
+
+  if test "$found" = "yes"; then
+    ac_libs=$LIBS
+    LIBS="$LIBS -lbind"
+    if test "$cross_compiling" = yes; then :
+  found=no
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+main() { return (0); }
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  found=yes
+else
+  found=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+    LIBS=$ac_libs
+  fi
+
+  if test "$found" = "yes"; then
+
+
+  case bind in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="-lbind $LIBS"
+   ;;
+  esac
+
+
+
+$as_echo "#define HAVE_RES_NDESTROY 1" >>confdefs.h
+
+
+$as_echo "#define HAVE_LIBBIND 1" >>confdefs.h
+
+    ac_cv_func_res_ndestroy=yes
+  else
+
+
+  unset ac_cv_lib_socket_res_ndestroy
+  unset ac_cv_lib_socket___res_ndestroy
+  unset found
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for res_ndestroy in -lsocket" >&5
+$as_echo_n "checking for res_ndestroy in -lsocket... " >&6; }
+if ${ac_cv_lib_socket_res_ndestroy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lsocket  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char res_ndestroy ();
+int
+main ()
+{
+return res_ndestroy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_socket_res_ndestroy=yes
+else
+  ac_cv_lib_socket_res_ndestroy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_socket_res_ndestroy" >&5
+$as_echo "$ac_cv_lib_socket_res_ndestroy" >&6; }
+if test "x$ac_cv_lib_socket_res_ndestroy" = xyes; then :
+  found=yes
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __res_ndestroy in -lsocket" >&5
+$as_echo_n "checking for __res_ndestroy in -lsocket... " >&6; }
+if ${ac_cv_lib_socket___res_ndestroy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lsocket  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char __res_ndestroy ();
+int
+main ()
+{
+return __res_ndestroy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_socket___res_ndestroy=yes
+else
+  ac_cv_lib_socket___res_ndestroy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_socket___res_ndestroy" >&5
+$as_echo "$ac_cv_lib_socket___res_ndestroy" >&6; }
+if test "x$ac_cv_lib_socket___res_ndestroy" = xyes; then :
+  found=yes
+else
+  found=no
+fi
+
+
+fi
+
+
+  if test "$found" = "yes"; then
+    ac_libs=$LIBS
+    LIBS="$LIBS -lsocket"
+    if test "$cross_compiling" = yes; then :
+  found=no
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+main() { return (0); }
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  found=yes
+else
+  found=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+    LIBS=$ac_libs
+  fi
+
+  if test "$found" = "yes"; then
+
+
+  case socket in
+  c|c_r|pthread*) ;;
+  *)
+      LIBS="-lsocket $LIBS"
+   ;;
+  esac
+
+
+
+$as_echo "#define HAVE_RES_NDESTROY 1" >>confdefs.h
+
+
+$as_echo "#define HAVE_LIBSOCKET 1" >>confdefs.h
+
+    ac_cv_func_res_ndestroy=yes
+  else
+
+  :
+
+  fi
+
+
+  fi
+
+
+  fi
+
+ ;;
+
+  esac
+
+
   unset ac_cv_func_dns_search
   unset ac_cv_func___dns_search
   unset found
@@ -82478,18 +82934,6 @@ fi
 
 cat >>confdefs.h <<_ACEOF
 #define HAVE_DECL_ARC4RANDOM_BUF $ac_have_decl
-_ACEOF
-
-
-ac_fn_c_check_decl "$LINENO" "getrandom" "ac_cv_have_decl_getrandom" "$ac_includes_default"
-if test "x$ac_cv_have_decl_getrandom" = xyes; then :
-  ac_have_decl=1
-else
-  ac_have_decl=0
-fi
-
-cat >>confdefs.h <<_ACEOF
-#define HAVE_DECL_GETRANDOM $ac_have_decl
 _ACEOF
 
 
@@ -95386,7 +95830,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 95389 "configure"
+#line 95833 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -97439,7 +97883,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 97442 "configure"' > conftest.$ac_ext
+  echo '#line 97886 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -98837,7 +99281,7 @@ else
       LDFLAGS="$LDFLAGS -Wl,-exported_symbols_list,conftest.sym"
 
 cat > conftest.$ac_ext <<EOF
-#line 98840 "configure"
+#line 99284 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -98995,11 +99439,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:98998: $lt_compile\"" >&5)
+   (eval echo "\"configure:99442: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "configure:99002: \$? = $ac_status" >&5
+   echo "configure:99446: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -99293,11 +99737,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:99296: $lt_compile\"" >&5)
+   (eval echo "\"configure:99740: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "configure:99300: \$? = $ac_status" >&5
+   echo "configure:99744: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -99397,11 +99841,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:99400: $lt_compile\"" >&5)
+   (eval echo "\"configure:99844: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "configure:99404: \$? = $ac_status" >&5
+   echo "configure:99848: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -99861,7 +100305,7 @@ _LT_EOF
        # Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 99864 "configure"
+#line 100308 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -99903,7 +100347,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	 # Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 99906 "configure"
+#line 100350 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -101420,7 +101864,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 101423 "configure"
+#line 101867 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -101520,7 +101964,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 101523 "configure"
+#line 101967 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -102585,7 +103029,7 @@ case $host_os in
       # Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 102588 "configure"
+#line 103032 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -102628,7 +103072,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	# Determine the default libpath from the value encoded in an empty executable.
 
 cat > conftest.$ac_ext <<EOF
-#line 102631 "configure"
+#line 103075 "configure"
 #include "confdefs.h"
 int main() {
 ; return 0; }
@@ -103880,11 +104324,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:103883: $lt_compile\"" >&5)
+   (eval echo "\"configure:104327: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "configure:103887: \$? = $ac_status" >&5
+   echo "configure:104331: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -103984,11 +104428,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"configure:103987: $lt_compile\"" >&5)
+   (eval echo "\"configure:104431: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "configure:103991: \$? = $ac_status" >&5
+   echo "configure:104435: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized

@@ -152,6 +152,7 @@ ZEND_TSRMLS_CACHE_DEFINE()
 #endif
 
 ZEND_API zend_utility_values zend_uv;
+ZEND_API zend_bool zend_dtrace_enabled;
 
 /* version information */
 static char *zend_version_info;
@@ -312,7 +313,6 @@ ZEND_API void zend_print_flat_zval_r(zval *expr) /* {{{ */
 
 static void zend_print_zval_r_to_buf(smart_str *buf, zval *expr, int indent) /* {{{ */
 {
-	ZVAL_DEREF(expr);
 	switch (Z_TYPE_P(expr)) {
 		case IS_ARRAY:
 			smart_str_appends(buf, "Array\n");
@@ -697,6 +697,7 @@ int zend_startup(zend_utility_functions *utility_functions, char **extensions) /
 		char *tmp = getenv("USE_ZEND_DTRACE");
 
 		if (tmp && zend_atoi(tmp, 0)) {
+			zend_dtrace_enabled = 1;
 			zend_compile_file = dtrace_compile_file;
 			zend_execute_ex = dtrace_execute_ex;
 			zend_execute_internal = dtrace_execute_internal;
