@@ -9,10 +9,10 @@ Subject: session_save_path
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ext/session/session.c b/ext/session/session.c
-index c06c5a3a0..aa40aa321 100644
+index d672b0c28..308dd45b0 100644
 --- a/ext/session/session.c
 +++ b/ext/session/session.c
-@@ -703,7 +703,7 @@ static PHP_INI_MH(OnUpdateRfc1867Freq) /* {{{ */
+@@ -702,7 +702,7 @@ static PHP_INI_MH(OnUpdateRfc1867Freq) /* {{{ */
  /* {{{ PHP_INI
   */
  PHP_INI_BEGIN()
@@ -22,7 +22,7 @@ index c06c5a3a0..aa40aa321 100644
  	PHP_INI_ENTRY("session.save_handler",           "files",     PHP_INI_ALL, OnUpdateSaveHandler)
  	STD_PHP_INI_BOOLEAN("session.auto_start",       "0",         PHP_INI_PERDIR, OnUpdateBool,   auto_start,         php_ps_globals,    ps_globals)
 diff --git a/php.ini-development b/php.ini-development
-index ae383812f..b03557700 100644
+index 1badee26c..529f01ebf 100644
 --- a/php.ini-development
 +++ b/php.ini-development
 @@ -1358,7 +1358,7 @@ session.save_handler = files
@@ -35,7 +35,7 @@ index ae383812f..b03557700 100644
  ; Whether to use strict session mode.
  ; Strict session mode does not accept uninitialized session ID and regenerate
 diff --git a/php.ini-production b/php.ini-production
-index 5207f1223..108016c72 100644
+index 699951f00..d99c8e43b 100644
 --- a/php.ini-production
 +++ b/php.ini-production
 @@ -1352,7 +1352,7 @@ session.save_handler = files
