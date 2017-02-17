@@ -7,16 +7,16 @@ Subject: libtool2.2
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 9bd3b9a5d..7a0e599cc 100644
+index 13c2c7494..128168a8f 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -9,7 +9,9 @@ includedir="$prefix/include/php/@DEBIAN_PHP_API@"
  builddir="`pwd`"
  SED="@SED@"
  
--FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4"
+-FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool libtool.m4 ax_check_compile_flag.m4"
 +aclocaldir="$prefix/share/aclocal"
-+FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool"
++FILES_BUILD="mkdep.awk scan_makefile_in.awk shtool ax_check_compile_flag.m4"
 +LIBTOOL_FILES="libtool.m4 ltoptions.m4 ltsugar.m4 ltversion.m4 lt~obsolete.m4"
  FILES="acinclude.m4 Makefile.global config.sub config.guess ltmain.sh run-tests*.php"
  CLEAN_FILES="$FILES *.o *.lo *.la .deps .libs/ build/ modules/ install-sh \
