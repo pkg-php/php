@@ -219,10 +219,9 @@ static inline time_t FileTimeToUnixTime(const FILETIME *FileTime)
 
 CWD_API int php_sys_readlink(const char *link, char *target, size_t target_len){ /* {{{ */
 	HANDLE hFile;
-	DWORD dwRet;
 	wchar_t *linkw = php_win32_ioutil_any_to_w(link), targetw[MAXPATHLEN];
-	size_t _tmp_len;
-	char *_tmp;
+	size_t ret_len, targetw_len, offset = 0;
+	char *ret;
 
 	if (!linkw) {
 		return -1;
@@ -251,46 +250,40 @@ CWD_API int php_sys_readlink(const char *link, char *target, size_t target_len){
 		with VS2012 and earlier, and seems not to be fixed till
 		now. Thus, correcting target_len so it's suddenly don't
 		overflown. */
-	dwRet = GetFinalPathNameByHandleW(hFile, targetw, MAXPATHLEN, VOLUME_NAME_DOS);
-	if(dwRet >= target_len || dwRet >= MAXPATHLEN || dwRet == 0) {
+	targetw_len = GetFinalPathNameByHandleW(hFile, targetw, MAXPATHLEN, VOLUME_NAME_DOS);
+	if(targetw_len >= target_len || targetw_len >= MAXPATHLEN || targetw_len == 0) {
 		free(linkw);
 		CloseHandle(hFile);
 		return -1;
 	}
 
-	_tmp = php_win32_ioutil_conv_w_to_any(targetw, dwRet, &_tmp_len);
-	if (!_tmp || _tmp_len >= MAXPATHLEN) {
-		CloseHandle(hFile);
-		free(linkw);
-		return -1;
-	}
-	memcpy(target, _tmp, _tmp_len);
-	free(_tmp);
+	if(targetw_len > 4) {
+		/* Skip first 4 characters if they are "\\?\" */
+		if(targetw[0] == L'\\' && targetw[1] == L'\\' && targetw[2] == L'?' && targetw[3] ==  L'\\') {
+			offset = 4;
 
-	CloseHandle(hFile);
-	free(linkw);
-
-	if(dwRet > 4) {
-		/* Skip first 4 characters if they are "\??\" */
-		if(target[0] == '\\' && target[1] == '\\' && target[2] == '?' && target[3] ==  '\\') {
-			char tmp[MAXPATHLEN];
-			unsigned int offset = 4;
-			dwRet -= 4;
-
-			/* \??\UNC\ */
-			if (dwRet > 7 && target[4] == 'U' && target[5] == 'N' && target[6] == 'C') {
+			/* \\?\UNC\ */
+			if (targetw_len > 7 && targetw[4] == L'U' && targetw[5] == L'N' && targetw[6] == L'C') {
 				offset += 2;
-				dwRet -= 2;
-				target[offset] = '\\';
+				targetw[offset] = L'\\';
 			}
-
-			memcpy(tmp, target + offset, dwRet);
-			memcpy(target, tmp, dwRet);
 		}
 	}
 
-	target[dwRet] = '\0';
-	return dwRet;
+	ret = php_win32_ioutil_conv_w_to_any(targetw + offset, targetw_len - offset, &ret_len);
+	if (!ret || ret_len >= MAXPATHLEN) {
+		CloseHandle(hFile);
+		free(linkw);
+		free(ret);
+		return -1;
+	}
+	memcpy(target, ret, ret_len + 1);
+
+	free(ret);
+	CloseHandle(hFile);
+	free(linkw);
+
+	return ret_len;
 }
 /* }}} */
 
@@ -920,9 +913,13 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 			int bufindex = 0, isabsolute = 0;
 			wchar_t * reparsetarget;
 			BOOL isVolume = FALSE;
-			char *printname = NULL, *substitutename = NULL;
-			int substitutename_len;
+#if VIRTUAL_CWD_DEBUG
+			char *printname = NULL;
+#endif
+			char *substitutename = NULL;
+			size_t substitutename_len;
 			int substitutename_off = 0;
+			wchar_t tmpsubstname[MAXPATHLEN];
 
 			if(++(*ll) > LINK_MAX) {
 				free_alloca(tmp, use_heap);
@@ -957,6 +954,7 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 			if(pbuffer->ReparseTag == IO_REPARSE_TAG_SYMLINK) {
 				reparsetarget = pbuffer->SymbolicLinkReparseBuffer.ReparseTarget;
 				isabsolute = (pbuffer->SymbolicLinkReparseBuffer.Flags == 0) ? 1 : 0;
+#if VIRTUAL_CWD_DEBUG
 				printname = php_win32_ioutil_w_to_any(reparsetarget + pbuffer->MountPointReparseBuffer.PrintNameOffset  / sizeof(WCHAR));
 				if (!printname) {
 					free_alloca(pbuffer, use_heap_large);
@@ -964,13 +962,25 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 					FREE_PATHW()
 					return -1;
 				}
+#endif
 
 				substitutename_len = pbuffer->MountPointReparseBuffer.SubstituteNameLength / sizeof(WCHAR);
-				substitutename = php_win32_ioutil_w_to_any(reparsetarget + pbuffer->MountPointReparseBuffer.SubstituteNameOffset / sizeof(WCHAR));
-				if (!substitutename) {
+				if (substitutename_len >= MAXPATHLEN) {
 					free_alloca(pbuffer, use_heap_large);
 					free_alloca(tmp, use_heap);
+					FREE_PATHW()
+					return -1;
+				}
+				memmove(tmpsubstname, reparsetarget + pbuffer->MountPointReparseBuffer.SubstituteNameOffset / sizeof(WCHAR), pbuffer->MountPointReparseBuffer.SubstituteNameLength);
+				tmpsubstname[substitutename_len] = L'\0';
+				substitutename = php_win32_cp_conv_w_to_any(tmpsubstname, substitutename_len, &substitutename_len);
+				if (!substitutename || substitutename_len >= MAXPATHLEN) {
+					free_alloca(pbuffer, use_heap_large);
+					free_alloca(tmp, use_heap);
+					free(substitutename);
+#if VIRTUAL_CWD_DEBUG
 					free(printname);
+#endif
 					FREE_PATHW()
 					return -1;
 				}
@@ -978,6 +988,7 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 			else if(pbuffer->ReparseTag == IO_REPARSE_TAG_MOUNT_POINT) {
 				isabsolute = 1;
 				reparsetarget = pbuffer->MountPointReparseBuffer.ReparseTarget;
+#if VIRTUAL_CWD_DEBUG
 				printname = php_win32_ioutil_w_to_any(reparsetarget + pbuffer->MountPointReparseBuffer.PrintNameOffset  / sizeof(WCHAR));
 				if (!printname) {
 					free_alloca(pbuffer, use_heap_large);
@@ -985,14 +996,26 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 					FREE_PATHW()
 					return -1;
 				}
+#endif
 
 
 				substitutename_len = pbuffer->MountPointReparseBuffer.SubstituteNameLength / sizeof(WCHAR);
-				substitutename = php_win32_ioutil_w_to_any(reparsetarget + pbuffer->MountPointReparseBuffer.SubstituteNameOffset / sizeof(WCHAR));
-				if (!substitutename) {
+				if (substitutename_len >= MAXPATHLEN) {
 					free_alloca(pbuffer, use_heap_large);
 					free_alloca(tmp, use_heap);
+					FREE_PATHW()
+					return -1;
+				}
+				memmove(tmpsubstname, reparsetarget + pbuffer->MountPointReparseBuffer.SubstituteNameOffset / sizeof(WCHAR), pbuffer->MountPointReparseBuffer.SubstituteNameLength);
+				tmpsubstname[substitutename_len] = L'\0';
+				substitutename = php_win32_cp_conv_w_to_any(tmpsubstname, substitutename_len, &substitutename_len);
+				if (!substitutename || substitutename_len >= MAXPATHLEN) {
+					free_alloca(pbuffer, use_heap_large);
+					free_alloca(tmp, use_heap);
+					free(substitutename);
+#if VIRTUAL_CWD_DEBUG
 					free(printname);
+#endif
 					FREE_PATHW()
 					return -1;
 				}
@@ -1055,9 +1078,9 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 			fprintf(stderr, "reparse: print: %s ", printname);
 			fprintf(stderr, "sub: %s ", substitutename);
 			fprintf(stderr, "resolved: %s ", path);
+			free(printname);
 #endif
 			free_alloca(pbuffer, use_heap_large);
-			free(printname);
 			free(substitutename);
 
 			if(isabsolute == 1) {
