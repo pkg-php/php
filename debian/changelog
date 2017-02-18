@@ -1,3 +1,9 @@
+php7.1 (7.1.2-2) unstable; urgency=medium
+
+  * Apply patch to remedy missing getrandom syscall
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 18 Feb 2017 12:15:08 +0100
+
 php7.1 (7.1.2-1) unstable; urgency=medium
 
   * New upstream version 7.1.2
