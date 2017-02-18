@@ -5,11 +5,11 @@ Subject: temporary-path-fixes-for-multiarch
 ---
  acinclude.m4            | 4 ++--
  ext/dba/config.m4       | 2 +-
- ext/gmp/config.m4       | 1 +
+ ext/gmp/config.m4       | 2 ++
  ext/ldap/config.m4      | 2 +-
  ext/pcre/config0.m4     | 2 +-
  ext/pdo_dblib/config.m4 | 2 +-
- 6 files changed, 7 insertions(+), 6 deletions(-)
+ 6 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/acinclude.m4 b/acinclude.m4
 index ca09bb750..7a1407eea 100644
