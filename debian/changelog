@@ -1,3 +1,11 @@
+php7.0 (7.0.16-2) unstable; urgency=medium
+
+  * Put the GMP Multi-Arch fix back, it's needed on platforms where
+    DEB_HOST_MULTIARCH != cc -dumpmachine
+  * Apply patch to remedy missing getrandom syscall
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 18 Feb 2017 13:48:34 +0100
+
 php7.0 (7.0.16-1) unstable; urgency=medium
 
   * New upstream version 7.0.16
