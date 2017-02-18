@@ -45,3 +45,4 @@
 0045-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0046-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
 0049-Fix-check-for-CURL-include-in-M-A-directory.patch
+0048-If-getrandom-syscall-is-unavailable-ENOSYS-try-to-fa.patch
