@@ -1,3 +1,10 @@
+php5.6 (5.6.30-4) experimental; urgency=medium
+
+  * Update OpenSSL 1.1 patch (gh#555)
+  * Refresh patches on Debian stretch
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 22 Feb 2017 18:47:54 +0100
+
 php5.6 (5.6.30-3) experimental; urgency=medium
 
   * Fix generating recommends for php extensions
