@@ -304,6 +304,7 @@ Replaces: ${php-odbc:Replaces}
 Breaks: ${php-odbc:Breaks}
 Conflicts: ${php-odbc:Conflicts}
 Provides: ${php-odbc:Provides}
+Recommends: ${php-odbc:Recommends}
 Description: ODBC module for PHP
  This package provides the ODBC module(s) for PHP.
  .
@@ -326,6 +327,7 @@ Replaces: ${php-readline:Replaces}
 Breaks: ${php-readline:Breaks}
 Conflicts: ${php-readline:Conflicts}
 Provides: ${php-readline:Provides}
+Recommends: ${php-readline:Recommends}
 Description: readline module for PHP
  This package provides the readline module(s) for PHP.
  .
@@ -348,6 +350,7 @@ Replaces: ${php-recode:Replaces}
 Breaks: ${php-recode:Breaks}
 Conflicts: ${php-recode:Conflicts}
 Provides: ${php-recode:Provides}
+Recommends: ${php-recode:Recommends}
 Description: recode module for PHP
  This package provides the recode module(s) for PHP.
  .
@@ -370,6 +373,7 @@ Replaces: ${php-sqlite3:Replaces}
 Breaks: ${php-sqlite3:Breaks}
 Conflicts: ${php-sqlite3:Conflicts}
 Provides: ${php-sqlite3:Provides}
+Recommends: ${php-sqlite3:Recommends}
 Description: SQLite3 module for PHP
  This package provides the SQLite3 module(s) for PHP.
  .
@@ -392,6 +396,7 @@ Replaces: ${php-xml:Replaces}
 Breaks: ${php-xml:Breaks}
 Conflicts: ${php-xml:Conflicts}
 Provides: ${php-xml:Provides}
+Recommends: ${php-xml:Recommends}
 Description: DOM, SimpleXML, WDDX, XML, and XSL module for PHP
  This package provides the DOM, SimpleXML, WDDX, XML, and XSL module(s) for PHP.
  .
@@ -414,6 +419,7 @@ Replaces: ${php-zip:Replaces}
 Breaks: ${php-zip:Breaks}
 Conflicts: ${php-zip:Conflicts}
 Provides: ${php-zip:Provides}
+Recommends: ${php-zip:Recommends}
 Description: Zip module for PHP
  This package provides the Zip module(s) for PHP.
  .
@@ -436,6 +442,7 @@ Replaces: ${php-sybase:Replaces}
 Breaks: ${php-sybase:Breaks}
 Conflicts: ${php-sybase:Conflicts}
 Provides: ${php-sybase:Provides}
+Recommends: ${php-sybase:Recommends}
 Description: Sybase module for PHP
  This package provides the Sybase module(s) for PHP.
  .
@@ -458,6 +465,7 @@ Replaces: ${php-gd:Replaces}
 Breaks: ${php-gd:Breaks}
 Conflicts: ${php-gd:Conflicts}
 Provides: ${php-gd:Provides}
+Recommends: ${php-gd:Recommends}
 Description: GD module for PHP
  This package provides the GD module(s) for PHP.
  .
@@ -480,6 +488,7 @@ Replaces: ${php-gmp:Replaces}
 Breaks: ${php-gmp:Breaks}
 Conflicts: ${php-gmp:Conflicts}
 Provides: ${php-gmp:Provides}
+Recommends: ${php-gmp:Recommends}
 Description: GMP module for PHP
  This package provides the GMP module(s) for PHP.
  .
@@ -502,6 +511,7 @@ Replaces: ${php-ldap:Replaces}
 Breaks: ${php-ldap:Breaks}
 Conflicts: ${php-ldap:Conflicts}
 Provides: ${php-ldap:Provides}
+Recommends: ${php-ldap:Recommends}
 Description: LDAP module for PHP
  This package provides the LDAP module(s) for PHP.
  .
@@ -524,6 +534,7 @@ Replaces: ${php-common:Replaces}
 Breaks: ${php-common:Breaks}
 Conflicts: ${php-common:Conflicts}
 Provides: ${php-common:Provides}
+Recommends: ${php-common:Recommends}
 Description: documentation, examples and common module for PHP
  This package provides the documentation, examples and common module(s) for PHP.
  .
@@ -546,6 +557,7 @@ Replaces: ${php-intl:Replaces}
 Breaks: ${php-intl:Breaks}
 Conflicts: ${php-intl:Conflicts}
 Provides: ${php-intl:Provides}
+Recommends: ${php-intl:Recommends}
 Description: Internationalisation module for PHP
  This package provides the Internationalisation module(s) for PHP.
  .
@@ -568,6 +580,7 @@ Replaces: ${php-mysql:Replaces}
 Breaks: ${php-mysql:Breaks}
 Conflicts: ${php-mysql:Conflicts}
 Provides: ${php-mysql:Provides}
+Recommends: ${php-mysql:Recommends}
 Description: MySQL module for PHP
  This package provides the MySQL module(s) for PHP.
  .
@@ -590,6 +603,7 @@ Replaces: ${php-mcrypt:Replaces}
 Breaks: ${php-mcrypt:Breaks}
 Conflicts: ${php-mcrypt:Conflicts}
 Provides: ${php-mcrypt:Provides}
+Recommends: ${php-mcrypt:Recommends}
 Description: libmcrypt module for PHP
  This package provides the libmcrypt module(s) for PHP.
  .
@@ -612,6 +626,7 @@ Replaces: ${php-snmp:Replaces}
 Breaks: ${php-snmp:Breaks}
 Conflicts: ${php-snmp:Conflicts}
 Provides: ${php-snmp:Provides}
+Recommends: ${php-snmp:Recommends}
 Description: SNMP module for PHP
  This package provides the SNMP module(s) for PHP.
  .
@@ -634,6 +649,7 @@ Replaces: ${php-curl:Replaces}
 Breaks: ${php-curl:Breaks}
 Conflicts: ${php-curl:Conflicts}
 Provides: ${php-curl:Provides}
+Recommends: ${php-curl:Recommends}
 Description: CURL module for PHP
  This package provides the CURL module(s) for PHP.
  .
@@ -656,6 +672,7 @@ Replaces: ${php-json:Replaces}
 Breaks: ${php-json:Breaks}
 Conflicts: ${php-json:Conflicts}
 Provides: ${php-json:Provides}
+Recommends: ${php-json:Recommends}
 Description: JSON module for PHP
  This package provides the JSON module(s) for PHP.
  .
@@ -678,6 +695,7 @@ Replaces: ${php-pgsql:Replaces}
 Breaks: ${php-pgsql:Breaks}
 Conflicts: ${php-pgsql:Conflicts}
 Provides: ${php-pgsql:Provides}
+Recommends: ${php-pgsql:Recommends}
 Description: PostgreSQL module for PHP
  This package provides the PostgreSQL module(s) for PHP.
  .
@@ -700,6 +718,7 @@ Replaces: ${php-mbstring:Replaces}
 Breaks: ${php-mbstring:Breaks}
 Conflicts: ${php-mbstring:Conflicts}
 Provides: ${php-mbstring:Provides}
+Recommends: ${php-mbstring:Recommends}
 Description: MBSTRING module for PHP
  This package provides the MBSTRING module(s) for PHP.
  .
@@ -722,6 +741,7 @@ Replaces: ${php-enchant:Replaces}
 Breaks: ${php-enchant:Breaks}
 Conflicts: ${php-enchant:Conflicts}
 Provides: ${php-enchant:Provides}
+Recommends: ${php-enchant:Recommends}
 Description: Enchant module for PHP
  This package provides the Enchant module(s) for PHP.
  .
@@ -744,6 +764,7 @@ Replaces: ${php-opcache:Replaces}
 Breaks: ${php-opcache:Breaks}
 Conflicts: ${php-opcache:Conflicts}
 Provides: ${php-opcache:Provides}
+Recommends: ${php-opcache:Recommends}
 Description: Zend OpCache module for PHP
  This package provides the Zend OpCache module(s) for PHP.
  .
@@ -766,6 +787,7 @@ Replaces: ${php-imap:Replaces}
 Breaks: ${php-imap:Breaks}
 Conflicts: ${php-imap:Conflicts}
 Provides: ${php-imap:Provides}
+Recommends: ${php-imap:Recommends}
 Description: IMAP module for PHP
  This package provides the IMAP module(s) for PHP.
  .
@@ -788,6 +810,7 @@ Replaces: ${php-bcmath:Replaces}
 Breaks: ${php-bcmath:Breaks}
 Conflicts: ${php-bcmath:Conflicts}
 Provides: ${php-bcmath:Provides}
+Recommends: ${php-bcmath:Recommends}
 Description: Bcmath module for PHP
  This package provides the Bcmath module(s) for PHP.
  .
@@ -810,6 +833,7 @@ Replaces: ${php-tidy:Replaces}
 Breaks: ${php-tidy:Breaks}
 Conflicts: ${php-tidy:Conflicts}
 Provides: ${php-tidy:Provides}
+Recommends: ${php-tidy:Recommends}
 Description: tidy module for PHP
  This package provides the tidy module(s) for PHP.
  .
@@ -832,6 +856,7 @@ Replaces: ${php-soap:Replaces}
 Breaks: ${php-soap:Breaks}
 Conflicts: ${php-soap:Conflicts}
 Provides: ${php-soap:Provides}
+Recommends: ${php-soap:Recommends}
 Description: SOAP module for PHP
  This package provides the SOAP module(s) for PHP.
  .
@@ -854,6 +879,7 @@ Replaces: ${php-dba:Replaces}
 Breaks: ${php-dba:Breaks}
 Conflicts: ${php-dba:Conflicts}
 Provides: ${php-dba:Provides}
+Recommends: ${php-dba:Recommends}
 Description: DBA module for PHP
  This package provides the DBA module(s) for PHP.
  .
@@ -876,6 +902,7 @@ Replaces: ${php-interbase:Replaces}
 Breaks: ${php-interbase:Breaks}
 Conflicts: ${php-interbase:Conflicts}
 Provides: ${php-interbase:Provides}
+Recommends: ${php-interbase:Recommends}
 Description: Interbase module for PHP
  This package provides the Interbase module(s) for PHP.
  .
@@ -898,6 +925,7 @@ Replaces: ${php-xmlrpc:Replaces}
 Breaks: ${php-xmlrpc:Breaks}
 Conflicts: ${php-xmlrpc:Conflicts}
 Provides: ${php-xmlrpc:Provides}
+Recommends: ${php-xmlrpc:Recommends}
 Description: XMLRPC-EPI module for PHP
  This package provides the XMLRPC-EPI module(s) for PHP.
  .
@@ -920,6 +948,7 @@ Replaces: ${php-pspell:Replaces}
 Breaks: ${php-pspell:Breaks}
 Conflicts: ${php-pspell:Conflicts}
 Provides: ${php-pspell:Provides}
+Recommends: ${php-pspell:Recommends}
 Description: pspell module for PHP
  This package provides the pspell module(s) for PHP.
  .
@@ -942,6 +971,7 @@ Replaces: ${php-bz2:Replaces}
 Breaks: ${php-bz2:Breaks}
 Conflicts: ${php-bz2:Conflicts}
 Provides: ${php-bz2:Provides}
+Recommends: ${php-bz2:Recommends}
 Description: bzip2 module for PHP
  This package provides the bzip2 module(s) for PHP.
  .
