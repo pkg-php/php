@@ -13,6 +13,7 @@ Replaces: ${php-@ext@:Replaces}
 Breaks: ${php-@ext@:Breaks}
 Conflicts: ${php-@ext@:Conflicts}
 Provides: ${php-@ext@:Provides}
+Recommends: ${php-@ext@:Recommends}
 Description: @description@ module for PHP
  This package provides the @description@ module(s) for PHP.
  .
