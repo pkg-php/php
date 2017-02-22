@@ -26,7 +26,7 @@ r1: initial revision
  2 files changed, 540 insertions(+), 4 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 20d7eeac1..eafbdb20f 100644
+index 20d7eea..eafbdb2 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -22,8 +22,22 @@
@@ -629,7 +629,7 @@ index 20d7eeac1..eafbdb20f 100644
  		tmp = NULL;
  	}
 diff --git a/ext/date/lib/timelib.m4 b/ext/date/lib/timelib.m4
-index c7255727f..4c837c77b 100644
+index c725572..4c837c7 100644
 --- a/ext/date/lib/timelib.m4
 +++ b/ext/date/lib/timelib.m4
 @@ -78,3 +78,17 @@ stdlib.h

@@ -9,7 +9,7 @@ Subject: session_save_path
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ext/session/session.c b/ext/session/session.c
-index b2d02361d..5380d2bc4 100644
+index b2d0236..5380d2b 100644
 --- a/ext/session/session.c
 +++ b/ext/session/session.c
 @@ -785,7 +785,7 @@ static ZEND_INI_MH(OnUpdateSmartStr) /* {{{ */
@@ -22,7 +22,7 @@ index b2d02361d..5380d2bc4 100644
  	PHP_INI_ENTRY("session.save_handler",           "files",     PHP_INI_ALL, OnUpdateSaveHandler)
  	STD_PHP_INI_BOOLEAN("session.auto_start",       "0",         PHP_INI_PERDIR, OnUpdateBool,   auto_start,         php_ps_globals,    ps_globals)
 diff --git a/php.ini-development b/php.ini-development
-index d7103b2c7..e275025a0 100644
+index d7103b2..e275025 100644
 --- a/php.ini-development
 +++ b/php.ini-development
 @@ -1448,7 +1448,7 @@ session.save_handler = files
@@ -35,7 +35,7 @@ index d7103b2c7..e275025a0 100644
  ; Whether to use strict session mode.
  ; Strict session mode does not accept uninitialized session ID and regenerate
 diff --git a/php.ini-production b/php.ini-production
-index f0894cac1..fbccf384b 100644
+index f0894ca..fbccf38 100644
 --- a/php.ini-production
 +++ b/php.ini-production
 @@ -1442,7 +1442,7 @@ session.save_handler = files

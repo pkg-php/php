@@ -7,7 +7,7 @@ Subject: lp564920-fix-big-files
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/main/streams/plain_wrapper.c b/main/streams/plain_wrapper.c
-index f472bad4b..9805bfcd4 100644
+index f472bad..9805bfc 100644
 --- a/main/streams/plain_wrapper.c
 +++ b/main/streams/plain_wrapper.c
 @@ -656,7 +656,13 @@ static int php_stdiop_set_option(php_stream *stream, int option, int value, void

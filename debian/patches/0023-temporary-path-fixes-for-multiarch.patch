@@ -14,7 +14,7 @@ Subject: temporary-path-fixes-for-multiarch
  8 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/acinclude.m4 b/acinclude.m4
-index f36d0b169..2f07db094 100644
+index f36d0b1..2f07db0 100644
 --- a/acinclude.m4
 +++ b/acinclude.m4
 @@ -2282,7 +2282,7 @@ AC_DEFUN([PHP_SETUP_KERBEROS],[
@@ -36,7 +36,7 @@ index f36d0b169..2f07db094 100644
        fi
        test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
 diff --git a/ext/dba/config.m4 b/ext/dba/config.m4
-index d2e6fd943..f3aec83d6 100644
+index d2e6fd9..f3aec83 100644
 --- a/ext/dba/config.m4
 +++ b/ext/dba/config.m4
 @@ -239,7 +239,7 @@ AC_DEFUN([PHP_DBA_DB_CHECK],[
@@ -49,7 +49,7 @@ index d2e6fd943..f3aec83d6 100644
        PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/$PHP_LIBDIR, -l$LIB,[
          AC_TRY_LINK([
 diff --git a/ext/gmp/config.m4 b/ext/gmp/config.m4
-index 2140aaf70..90f4800d8 100644
+index 2140aaf..90f4800 100644
 --- a/ext/gmp/config.m4
 +++ b/ext/gmp/config.m4
 @@ -9,6 +9,7 @@ if test "$PHP_GMP" != "no"; then
@@ -69,7 +69,7 @@ index 2140aaf70..90f4800d8 100644
    PHP_NEW_EXTENSION(gmp, gmp.c, $ext_shared)
    PHP_SUBST(GMP_SHARED_LIBADD)
 diff --git a/ext/ldap/config.m4 b/ext/ldap/config.m4
-index 947cebca3..b2da7b4ee 100644
+index 947cebc..b2da7b4 100644
 --- a/ext/ldap/config.m4
 +++ b/ext/ldap/config.m4
 @@ -117,7 +117,7 @@ if test "$PHP_LDAP" != "no"; then
@@ -82,7 +82,7 @@ index 947cebca3..b2da7b4ee 100644
      PHP_ADD_LIBRARY_WITH_PATH(ldap, $LDAP_LIBDIR, LDAP_SHARED_LIBADD)
  
 diff --git a/ext/mssql/config.m4 b/ext/mssql/config.m4
-index 2a298af73..90725eedc 100644
+index 2a298af..90725ee 100644
 --- a/ext/mssql/config.m4
 +++ b/ext/mssql/config.m4
 @@ -38,7 +38,7 @@ if test "$PHP_MSSQL" != "no"; then
@@ -95,7 +95,7 @@ index 2a298af73..90725eedc 100644
    fi
  
 diff --git a/ext/mysql/config.m4 b/ext/mysql/config.m4
-index 999c47bb2..838010b95 100644
+index 999c47b..838010b 100644
 --- a/ext/mysql/config.m4
 +++ b/ext/mysql/config.m4
 @@ -94,17 +94,15 @@ Note that the MySQL client library is not bundled anymore!])
@@ -123,7 +123,7 @@ index 999c47bb2..838010b95 100644
  Note that the MySQL client library is not bundled anymore!])
    fi
 diff --git a/ext/pcre/config0.m4 b/ext/pcre/config0.m4
-index bfe2009aa..71b98a156 100644
+index bfe2009..71b98a1 100644
 --- a/ext/pcre/config0.m4
 +++ b/ext/pcre/config0.m4
 @@ -21,7 +21,7 @@ PHP_ARG_WITH(pcre-regex,,
@@ -136,7 +136,7 @@ index bfe2009aa..71b98a156 100644
      done
      
 diff --git a/ext/pdo_dblib/config.m4 b/ext/pdo_dblib/config.m4
-index ba8244c72..04d3838fb 100644
+index ba8244c..04d3838 100644
 --- a/ext/pdo_dblib/config.m4
 +++ b/ext/pdo_dblib/config.m4
 @@ -46,7 +46,7 @@ if test "$PHP_PDO_DBLIB" != "no"; then

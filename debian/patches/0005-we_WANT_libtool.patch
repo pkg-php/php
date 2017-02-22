@@ -7,7 +7,7 @@ Subject: we_WANT_libtool
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/build/build2.mk b/build/build2.mk
-index caaa53faa..03671cf3f 100644
+index caaa53f..03671cf 100644
 --- a/build/build2.mk
 +++ b/build/build2.mk
 @@ -46,7 +46,8 @@ $(TOUCH_FILES):

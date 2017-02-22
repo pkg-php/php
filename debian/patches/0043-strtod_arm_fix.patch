@@ -7,7 +7,7 @@ Subject: strtod_arm_fix
  1 file changed, 19 insertions(+), 8 deletions(-)
 
 diff --git a/Zend/zend_strtod.c b/Zend/zend_strtod.c
-index e74cf0eb8..7ec0366ec 100644
+index e74cf0e..7ec0366 100644
 --- a/Zend/zend_strtod.c
 +++ b/Zend/zend_strtod.c
 @@ -152,14 +152,25 @@ typedef unsigned long int uint32_t;

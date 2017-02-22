@@ -7,7 +7,7 @@ Subject: Don't put $(INSTALL_ROOT) into phar.phar exec stanza
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/ext/phar/Makefile.frag b/ext/phar/Makefile.frag
-index b8b1b42d4..ead651590 100644
+index b8b1b42..ead6515 100644
 --- a/ext/phar/Makefile.frag
 +++ b/ext/phar/Makefile.frag
 @@ -18,7 +18,7 @@ PHP_PHARCMD_EXECUTABLE = ` \

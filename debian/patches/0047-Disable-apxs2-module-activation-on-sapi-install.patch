@@ -7,7 +7,7 @@ Subject: Disable apxs2 module activation on sapi install
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sapi/apache2handler/config.m4 b/sapi/apache2handler/config.m4
-index f170ea95c..3b280dd55 100644
+index f170ea9..3b280dd 100644
 --- a/sapi/apache2handler/config.m4
 +++ b/sapi/apache2handler/config.m4
 @@ -69,7 +69,7 @@ if test "$PHP_APXS2" != "no"; then

@@ -7,7 +7,7 @@ Subject: php-5.4.0-dlopen
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Zend/zend.h b/Zend/zend.h
-index 35fa01332..3d9301845 100644
+index 35fa013..3d93018 100644
 --- a/Zend/zend.h
 +++ b/Zend/zend.h
 @@ -90,11 +90,11 @@
