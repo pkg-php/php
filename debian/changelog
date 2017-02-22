@@ -1,3 +1,9 @@
+php5.6 (5.6.30-3) experimental; urgency=medium
+
+  * Fix generating recommends for php extensions
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 22 Feb 2017 11:02:09 +0100
+
 php5.6 (5.6.30-2) experimental; urgency=medium
 
   * Add patches to fix CURL and OpenSSL 1.1 build failures
