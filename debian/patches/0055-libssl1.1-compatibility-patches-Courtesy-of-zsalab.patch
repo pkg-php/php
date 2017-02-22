@@ -1,15 +1,15 @@
-From: =?utf-8?q?Ond=C5=99ej_Sur=C3=BD?= <ondrej@sury.org>
-Date: Mon, 20 Feb 2017 13:40:20 +0100
-Subject: libssl1.1 compatibility patches (Courtesy of @zsalab)
+From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
+Date: Wed, 22 Feb 2017 18:46:59 +0100
+Subject: libssl1.1-compatibility-patches-Courtesy-of-zsalab
 
 ---
- ext/openssl/openssl.c | 2091 +++++++++++++++++++++++++++++++++----------------
+ ext/openssl/openssl.c | 2088 +++++++++++++++++++++++++++++++++----------------
  ext/openssl/xp_ssl.c  |    4 -
  ext/phar/util.c       |   13 +-
- 3 files changed, 1410 insertions(+), 698 deletions(-)
+ 3 files changed, 1407 insertions(+), 698 deletions(-)
 
 diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
-index f8641c62f..9d813f394 100644
+index f8641c6..bcc53c5 100644
 --- a/ext/openssl/openssl.c
 +++ b/ext/openssl/openssl.c
 @@ -2,7 +2,7 @@
@@ -2289,11 +2289,11 @@ index f8641c62f..9d813f394 100644
  					}
  					DH_free(dh);
 +				} else {
- 				}
- 				EVP_PKEY_free(pkey);
++				}
++				EVP_PKEY_free(pkey);
 +			} else {
- 			}
- 			RETURN_FALSE;
++			}
++			RETURN_FALSE;
 +#ifdef HAVE_EVP_PKEY_EC
 +		} else if (zend_hash_find(Z_ARRVAL_P(args), "ec", sizeof("ec"), (void**)&data) == SUCCESS &&
 +			Z_TYPE_PP(data) == IS_ARRAY) {
@@ -2377,7 +2377,7 @@ index f8641c62f..9d813f394 100644
 +					} else {
 +					}
 +				} else {
-+				}
+ 				}
 +			} else {
 +			}
 +clean_exit:
@@ -2391,9 +2391,9 @@ index f8641c62f..9d813f394 100644
 +				EC_KEY_free(eckey);
 +			}
 +			if (pkey != NULL) {
-+				EVP_PKEY_free(pkey);
-+			}
-+			RETURN_FALSE;
+ 				EVP_PKEY_free(pkey);
+ 			}
+ 			RETURN_FALSE;
 +#endif
  		}
 -	} 
@@ -2797,16 +2797,16 @@ index f8641c62f..9d813f394 100644
  				int i;
  				signers = PKCS7_get0_signers(p7, NULL, flags);
 +				if (signers != NULL) {
-+
+ 
+-				for(i = 0; i < sk_X509_num(signers); i++) {
+-					PEM_write_bio_X509(certout, sk_X509_value(signers, i));
 +					for (i = 0; i < sk_X509_num(signers); i++) {
 +						if (!PEM_write_bio_X509(certout, sk_X509_value(signers, i))) {
 +							RETVAL_LONG(-1);
 +							php_error_docref(NULL TSRMLS_CC, E_WARNING, "failed to write signer %d", i);
 +						}
 +					}
- 
--				for(i = 0; i < sk_X509_num(signers); i++) {
--					PEM_write_bio_X509(certout, sk_X509_value(signers, i));
++
 +					sk_X509_free(signers);
 +				} else {
 +					RETVAL_LONG(-1);
@@ -3456,7 +3456,7 @@ index f8641c62f..9d813f394 100644
  }
  /* }}} */
  
-@@ -5202,79 +5861,173 @@ static zend_bool php_openssl_validate_iv(char **piv, int *piv_len, int iv_requir
+@@ -5202,79 +5861,170 @@ static zend_bool php_openssl_validate_iv(char **piv, int *piv_len, int iv_requir
  	if (*piv_len <= 0) {
  		/* BC behavior */
  		*piv_len = iv_required_len;
@@ -3513,7 +3513,7 @@ index f8641c62f..9d813f394 100644
 +		key = (unsigned char*)*ppassword;
 +		*free_password = 0;
 +	}
- 
++
 +	max_iv_len = EVP_CIPHER_iv_length(cipher_type);
 +	if (enc && *piv_len == 0 && max_iv_len > 0 && !mode->is_aead) {
 +		php_error_docref(NULL TSRMLS_CC, E_WARNING,
@@ -3523,11 +3523,8 @@ index f8641c62f..9d813f394 100644
 +	if (!EVP_CipherInit_ex(cipher_ctx, cipher_type, NULL, NULL, NULL, enc)) {
 +		return FAILURE;
 +	}
-+	free_iv = php_openssl_validate_iv(piv, piv_len, max_iv_len);
-+	if (!free_iv) {
-+		return FAILURE;
-+	}
-+
++	free_iv = php_openssl_validate_iv(piv, piv_len, max_iv_len TSRMLS_CC);
+ 
 +	if (mode->is_single_run_aead && enc) {
 +		EVP_CIPHER_CTX_ctrl(cipher_ctx, mode->aead_set_tag_flag, tag_len, NULL);
 +	} else if (!enc && tag && tag_len > 0) {
@@ -3669,7 +3666,7 @@ index f8641c62f..9d813f394 100644
  		outlen += i;
  		if (options & OPENSSL_RAW_DATA) {
  			outbuf[outlen] = '\0';
-@@ -5282,7 +6035,7 @@ PHP_FUNCTION(openssl_encrypt)
+@@ -5282,7 +6032,7 @@ PHP_FUNCTION(openssl_encrypt)
  		} else {
  			int base64_str_len;
  			char *base64_str;
@@ -3678,7 +3675,7 @@ index f8641c62f..9d813f394 100644
  			base64_str = (char*)php_base64_encode(outbuf, outlen, &base64_str_len);
  			efree(outbuf);
  			if (!base64_str) {
-@@ -5295,30 +6048,33 @@ PHP_FUNCTION(openssl_encrypt)
+@@ -5295,30 +6045,33 @@ PHP_FUNCTION(openssl_encrypt)
  		efree(outbuf);
  		RETVAL_FALSE;
  	}
@@ -3722,7 +3719,7 @@ index f8641c62f..9d813f394 100644
  
  	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|ls", &data, &data_len, &method, &method_len, &password, &password_len, &options, &iv, &iv_len) == FAILURE) {
  		return;
-@@ -5335,41 +6091,33 @@ PHP_FUNCTION(openssl_decrypt)
+@@ -5335,41 +6088,33 @@ PHP_FUNCTION(openssl_decrypt)
  		RETURN_FALSE;
  	}
  
@@ -3781,7 +3778,7 @@ index f8641c62f..9d813f394 100644
  		outlen += i;
  		outbuf[outlen] = '\0';
  		RETVAL_STRINGL((char *)outbuf, outlen, 0);
-@@ -5377,8 +6125,9 @@ PHP_FUNCTION(openssl_decrypt)
+@@ -5377,8 +6122,9 @@ PHP_FUNCTION(openssl_decrypt)
  		efree(outbuf);
  		RETVAL_FALSE;
  	}
@@ -3793,7 +3790,7 @@ index f8641c62f..9d813f394 100644
  	}
  	if (free_iv) {
  		efree(iv);
-@@ -5386,7 +6135,8 @@ PHP_FUNCTION(openssl_decrypt)
+@@ -5386,7 +6132,8 @@ PHP_FUNCTION(openssl_decrypt)
  	if (base64_str) {
  		efree(base64_str);
  	}
@@ -3803,7 +3800,7 @@ index f8641c62f..9d813f394 100644
  }
  /* }}} */
  
-@@ -5417,43 +6167,6 @@ PHP_FUNCTION(openssl_cipher_iv_length)
+@@ -5417,43 +6164,6 @@ PHP_FUNCTION(openssl_cipher_iv_length)
  /* }}} */
  
  
@@ -3847,7 +3844,7 @@ index f8641c62f..9d813f394 100644
  /* {{{ proto string openssl_random_pseudo_bytes(integer length [, &bool returned_strong_result])
     Returns a string of the length specified filled with random pseudo bytes */
  PHP_FUNCTION(openssl_random_pseudo_bytes)
-@@ -5474,12 +6187,11 @@ PHP_FUNCTION(openssl_random_pseudo_bytes)
+@@ -5474,12 +6184,11 @@ PHP_FUNCTION(openssl_random_pseudo_bytes)
  	if (buffer_length <= 0 || buffer_length > INT_MAX) {
  		RETURN_FALSE;
  	}
@@ -3861,7 +3858,7 @@ index f8641c62f..9d813f394 100644
  		efree(buffer);
  		if (zstrong_result_returned) {
  			ZVAL_BOOL(zstrong_result_returned, 0);
-@@ -5487,13 +6199,16 @@ PHP_FUNCTION(openssl_random_pseudo_bytes)
+@@ -5487,13 +6196,16 @@ PHP_FUNCTION(openssl_random_pseudo_bytes)
  		RETURN_FALSE;
  	}
  #else
@@ -3879,7 +3876,7 @@ index f8641c62f..9d813f394 100644
  #endif
  
 diff --git a/ext/openssl/xp_ssl.c b/ext/openssl/xp_ssl.c
-index d5490331d..04d31c7cd 100644
+index d549033..04d31c7 100644
 --- a/ext/openssl/xp_ssl.c
 +++ b/ext/openssl/xp_ssl.c
 @@ -935,13 +935,9 @@ static int set_local_cert(SSL_CTX *ctx, php_stream *stream TSRMLS_DC) /* {{{ */
@@ -3897,7 +3894,7 @@ index d5490331d..04d31c7cd 100644
  #ifndef OPENSSL_NO_SSL3
  		return is_client ? SSLv3_client_method() : SSLv3_server_method();
 diff --git a/ext/phar/util.c b/ext/phar/util.c
-index 828be8f9a..06e4e55da 100644
+index 828be8f..06e4e55 100644
 --- a/ext/phar/util.c
 +++ b/ext/phar/util.c
 @@ -1531,7 +1531,7 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
