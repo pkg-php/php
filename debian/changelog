@@ -2,6 +2,7 @@ php5.6 (5.6.30-5) experimental; urgency=medium
 
   * Use OpenSSL 1.0 old code in ext/openssl/ when not building
     with OpenSSL 1.1
+  * The openssl.c hack has to #include <openssl/opensslv.h> to work
 
  -- Ondřej Surý <ondrej@debian.org>  Thu, 23 Feb 2017 09:26:44 +0100
 
