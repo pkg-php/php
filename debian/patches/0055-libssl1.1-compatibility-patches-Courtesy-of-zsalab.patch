@@ -14,7 +14,7 @@ Subject: Use OpenSSL 1.1 compatibility patch when built with OpenSSL >= 1.1
  create mode 100644 ext/openssl/openssl.c.1.1
 
 diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
-index f8641c6..4c94500 100644
+index f8641c6..cc0a6bf 100644
 --- a/ext/openssl/openssl.c
 +++ b/ext/openssl/openssl.c
 @@ -22,5490 +22,12 @@
@@ -5486,7 +5486,7 @@ index f8641c6..4c94500 100644
 -		RETURN_FALSE;
 -	}
 +#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#include "openssl.c.1.0
++#include "openssl.c.1.0"
  #else
 -	PHP_OPENSSL_RAND_ADD_TIME();
 -	if (RAND_bytes(buffer, buffer_length) <= 0) {
@@ -5496,7 +5496,7 @@ index f8641c6..4c94500 100644
 -		}
 -		RETURN_FALSE;
 -	}
-+#include "openssl.c.1.1
++#include "openssl.c.1.1"
  #endif
  
 -	buffer[buffer_length] = 0;
