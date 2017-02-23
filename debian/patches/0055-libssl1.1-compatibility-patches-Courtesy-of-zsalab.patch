@@ -9,15 +9,15 @@ Subject: Use OpenSSL 1.1 compatibility patch when built with OpenSSL >= 1.1
  ext/openssl/openssl.c.1.1 | 6229 +++++++++++++++++++++++++++++++++++++++++++++
  ext/openssl/xp_ssl.c      |    4 -
  ext/phar/util.c           |   13 +-
- 5 files changed, 11756 insertions(+), 5491 deletions(-)
+ 5 files changed, 11757 insertions(+), 5490 deletions(-)
  create mode 100644 ext/openssl/openssl.c.1.0
  create mode 100644 ext/openssl/openssl.c.1.1
 
 diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
-index f8641c6..cc0a6bf 100644
+index f8641c6..6efa961 100644
 --- a/ext/openssl/openssl.c
 +++ b/ext/openssl/openssl.c
-@@ -22,5490 +22,12 @@
+@@ -22,5490 +22,14 @@
  
  /* $Id$ */
  
@@ -3498,7 +3498,8 @@ index f8641c6..cc0a6bf 100644
 -		case EVP_PKEY_DSA3:
 -		case EVP_PKEY_DSA4:
 -			assert(pkey->pkey.dsa != NULL);
--
++#include <openssl/opensslv.h>
+ 
 -			if (NULL == pkey->pkey.dsa->p || NULL == pkey->pkey.dsa->q || NULL == pkey->pkey.dsa->priv_key){ 
 -				return 0;
 -			}
