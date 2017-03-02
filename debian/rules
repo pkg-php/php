@@ -335,7 +335,9 @@ override_dh_auto_install:
 
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
-override_dh_auto_test: test-results.txt
+override_dh_auto_test-indep:
+
+override_dh_auto_test-arch: test-results.txt
 
 test-results.txt:
 ifeq (yes,$(RUN_TESTS))
@@ -434,7 +436,7 @@ prepare-files-stamp:
 	      > debian/tmp/usr/share/$${package}/$${module}/$${dsoname}.ini; \
 	    echo "usr/lib/php/*/$${dsoname}.so" >> debian/$${package}.install; \
 	    echo "usr/share/$${package}/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
-	    provides="php-$${normalized}, $${provides}"; \
+	    if [ "$${normalized}" != "gettext" ]; then provides="php-$${normalized}, $${provides}"; fi; \
 	    if [ "$${module}" != "$${normalized}" ]; then provides="php$(PHP_NAME_VERSION)-$${normalized}, $${provides}"; fi; \
 	  done; \
 	  echo "php-$${module}:Provides=$${provides}" >> debian/$${package}.substvars; \
