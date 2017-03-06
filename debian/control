@@ -11,7 +11,7 @@ Build-Depends: apache2-dev (>= 2.4),
                chrpath,
                debhelper (>= 9),
                default-libmysqlclient-dev | libmysqlclient-dev,
-               default-mysql-server | mysql-server | virtual-mysql-server,
+               default-mysql-server | mysql-server | virtual-mysql-server <!nocheck>,
                dh-apache2,
                dh-systemd (>= 1.3) [linux-any] | base-files (<< 7.2ubuntu5~) [linux-any],
                dpkg-dev (>= 1.16.1~),
@@ -294,6 +294,29 @@ Description: XSL module for PHP (dummy)
  This package is a transitional dummy package and can be safely
  removed.
 
+Package: php7.0-intl
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-intl:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-intl:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-intl:Replaces}
+Breaks: ${php-intl:Breaks}
+Conflicts: ${php-intl:Conflicts}
+Provides: ${php-intl:Provides}
+Recommends: ${php-intl:Recommends}
+Description: Internationalisation module for PHP
+ This package provides the Internationalisation module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php7.0-odbc
 Architecture: any
 Depends: php-common (>= 1:35),
@@ -547,47 +570,24 @@ Description: documentation, examples and common module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-intl
+Package: php7.0-tidy
 Architecture: any
 Depends: php-common (>= 1:35),
          ucf,
          ${misc:Depends},
          ${php:Depends},
-	 ${php-intl:Depends},
+	 ${php-tidy:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends},
-	     ${php-intl:Pre-Depends}
+	     ${php-tidy:Pre-Depends}
 Built-Using: ${php:Built-Using}
-Replaces: ${php-intl:Replaces}
-Breaks: ${php-intl:Breaks}
-Conflicts: ${php-intl:Conflicts}
-Provides: ${php-intl:Provides}
-Recommends: ${php-intl:Recommends}
-Description: Internationalisation module for PHP
- This package provides the Internationalisation module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php7.0-mysql
-Architecture: any
-Depends: php-common (>= 1:35),
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-mysql:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-mysql:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-mysql:Replaces}
-Breaks: ${php-mysql:Breaks}
-Conflicts: ${php-mysql:Conflicts}
-Provides: ${php-mysql:Provides}
-Recommends: ${php-mysql:Recommends}
-Description: MySQL module for PHP
- This package provides the MySQL module(s) for PHP.
+Replaces: ${php-tidy:Replaces}
+Breaks: ${php-tidy:Breaks}
+Conflicts: ${php-tidy:Conflicts}
+Provides: ${php-tidy:Provides}
+Recommends: ${php-tidy:Recommends}
+Description: tidy module for PHP
+ This package provides the tidy module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -800,6 +800,29 @@ Description: IMAP module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
+Package: php7.0-mysql
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-mysql:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-mysql:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-mysql:Replaces}
+Breaks: ${php-mysql:Breaks}
+Conflicts: ${php-mysql:Conflicts}
+Provides: ${php-mysql:Provides}
+Recommends: ${php-mysql:Recommends}
+Description: MySQL module for PHP
+ This package provides the MySQL module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php7.0-bcmath
 Architecture: any
 Depends: php-common (>= 1:35),
@@ -818,29 +841,6 @@ Provides: ${php-bcmath:Provides}
 Recommends: ${php-bcmath:Recommends}
 Description: Bcmath module for PHP
  This package provides the Bcmath module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: php7.0-tidy
-Architecture: any
-Depends: php-common (>= 1:35),
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-tidy:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-tidy:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-tidy:Replaces}
-Breaks: ${php-tidy:Breaks}
-Conflicts: ${php-tidy:Conflicts}
-Provides: ${php-tidy:Provides}
-Recommends: ${php-tidy:Recommends}
-Description: tidy module for PHP
- This package provides the tidy module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
