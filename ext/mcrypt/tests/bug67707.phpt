@@ -8,3 +8,6 @@ $td = mcrypt_module_open('rijndael-256', '', 'ecb', '');
 mcrypt_generic_init($td, 'secret key', NULL);
 ?>
 --EXPECTF--
+Deprecated: Function mcrypt_module_open() is deprecated in %s on line %d
+
+Deprecated: Function mcrypt_generic_init() is deprecated in %s on line %d

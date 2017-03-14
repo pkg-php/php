@@ -79,7 +79,7 @@ PHPAPI void php_register_variable_ex(char *var_name, zval *val, zval *track_vars
 
 
 	/* ignore leading spaces in the variable name */
-	while (*var_name && *var_name==' ') {
+	while (*var_name==' ') {
 		var_name++;
 	}
 
@@ -107,6 +107,26 @@ PHPAPI void php_register_variable_ex(char *var_name, zval *val, zval *track_vars
 		zval_dtor(val);
 		free_alloca(var_orig, use_heap);
 		return;
+	}
+
+	if (var_len == sizeof("this")-1 && EG(current_execute_data)) {
+		zend_execute_data *ex = EG(current_execute_data);
+
+		while (ex) {
+			if (ex->func && ZEND_USER_CODE(ex->func->common.type)) {
+				if ((ZEND_CALL_INFO(ex) & ZEND_CALL_HAS_SYMBOL_TABLE)
+						&& ex->symbol_table == symtable1) {
+					if (memcmp(var, "this", sizeof("this")-1) == 0) {
+						zend_throw_error(NULL, "Cannot re-assign $this");
+						zval_dtor(val);
+						free_alloca(var_orig, use_heap);
+						return;
+					}
+				}
+				break;
+			}
+			ex = ex->prev_execute_data;
+		}
 	}
 
 	/* GLOBALS hijack attempt, reject parameter */

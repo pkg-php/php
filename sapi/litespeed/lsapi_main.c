@@ -369,7 +369,7 @@ static int sapi_lsapi_send_headers(sapi_headers_struct *sapi_headers)
 
 /* {{{ sapi_lsapi_send_headers
  */
-static void sapi_lsapi_log_message(char *message)
+static void sapi_lsapi_log_message(char *message, int syslog_type_int)
 {
     char buf[8192];
     int len = strlen( message );
@@ -433,15 +433,8 @@ static sapi_module_struct lsapi_sapi_module =
 
     sapi_lsapi_register_variables,  /* register server variables */
     sapi_lsapi_log_message,         /* Log message */
-
-    NULL,                           /* php.ini path override */
-    NULL,                           /* block interruptions */
-    NULL,                           /* unblock interruptions */
-    NULL,                           /* default post reader */
-    NULL,                           /* treat data */
-    NULL,                           /* executable location */
-
-    0,                              /* php.ini ignore */
+	NULL,							/* Get request time */
+	NULL,							/* Child terminate */
 
     STANDARD_SAPI_MODULE_PROPERTIES
 
@@ -1288,9 +1281,7 @@ int main( int argc, char * argv[] )
     tsrm_startup(1, 1, 0, NULL);
 #endif
 
-#ifdef ZEND_SIGNALS
 	zend_signal_startup();
-#endif
 
     if (argc > 1 ) {
         if ( parse_opt( argc, argv, &climode,
@@ -1405,23 +1396,16 @@ int main( int argc, char * argv[] )
 
 /*   LiteSpeed PHP module starts here */
 
-#if PHP_MAJOR_VERSION > 4
-
 /* {{{ arginfo */
 ZEND_BEGIN_ARG_INFO(arginfo_litespeed__void, 0)
 ZEND_END_ARG_INFO()
 /* }}} */
-
-#else
-#define arginfo_litespeed__void NULL
-#endif
 
 PHP_FUNCTION(litespeed_request_headers);
 PHP_FUNCTION(litespeed_response_headers);
 PHP_FUNCTION(apache_get_modules);
 
 PHP_MINFO_FUNCTION(litespeed);
-
 
 zend_function_entry litespeed_functions[] = {
     PHP_FE(litespeed_request_headers,   arginfo_litespeed__void)
