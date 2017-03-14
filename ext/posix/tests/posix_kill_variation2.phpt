@@ -179,4 +179,4 @@ bool(false)
 Arg value  
 bool(false)
 
-Recoverable fatal error: Object of class stdClass could not be converted to string in %s on line %d
+Catchable fatal error: Object of class stdClass could not be converted to string in %s on line %d

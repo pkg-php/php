@@ -57,13 +57,8 @@ $bar = foo3();
 string(9) "not catch"
 NULL
 
-Fatal error: Uncaught Exception: not catched in %sbug65784.php:42
+Fatal error: Uncaught Error: Class 'NotExists' not found in %sbug65784.php:%d
 Stack trace:
-#0 %sbug65784.php(52): foo3()
+#0 %s(%d): foo3()
 #1 {main}
-
-Next Error: Class 'NotExists' not found in %sbug65784.php:46
-Stack trace:
-#0 %sbug65784.php(52): foo3()
-#1 {main}
-  thrown in %sbug65784.php on line 46
+  thrown in %sbug65784.php on line %d

@@ -44,9 +44,7 @@ var_dump(
 );
 
 ?>
---EXPECTF--
-
-Warning: A non-numeric value encountered in %s on line %d
+--EXPECT--
 int(3)
 string(4) "1foo"
 bool(false)

@@ -9,8 +9,7 @@ foreach (mcrypt_list_algorithms() as $algo) {
 	   echo "FOUND\n";
 	}
 }
---EXPECTF--
-Deprecated: Function mcrypt_list_algorithms() is deprecated in %s%emcrypt_list_algorithms.php on line 2
+--EXPECT--
 FOUND
 FOUND
 FOUND

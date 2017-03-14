@@ -1,5 +1,7 @@
 --TEST--
 Exception after separation during indirect write to fcall result
+--XFAIL--
+See Bug #62210 and attempt to fix it in "tmp_livelibess" branch
 --FILE--
 <?php
 

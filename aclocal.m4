@@ -2337,13 +2337,15 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
 
   dnl If pkg-config is found try using it
   if test "$PHP_OPENSSL_DIR" = "yes" && test -x "$PKG_CONFIG" && $PKG_CONFIG --exists openssl; then
-    if $PKG_CONFIG --atleast-version=1.0.1 openssl; then
+    if $PKG_CONFIG --atleast-version=1.1 openssl; then
+      AC_MSG_ERROR([OpenSSL version >= 1.1 is not supported.])
+    elif $PKG_CONFIG --atleast-version=0.9.8 openssl; then
       found_openssl=yes
       OPENSSL_LIBS=`$PKG_CONFIG --libs openssl`
       OPENSSL_INCS=`$PKG_CONFIG --cflags-only-I openssl`
       OPENSSL_INCDIR=`$PKG_CONFIG --variable=includedir openssl`
     else
-      AC_MSG_ERROR([OpenSSL version 1.0.1 or greater required.])
+      AC_MSG_ERROR([OpenSSL version >= 0.9.8 and < 1.1 required.])
     fi
 
     if test -n "$OPENSSL_LIBS"; then
@@ -2384,13 +2386,13 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
     AC_MSG_CHECKING([for OpenSSL version])
     AC_EGREP_CPP(yes,[
 #include <openssl/opensslv.h>
-#if OPENSSL_VERSION_NUMBER >= 0x10001001L
+#if OPENSSL_VERSION_NUMBER >= 0x0090800fL
   yes
 #endif
     ],[
-      AC_MSG_RESULT([>= 1.0.1])
+      AC_MSG_RESULT([>= 0.9.8])
     ],[
-      AC_MSG_ERROR([OpenSSL version 1.0.1 or greater required.])
+      AC_MSG_ERROR([OpenSSL version 0.9.8 or greater required.])
     ])
     CPPFLAGS=$old_CPPFLAGS
 
@@ -2692,21 +2694,21 @@ EOF
   else 
     CONFIGURE_COMMAND="$CONFIGURE_COMMAND [$]0"
   fi
-  CONFIGURE_ARGS="$clean_configure_args"
-  while test "X$CONFIGURE_ARGS" != "X";
-  do
-   if CURRENT_ARG=`expr "X$CONFIGURE_ARGS" : "X *\('[[^']]*'\)"`
-   then
-     CONFIGURE_ARGS=`expr "X$CONFIGURE_ARGS" : "X *'[[^']]*' \(.*\)"`
-   elif CURRENT_ARG=`expr "X$CONFIGURE_ARGS" : "X *\([[^ ]]*\)"`
-   then
-     CONFIGURE_ARGS=`expr "X$CONFIGURE_ARGS" : "X *[[^ ]]* \(.*\)"`
-     CURRENT_ARG="'$CURRENT_ARG'"
-   else
-    break
-   fi
-   $as_echo "$CURRENT_ARG \\" >>$1
-   CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS $CURRENT_ARG"
+
+  for arg in $clean_configure_args; do
+    if test `expr -- $arg : "'.*"` = 0; then
+      if test `expr -- $arg : "-.*"` = 0 && test `expr -- $arg : ".*=.*"` = 0; then
+        continue;
+      fi
+      echo "'[$]arg' \\" >> $1
+      CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS '[$]arg'"
+    else
+      if test `expr -- $arg : "'-.*"` = 0 && test `expr -- $arg : "'.*=.*"` = 0; then
+        continue;
+      fi
+      echo "[$]arg \\" >> $1
+      CONFIGURE_OPTIONS="$CONFIGURE_OPTIONS [$]arg"
+    fi
   done
   echo '"[$]@"' >> $1
   chmod +x $1

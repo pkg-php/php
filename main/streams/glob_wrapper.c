@@ -271,7 +271,6 @@ static php_stream_wrapper_ops  php_glob_stream_wrapper_ops = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
 	NULL
 };
 

@@ -1,7 +1,5 @@
 --TEST--
 test finish and leave commands
---INI--
-opcache.optimization_level=0
 --PHPDBG--
 b bar
 b 5

@@ -24,8 +24,4 @@ require(dirname(__FILE__) .'/clean.inc');
 --EXPECTF--
 database handler: %s
 
-Fatal error: Uncaught Error: Key does not have exactly two elements: (key, name) in %sdba013.php:6
-Stack trace:
-#0 %sdba013.php(6): dba_insert(Array, '%s', Resource id #%d)
-#1 {main}
-  thrown in %sdba013.php on line 6
+Catchable fatal error: dba_insert(): Key does not have exactly two elements: (key, name) in %sdba013.php on line %d

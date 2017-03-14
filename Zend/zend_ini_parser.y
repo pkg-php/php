@@ -142,10 +142,11 @@ static void zend_ini_get_constant(zval *result, zval *name)
 	if (!memchr(Z_STRVAL_P(name), ':', Z_STRLEN_P(name))
 		   	&& (c = zend_get_constant(Z_STR_P(name))) != 0) {
 		if (Z_TYPE_P(c) != IS_STRING) {
-			ZVAL_DUP(&tmp, c);
+			ZVAL_COPY_VALUE(&tmp, c);
 			if (Z_OPT_CONSTANT(tmp)) {
-				zval_update_constant_ex(&tmp, NULL);
+				zval_update_constant_ex(&tmp, 1, NULL);
 			}
+			zval_opt_copy_ctor(&tmp);
 			convert_to_string(&tmp);
 			c = &tmp;
 		}
@@ -270,7 +271,7 @@ ZEND_API int zend_parse_ini_string(char *str, zend_bool unbuffered_errors, int s
 %}
 
 %expect 0
-%pure-parser
+%pure_parser
 
 %token TC_SECTION
 %token TC_RAW

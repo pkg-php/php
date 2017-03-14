@@ -7,8 +7,8 @@ var_dump($i);
 echo $i->format("%d"), "\n";
 echo $i->format("%a"), "\n";
 ?>
---EXPECTF--
-object(DateInterval)#%d (16) {
+--EXPECT--
+object(DateInterval)#1 (15) {
   ["y"]=>
   int(0)
   ["m"]=>
@@ -21,8 +21,6 @@ object(DateInterval)#%d (16) {
   int(0)
   ["s"]=>
   int(0)
-  ["f"]=>
-  float(0)
   ["weekday"]=>
   int(0)
   ["weekday_behavior"]=>

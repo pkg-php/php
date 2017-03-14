@@ -23,49 +23,6 @@
 #include "ext/standard/php_var.h"
 #include "php_incomplete_class.h"
 
-struct php_unserialize_data {
-	void *first;
-	void *last;
-	void *first_dtor;
-	void *last_dtor;
-	HashTable *allowed_classes;
-};
-
-PHPAPI php_unserialize_data_t php_var_unserialize_init() {
-	php_unserialize_data_t d;
-	/* fprintf(stderr, "UNSERIALIZE_INIT    == lock: %u, level: %u\n", BG(serialize_lock), BG(unserialize).level); */
-	if (BG(serialize_lock) || !BG(unserialize).level) {
-		d = ecalloc(1, sizeof(struct php_unserialize_data));
-		if (!BG(serialize_lock)) {
-			BG(unserialize).data = d;
-			BG(unserialize).level = 1;
-		}
-	} else {
-		d = BG(unserialize).data;
-		++BG(unserialize).level;
-	}
-	return d;
-}
-
-PHPAPI void php_var_unserialize_destroy(php_unserialize_data_t d) {
-	/* fprintf(stderr, "UNSERIALIZE_DESTROY == lock: %u, level: %u\n", BG(serialize_lock), BG(unserialize).level); */
-	if (BG(serialize_lock) || BG(unserialize).level == 1) {
-		var_destroy(&d);
-		efree(d);
-	}
-	if (!BG(serialize_lock) && !--BG(unserialize).level) {
-		BG(unserialize).data = NULL;
-	}
-}
-
-PHPAPI HashTable *php_var_unserialize_get_allowed_classes(php_unserialize_data_t d) {
-	return d->allowed_classes;
-}
-PHPAPI void php_var_unserialize_set_allowed_classes(php_unserialize_data_t d, HashTable *classes) {
-	d->allowed_classes = classes;
-}
-
-
 /* {{{ reference-handling for unserializer: var_* */
 #define VAR_ENTRIES_MAX 1024
 #define VAR_ENTRIES_DBG 0
@@ -141,7 +98,7 @@ PHPAPI zval *var_tmp_var(php_unserialize_data_t *var_hashx)
         (*var_hashx)->last_dtor = var_hash;
     }
     ZVAL_UNDEF(&var_hash->data[var_hash->used_slots]);
-	Z_EXTRA(var_hash->data[var_hash->used_slots]) = 0;
+	Z_VAR_FLAGS(var_hash->data[var_hash->used_slots]) = 0;
     return &var_hash->data[var_hash->used_slots++];
 }
 
@@ -211,7 +168,7 @@ PHPAPI void var_destroy(php_unserialize_data_t *var_hashx)
 #endif
 
 			/* Perform delayed __wakeup calls */
-			if (Z_EXTRA_P(zv) == VAR_WAKEUP_FLAG) {
+			if (Z_VAR_FLAGS_P(zv) == VAR_WAKEUP_FLAG) {
 				if (!wakeup_failed) {
 					zval retval;
 					if (Z_ISUNDEF(wakeup_name)) {
@@ -286,10 +243,8 @@ static zend_string *unserialize_str(const unsigned char **p, size_t len, size_t 
 	return str;
 }
 
-static inline int unserialize_allowed_class(
-		zend_string *class_name, php_unserialize_data_t *var_hashx)
+static inline int unserialize_allowed_class(zend_string *class_name, HashTable *classes)
 {
-	HashTable *classes = (*var_hashx)->allowed_classes;
 	zend_string *lcname;
 	int res;
 	ALLOCA_FLAG(use_heap)
@@ -374,8 +329,8 @@ static inline size_t parse_uiv(const unsigned char *p)
 	return result;
 }
 
-#define UNSERIALIZE_PARAMETER zval *rval, const unsigned char **p, const unsigned char *max, php_unserialize_data_t *var_hash
-#define UNSERIALIZE_PASSTHRU rval, p, max, var_hash
+#define UNSERIALIZE_PARAMETER zval *rval, const unsigned char **p, const unsigned char *max, php_unserialize_data_t *var_hash, HashTable *classes
+#define UNSERIALIZE_PASSTHRU rval, p, max, var_hash, classes
 
 static int php_var_unserialize_internal(UNSERIALIZE_PARAMETER);
 
@@ -387,7 +342,7 @@ static zend_always_inline int process_nested_data(UNSERIALIZE_PARAMETER, HashTab
 
 		ZVAL_UNDEF(&key);
 
-		if (!php_var_unserialize_internal(&key, p, max, NULL)) {
+		if (!php_var_unserialize_internal(&key, p, max, NULL, classes)) {
 			zval_dtor(&key);
 			return 0;
 		}
@@ -443,7 +398,7 @@ string_key:
 			}
 		}
 
-		if (!php_var_unserialize_internal(data, p, max, var_hash)) {
+		if (!php_var_unserialize_internal(data, p, max, var_hash, classes)) {
 			zval_dtor(&key);
 			return 0;
 		}
@@ -489,7 +444,7 @@ static inline int object_custom(UNSERIALIZE_PARAMETER, zend_class_entry *ce)
 	(*p) += 2;
 
 	if (datalen < 0 || (max - (*p)) <= datalen) {
-		zend_error(E_WARNING, "Insufficient data for unserializing - " ZEND_LONG_FMT " required, " ZEND_LONG_FMT " present", datalen, (zend_long)(max - (*p)));
+		zend_error(E_WARNING, "Insufficient data for unserializing - %pd required, %pd present", datalen, (zend_long)(max - (*p)));
 		return 0;
 	}
 
@@ -560,7 +515,7 @@ static inline int object_common2(UNSERIALIZE_PARAMETER, zend_long elements)
 		/* Delay __wakeup call until end of serialization */
 		zval *wakeup_var = var_tmp_var(var_hash);
 		ZVAL_COPY(wakeup_var, rval);
-		Z_EXTRA_P(wakeup_var) = VAR_WAKEUP_FLAG;
+		Z_VAR_FLAGS_P(wakeup_var) = VAR_WAKEUP_FLAG;
 	}
 
 	return finish_nested_data(UNSERIALIZE_PASSTHRU);
@@ -569,7 +524,13 @@ static inline int object_common2(UNSERIALIZE_PARAMETER, zend_long elements)
 # pragma optimize("", on)
 #endif
 
-PHPAPI int php_var_unserialize(UNSERIALIZE_PARAMETER)
+PHPAPI int php_var_unserialize(zval *rval, const unsigned char **p, const unsigned char *max, php_unserialize_data_t *var_hash)
+{
+	HashTable *classes = NULL;
+	return php_var_unserialize_ex(UNSERIALIZE_PASSTHRU);
+}
+
+PHPAPI int php_var_unserialize_ex(UNSERIALIZE_PARAMETER)
 {
 	var_entries *orig_var_entries = (*var_hash)->last;
 	zend_long orig_used_slots = orig_var_entries ? orig_var_entries->used_slots : 0;
@@ -1187,7 +1148,7 @@ yy82:
 	class_name = zend_string_init(str, len, 0);
 
 	do {
-		if(!unserialize_allowed_class(class_name, var_hash)) {
+		if(!unserialize_allowed_class(class_name, classes)) {
 			incomplete_class = 1;
 			ce = PHP_IC_ENTRY;
 			break;

@@ -92,7 +92,7 @@ typedef struct bc_struct
 /* Define the _PROTOTYPE macro if it is needed. */
 
 #ifndef _PROTOTYPE
-#if defined(__STDC__) || defined(PHP_WIN32) && defined(__clang__)
+#ifdef __STDC__
 #define _PROTOTYPE(func, args) func args
 #else
 #define _PROTOTYPE(func, args) func()

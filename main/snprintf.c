@@ -143,12 +143,8 @@ PHPAPI char *php_gcvt(double value, int ndigit, char dec_point, char exponent, c
 {
 	char *digits, *dst, *src;
 	int i, decpt, sign;
-	int mode = ndigit >= 0 ? 2 : 0;
 
-	if (mode == 0) {
-		ndigit = 17;
-	}
-	digits = zend_dtoa(value, mode, ndigit, &decpt, &sign, NULL);
+	digits = zend_dtoa(value, 2, ndigit, &decpt, &sign, NULL);
 	if (decpt == 9999) {
 		/*
 		 * Infinity or NaN, convert to inf or nan with sign.
@@ -559,11 +555,11 @@ typedef struct buf_area buffy;
  * to be printed.
  */
 #define FIX_PRECISION( adjust, precision, s, s_len )	\
-    if ( adjust )						\
-	while ( s_len < (size_t)precision )	\
-	{									\
-	    *--s = '0' ;					\
-	    s_len++ ;						\
+    if ( adjust )					\
+	while ( s_len < precision )			\
+	{						\
+	    *--s = '0' ;				\
+	    s_len++ ;					\
 	}
 
 /*
@@ -800,14 +796,14 @@ static int format_converter(register buffy * odp, const char *fmt, va_list ap) /
 			 */
 			switch (*fmt) {
 				case 'Z': {
-					zvp = (zval*) va_arg(ap, zval*);
+				    				    zvp = (zval*) va_arg(ap, zval*);
 					free_zcopy = zend_make_printable_zval(zvp, &zcopy);
 					if (free_zcopy) {
 						zvp = &zcopy;
 					}
 					s_len = Z_STRLEN_P(zvp);
 					s = Z_STRVAL_P(zvp);
-					if (adjust_precision && (size_t)precision < s_len) {
+					if (adjust_precision && precision < s_len) {
 						s_len = precision;
 					}
 					break;
@@ -995,7 +991,7 @@ static int format_converter(register buffy * odp, const char *fmt, va_list ap) /
 					s = va_arg(ap, char *);
 					if (s != NULL) {
 						s_len = strlen(s);
-						if (adjust_precision && (size_t)precision < s_len) {
+						if (adjust_precision && precision < s_len) {
 							s_len = precision;
 						}
 					} else {
@@ -1194,14 +1190,14 @@ fmt_error:
 				*--s = prefix_char;
 				s_len++;
 			}
-			if (adjust_width && adjust == RIGHT && (size_t)min_width > s_len) {
+			if (adjust_width && adjust == RIGHT && min_width > s_len) {
 				if (pad_char == '0' && prefix_char != NUL) {
 					INS_CHAR(*s, sp, bep, cc)
 						s++;
 					s_len--;
 					min_width--;
 				}
-				PAD((size_t)min_width, s_len, pad_char);
+				PAD(min_width, s_len, pad_char);
 			}
 			/*
 			 * Print the string s.
@@ -1211,8 +1207,8 @@ fmt_error:
 				s++;
 			}
 
-			if (adjust_width && adjust == LEFT && (size_t)min_width > s_len)
-				PAD((size_t)min_width, s_len, pad_char);
+			if (adjust_width && adjust == LEFT && min_width > s_len)
+				PAD(min_width, s_len, pad_char);
 			if (free_zcopy) {
 				zval_dtor(&zcopy);
 			}
@@ -1267,7 +1263,7 @@ PHPAPI int ap_php_slprintf(char *buf, size_t len, const char *format,...) /* {{{
 	va_start(ap, format);
 	strx_printv(&cc, buf, len, format, ap);
 	va_end(ap);
-	if ((size_t)cc >= len) {
+	if (cc >= len) {
 		cc = (int)len -1;
 		buf[cc] = '\0';
 	}
@@ -1280,7 +1276,7 @@ PHPAPI int ap_php_vslprintf(char *buf, size_t len, const char *format, va_list a
 	int cc;
 
 	strx_printv(&cc, buf, len, format, ap);
-	if ((size_t)cc >= len) {
+	if (cc >= len) {
 		cc = (int)len -1;
 		buf[cc] = '\0';
 	}

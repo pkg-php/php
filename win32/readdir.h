@@ -2,10 +2,6 @@
 #define READDIR_H
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
  * Structures and types used to implement opendir/readdir/closedir
  * on Windows 95/NT.
@@ -13,12 +9,18 @@ extern "C" {
 
 #include <config.w32.h>
 
+#include <windows.h>
+
+#include <io.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <direct.h>
 
 #define php_readdir_r readdir_r
 
 /* struct dirent - same as Unix */
+
 struct dirent {
 	long d_ino;					/* inode (always 1 in WIN32) */
 	off_t d_off;				/* offset to this dirent */
@@ -26,8 +28,16 @@ struct dirent {
 	char d_name[_MAX_FNAME + 1];	/* filename (null terminated) */
 };
 
+
 /* typedef DIR - not the same as Unix */
-typedef struct DIR_W32 DIR;
+typedef struct {
+	HANDLE handle;				/* _findfirst/_findnext handle */
+	int offset;					/* offset into directory */
+	short finished;				/* 1 if there are not more files */
+	WIN32_FIND_DATA fileinfo;	/* from _findfirst/_findnext */
+	char *dir;					/* the dir we are reading */
+	struct dirent dent;			/* the dirent to return */
+} DIR;
 
 /* Function prototypes */
 DIR *opendir(const char *);
@@ -35,9 +45,5 @@ struct dirent *readdir(DIR *);
 int readdir_r(DIR *, struct dirent *, struct dirent **);
 int closedir(DIR *);
 int rewinddir(DIR *);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* READDIR_H */

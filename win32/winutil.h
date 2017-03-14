@@ -16,17 +16,11 @@
    +----------------------------------------------------------------------+
  */
 
-#ifdef PHP_EXPORTS
-# define PHP_WINUTIL_API __declspec(dllexport)
-#else
-# define PHP_WINUTIL_API __declspec(dllimport)
-#endif
-
-PHP_WINUTIL_API char *php_win32_error_to_msg(HRESULT error);
+PHPAPI char *php_win32_error_to_msg(HRESULT error);
 
 #define php_win_err()	php_win32_error_to_msg(GetLastError())
 int php_win32_check_trailing_space(const char * path, const int path_len);
-PHP_WINUTIL_API int php_win32_get_random_bytes(unsigned char *buf, size_t size);
+PHPAPI int php_win32_get_random_bytes(unsigned char *buf, size_t size);
 
 #ifdef ZTS
 void php_win32_init_rng_lock();
@@ -35,22 +29,3 @@ void php_win32_free_rng_lock();
 #define php_win32_init_rng_lock();
 #define php_win32_free_rng_lock();
 #endif
-
-#if !defined(ECURDIR)
-# define ECURDIR        EACCES
-#endif /* !ECURDIR */
-#if !defined(ENOSYS)
-# define ENOSYS         EPERM
-#endif /* !ENOSYS */
-
-PHP_WINUTIL_API int php_win32_code_to_errno(unsigned long w32Err);
-
-#define SET_ERRNO_FROM_WIN32_CODE(err) \
-	do { \
-	int ern = php_win32_code_to_errno(err); \
-	SetLastError(err); \
-	_set_errno(ern); \
-	} while (0)
-
-PHP_WINUTIL_API char *php_win32_get_username(void);
-

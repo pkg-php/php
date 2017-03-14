@@ -77,38 +77,28 @@ static void zend_win_error_message(int type, char *msg, int err)
 static char *create_name_with_username(char *name)
 {
 	static char newname[MAXPATHLEN + UNLEN + 4 + 1 + 32];
-	char *uname;
+	char uname[UNLEN + 1];
+	DWORD unsize = UNLEN;
 
-	uname = php_win32_get_username();
-	if (!uname) {
-		return NULL;
-	}
+	GetUserName(uname, &unsize);
 	snprintf(newname, sizeof(newname) - 1, "%s@%s@%.32s", name, uname, ZCG(system_id));
-
-	free(uname);
-
 	return newname;
 }
 
 static char *get_mmap_base_file(void)
 {
 	static char windir[MAXPATHLEN+UNLEN + 3 + sizeof("\\\\@") + 1 + 32];
-	char *uname;
+	char uname[UNLEN + 1];
+	DWORD unsize = UNLEN;
 	int l;
 
-	uname = php_win32_get_username();
-	if (!uname) {
-		return NULL;
-	}
 	GetTempPath(MAXPATHLEN, windir);
+	GetUserName(uname, &unsize);
 	l = strlen(windir);
 	if ('\\' == windir[l-1]) {
 		l--;
 	}
 	snprintf(windir + l, sizeof(windir) - l - 1, "\\%s@%s@%.32s", ACCEL_FILEMAP_BASE, uname, ZCG(system_id));
-
-	free(uname);
-
 	return windir;
 }
 

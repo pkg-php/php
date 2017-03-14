@@ -8,47 +8,41 @@ assert.bail=0
 assert.quiet_eval=0
 --FILE--
 <?php
+function handler($errno, $errstr) {
+	echo "in handler()\n";
+	assert(E_RECOVERABLE_ERROR === $errno);
+	var_dump($errstr);
+}
+
+set_error_handler('handler', E_RECOVERABLE_ERROR);
 
 assert(1);
 assert('1');
 assert('$a');
 
-try {
-	assert('aa=sd+as+safsafasfasafsaf');
-} catch (Throwable $e) {
-	echo $e->getMessage(), "\n";
-}
+assert('aa=sd+as+safsafasfasafsaf');
 
 assert('0');
 
 assert_options(ASSERT_BAIL, 1);
-
-try {
-	assert('aa=sd+as+safsafasfasafsaf');
-} catch (Throwable $e) {
-	echo $e->getMessage(), "\n";
-}
+assert('aa=sd+as+safsafasfasafsaf');
 
 echo "done\n";
 
 ?>
 --EXPECTF--
-Notice: Undefined variable: a in %sassert02.php(%d) : assert code on line 1
+Notice: Undefined variable: a in %sassert02.php(12) : assert code on line 1
 
-Warning: assert(): Assertion "$a" failed in %sassert02.php on line %d
-Failure evaluating code: 
-aa=sd+as+safsafasfasafsaf
+Warning: assert(): Assertion "$a" failed in %sassert02.php on line 12
 
-Warning: assert(): Assertion "0" failed in %sassert02.php on line %d
+Parse error: %s error%sin %sassert02.php(14) : assert code on line 1
+in handler()
+%string|unicode%(%d) "assert(): Failure evaluating code: 
+aa=sd+as+safsafasfasafsaf"
 
-Fatal error: Uncaught ParseError: syntax error, unexpected '=', expecting ';' in %s(%d) : assert code:1
-Stack trace:
-#0 %s(%d): assert('aa=sd+as+safsaf...')
-#1 {main}
+Warning: assert(): Assertion "0" failed in %sassert02.php on line 16
 
-Next Error: Failure evaluating code: 
-aa=sd+as+safsafasfasafsaf in %s:%d
-Stack trace:
-#0 %s(%d): assert('aa=sd+as+safsaf...')
-#1 {main}
-  thrown in %s on line %d
+Parse error: %s error%sin %sassert02.php(19) : assert code on line 1
+in handler()
+%string|unicode%(%d) "assert(): Failure evaluating code: 
+aa=sd+as+safsafasfasafsaf"

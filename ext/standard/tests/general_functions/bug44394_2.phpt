@@ -5,8 +5,6 @@ Bug #44394 (Last two bytes missing from output) with session.use_trans_id
 --INI--
 session.name=PHPSESSID
 session.use_only_cookies=0
-session.trans_sid_tags="a=href,area=href,frame=src,form="
-url_rewriter.tags="a=href,area=href,frame=src,form="
 --FILE--
 <?php
 
@@ -34,4 +32,4 @@ foreach (glob(__DIR__ . '/sess_*') as $filename) {
 }
 ?>
 --EXPECTF--
-<a href='a?q=1&a=b&PHPSESSID=%s'>asd</a>
+<a href='a?q=1&PHPSESSID=%s&a=b'>asd</a>

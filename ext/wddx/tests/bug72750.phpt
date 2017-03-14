@@ -30,5 +30,5 @@ var_dump($array);
 --EXPECT--
 array(1) {
   ["aBinary"]=>
-  string(9) "µ‰¥¹…ÉFF"
+  string(0) ""
 }

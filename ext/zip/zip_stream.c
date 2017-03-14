@@ -21,6 +21,7 @@
 #endif
 #include "php.h"
 #if HAVE_ZIP
+#if defined(ZEND_ENGINE_2) || defined(ZEND_ENGINE_3)
 
 #include "php_streams.h"
 #include "ext/standard/file.h"
@@ -347,8 +348,7 @@ static php_stream_wrapper_ops zip_stream_wops = {
 	NULL,	/* unlink */
 	NULL,	/* rename */
 	NULL,	/* mkdir */
-	NULL,	/* rmdir */
-	NULL
+	NULL	/* rmdir */
 };
 
 php_stream_wrapper php_stream_zip_wrapper = {
@@ -356,4 +356,5 @@ php_stream_wrapper php_stream_zip_wrapper = {
 	NULL,
 	0 /* is_url */
 };
+#endif /* defined(ZEND_ENGINE_2) || defined(ZEND_ENGINE_3) */
 #endif /* HAVE_ZIP */

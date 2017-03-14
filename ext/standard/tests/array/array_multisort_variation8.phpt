@@ -47,15 +47,15 @@ var_dump($inputs);
 *** Testing array_multisort() : usage variation  - test sort order of all types***
 bool(true)
 array(10) {
-  ["uppercase NULL"]=>
-  NULL
   ["empty string DQ"]=>
   string(0) ""
+  ["uppercase NULL"]=>
+  NULL
+  ["undefined var"]=>
+  NULL
   ["instance of classWithoutToString"]=>
   object(classWithoutToString)#2 (0) {
   }
-  ["undefined var"]=>
-  NULL
   ["float -10.5"]=>
   float(-10.5)
   ["int 0"]=>

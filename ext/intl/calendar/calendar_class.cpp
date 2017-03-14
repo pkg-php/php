@@ -231,6 +231,13 @@ static void calendar_object_init(Calendar_object *co)
 }
 /* }}} */
 
+/* {{{ Calendar_objects_dtor */
+static void Calendar_objects_dtor(zend_object *object)
+{
+	zend_objects_destroy_object(object);
+}
+/* }}} */
+
 /* {{{ Calendar_objects_free */
 static void Calendar_objects_free(zend_object *object)
 {
@@ -467,6 +474,7 @@ void calendar_register_IntlCalendar_class(void)
 	Calendar_handlers.offset = XtOffsetOf(Calendar_object, zo);
 	Calendar_handlers.clone_obj = Calendar_clone_obj;
 	Calendar_handlers.get_debug_info = Calendar_get_debug_info;
+	Calendar_handlers.dtor_obj = Calendar_objects_dtor;
 	Calendar_handlers.free_obj = Calendar_objects_free;
 
 	/* Create and register 'IntlGregorianCalendar' class. */
@@ -495,6 +503,8 @@ void calendar_register_IntlCalendar_class(void)
 	CALENDAR_DECL_LONG_CONST("FIELD_DAY_OF_WEEK",			UCAL_DAY_OF_WEEK);
 	CALENDAR_DECL_LONG_CONST("FIELD_DAY_OF_WEEK_IN_MONTH",	UCAL_DAY_OF_WEEK_IN_MONTH);
 	CALENDAR_DECL_LONG_CONST("FIELD_AM_PM",					UCAL_AM_PM);
+	CALENDAR_DECL_LONG_CONST("FIELD_HOUR",					UCAL_HOUR);
+	CALENDAR_DECL_LONG_CONST("FIELD_HOUR_OF_DAY",			UCAL_HOUR_OF_DAY);
 	CALENDAR_DECL_LONG_CONST("FIELD_HOUR",					UCAL_HOUR);
 	CALENDAR_DECL_LONG_CONST("FIELD_HOUR_OF_DAY",			UCAL_HOUR_OF_DAY);
 	CALENDAR_DECL_LONG_CONST("FIELD_MINUTE",				UCAL_MINUTE);

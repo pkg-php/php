@@ -59,6 +59,27 @@ NO_PROC_OPEN_ERROR;
 exit;
 }
 
+// Version constants only available as of 5.2.8
+if (!defined("PHP_VERSION_ID")) {
+	list($major, $minor, $bug) = explode(".", phpversion(), 3);
+	$bug = (int)$bug; // Many distros make up their own versions
+	if ($bug < 10) {
+		$bug = "0$bug";
+	}
+
+	define("PHP_VERSION_ID", "{$major}0{$minor}$bug");
+	define("PHP_MAJOR_VERSION", $major);
+}
+
+// __DIR__ is available from 5.3.0
+if (PHP_VERSION_ID < 50300) {
+	define('__DIR__', realpath(dirname(__FILE__)));
+	// FILE_BINARY is available from 5.2.7
+	if (PHP_VERSION_ID < 50207) {
+		define('FILE_BINARY', 0);
+	}
+}
+
 // If timezone is not set, use UTC.
 if (ini_get('date.timezone') == '') {
 	date_default_timezone_set('UTC');
@@ -92,6 +113,22 @@ while(@ob_end_clean());
 if (ob_get_level()) echo "Not all buffers were deleted.\n";
 
 error_reporting(E_ALL);
+if (PHP_MAJOR_VERSION < 6) {
+	if (ini_get('safe_mode')) {
+		echo <<< SAFE_MODE_WARNING
+
++-----------------------------------------------------------+
+|                       ! WARNING !                         |
+| You are running the test-suite with "safe_mode" ENABLED ! |
+|                                                           |
+| Chances are high that no test will work at all,           |
+| depending on how you configured "safe_mode" !             |
++-----------------------------------------------------------+
+
+
+SAFE_MODE_WARNING;
+	}
+}
 
 $environment = isset($_ENV) ? $_ENV : array();
 if ((substr(PHP_OS, 0, 3) == "WIN") && empty($environment["SystemRoot"])) {
@@ -210,6 +247,7 @@ $exts_to_test = array();
 $ini_overwrites = array(
 		'output_handler=',
 		'open_basedir=',
+		'safe_mode=0',
 		'disable_functions=',
 		'output_buffering=Off',
 		'error_reporting=' . (E_ALL | E_STRICT),
@@ -273,13 +311,10 @@ More .INIs  : " , (function_exists(\'php_ini_scanned_files\') ? str_replace("\n"
 		$phpdbg_info = '';
 	}
 
-	if (function_exists('opcache_invalidate')) {
-		opcache_invalidate($info_file, true);
-	}
 	@unlink($info_file);
 
 	// load list of enabled extensions
-	save_text($info_file, '<?php echo str_replace("Zend OPcache", "opcache", join(",", get_loaded_extensions())); ?>');
+	save_text($info_file, '<?php echo join(",", get_loaded_extensions()); ?>');
 	$exts_to_test = explode(',',`$php $pass_options $info_params $no_file_cache "$info_file"`);
 	// check for extensions that need special handling and regenerate
 	$info_params_ex = array(
@@ -296,9 +331,6 @@ More .INIs  : " , (function_exists(\'php_ini_scanned_files\') ? str_replace("\n"
 		}
 	}
 
-	if (function_exists('opcache_invalidate')) {
-		opcache_invalidate($info_file, true);
-	}
 	@unlink($info_file);
 
 	// Write test context information.
@@ -841,7 +873,7 @@ HELP;
 
 		junit_save_xml();
 
-		if (getenv('REPORT_EXIT_STATUS') == 1 and $sum_results['FAILED']) {
+		if (getenv('REPORT_EXIT_STATUS') == 1 && ($sum_results['FAILED'] || $sum_results['BORKED'])) {
 			exit(1);
 		}
 
@@ -977,7 +1009,7 @@ save_or_mail_results();
 
 junit_save_xml();
 
-if (getenv('REPORT_EXIT_STATUS') == 1 and $sum_results['FAILED']) {
+if (getenv('REPORT_EXIT_STATUS') == 1 && ($sum_results['FAILED'] || $sum_results['BORKED'])) {
 	exit(1);
 }
 exit(0);
@@ -1379,7 +1411,6 @@ TEST $file
 				return 'SKIPPED';
 			}
 		}
-		$uses_cgi = true;
 	}
 
 	/* For phpdbg tests, check if phpdbg sapi is available and if it is, use it. */
@@ -1595,11 +1626,6 @@ TEST $file
 					$warn = true; /* only if there is a reason */
 					$info = " (warn: $m[1])";
 				}
-			}
-
-			if (!strncasecmp('xfail', ltrim($output), 5)) {
-				// Pretend we have an XFAIL section
-				$section_text['XFAIL'] = trim(substr(ltrim($output), 5));
 			}
 		}
 	}
@@ -1921,7 +1947,7 @@ COMMAND $cmd
 	/* when using CGI, strip the headers from the output */
 	$headers = "";
 
-	if (!empty($uses_cgi) && preg_match("/^(.*?)\r?\n\r?\n(.*)/s", $out, $match)) {
+	if (isset($old_php) && preg_match("/^(.*?)\r?\n\r?\n(.*)/s", $out, $match)) {
 		$output = trim($match[2]);
 		$rh = preg_split("/[\n\r]+/", $match[1]);
 		$headers = array();
@@ -2802,7 +2828,7 @@ function junit_mark_test_as($type, $file_name, $test_name, $time = null, $messag
 	} elseif ('WARN' == $type) {
 		junit_suite_record($suite, 'test_warn');
 		$JUNIT['files'][$file_name]['xml'] .= "<warning>$escaped_message</warning>\n";
-	} elseif ('FAIL' == $type) {
+	} elseif('FAIL' == $type) {
 		junit_suite_record($suite, 'test_fail');
 		$JUNIT['files'][$file_name]['xml'] .= "<failure type='$output_type' message='$escaped_message'>$escaped_details</failure>\n";
 	} else {

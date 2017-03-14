@@ -17,8 +17,4 @@ $c = new Collator2();
 $c->getLocale(Locale::ACTUAL_LOCALE);
 --EXPECTF--
 
-Fatal error: Uncaught Error: Object not initialized in %s:%d
-Stack trace:
-#0 %s(%d): Collator->getLocale(0)
-#1 {main}
-  thrown in %s on line %d
+Catchable fatal error: Collator::getLocale(): Object not initialized in %s on line %d

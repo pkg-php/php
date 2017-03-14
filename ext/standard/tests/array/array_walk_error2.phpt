@@ -22,44 +22,36 @@ function callback2($value, $key, $user_data1, $user_data2) {
 echo "*** Testing array_walk() : error conditions - callback parameters ***\n";
 
 // expected: Missing argument Warning
-try {
-	var_dump( array_walk($input, "callback1") );
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
-try {
-	var_dump( array_walk($input, "callback2", 4) );
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump( array_walk($input, "callback1") );
+var_dump( array_walk($input, "callback2", 4) );
 
 // expected: Warning is suppressed
-try {
-	var_dump( @array_walk($input, "callback1") );  
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
-try {
-	var_dump( @array_walk($input, "callback2", 4) );  
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump( @array_walk($input, "callback1") );  
+var_dump( @array_walk($input, "callback2", 4) );  
 
 echo "-- Testing array_walk() function with too many callback parameters --\n";
-try {
-	var_dump( array_walk($input, "callback1", 20, 10) );
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump( array_walk($input, "callback1", 20, 10) );
 
 echo "Done";
 ?>
 --EXPECTF--
 *** Testing array_walk() : error conditions - callback parameters ***
-Exception: Too few arguments to function callback1(), 2 passed and exactly 3 expected
-Exception: Too few arguments to function callback2(), 3 passed and exactly 4 expected
-Exception: Too few arguments to function callback1(), 2 passed and exactly 3 expected
-Exception: Too few arguments to function callback2(), 3 passed and exactly 4 expected
+
+Warning: Missing argument 3 for callback1() in %s on line %d
+
+callback1() invoked 
+bool(true)
+
+Warning: Missing argument 4 for callback2() in %s on line %d
+
+callback2() invoked 
+bool(true)
+
+callback1() invoked 
+bool(true)
+
+callback2() invoked 
+bool(true)
 -- Testing array_walk() function with too many callback parameters --
 
 Warning: array_walk() expects at most 3 parameters, 4 given in %s on line %d

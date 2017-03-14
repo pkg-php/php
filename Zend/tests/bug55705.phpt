@@ -6,7 +6,7 @@ function f(callable $c) {}
 f();
 ?>
 --EXPECTF--
-Fatal error: Uncaught ArgumentCountError: Too few arguments to function f(), 0 passed in %s on line 3 and exactly 1 expected in %s:2
+Fatal error: Uncaught TypeError: Argument 1 passed to f() must be callable, none given, called in %s on line 3 and defined in %s:%d
 Stack trace:
 #0 %s(%d): f()
 #1 {main}

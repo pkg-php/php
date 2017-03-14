@@ -121,8 +121,6 @@ File permissions are => 100600
 File created in => directory specified
 
 -- Iteration 7 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation2.php on line %d
 File name is => %s/tempnam_variation2.tmp%s
 File permissions are => 100600
 File created in => temp dir
@@ -133,15 +131,11 @@ File permissions are => 100600
 File created in => directory specified
 
 -- Iteration 9 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation2.php on line %d
 File name is => %s/tempnam_variation2.tmp%s
 File permissions are => 100600
 File created in => temp dir
 
 -- Iteration 10 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation2.php on line %d
 File name is => %s/tempnam_variation2.tmp%s
 File permissions are => 100600
 File created in => temp dir
@@ -162,8 +156,6 @@ File permissions are => 100600
 File created in => directory specified
 
 -- Iteration 14 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation2.php on line %d
 File name is => %s/tempnam_variation2.tmp%s
 File permissions are => 100600
 File created in => temp dir

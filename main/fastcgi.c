@@ -462,6 +462,11 @@ void fcgi_terminate(void)
 	in_shutdown = 1;
 }
 
+void fcgi_request_set_keep(fcgi_request *req, int new_value)
+{
+	req->keep = new_value;
+}
+
 #ifndef HAVE_ATTRIBUTE_WEAK
 void fcgi_set_logger(fcgi_logger lg) {
 	fcgi_log = lg;
@@ -734,7 +739,7 @@ int fcgi_listen(const char *path, int backlog)
 #else
 		int path_len = strlen(path);
 
-		if (path_len >= (int)sizeof(sa.sa_unix.sun_path)) {
+		if (path_len >= sizeof(sa.sa_unix.sun_path)) {
 			fcgi_log(FCGI_ERROR, "Listening socket's path name is too long.\n");
 			return -1;
 		}
@@ -1081,14 +1086,11 @@ static int fcgi_read_request(fcgi_request *req)
 	req->id = (hdr.requestIdB1 << 8) + hdr.requestIdB0;
 
 	if (hdr.type == FCGI_BEGIN_REQUEST && len == sizeof(fcgi_begin_request)) {
-		fcgi_begin_request *b;
-
 		if (safe_read(req, buf, len+padding) != len+padding) {
 			return 0;
 		}
 
-		b = (fcgi_begin_request*)buf;
-		req->keep = (b->flags & FCGI_KEEP_CONN);
+		req->keep = (((fcgi_begin_request*)buf)->flags & FCGI_KEEP_CONN);
 #ifdef TCP_NODELAY
 		if (req->keep && req->tcp && !req->nodelay) {
 # ifdef _WIN32
@@ -1101,7 +1103,7 @@ static int fcgi_read_request(fcgi_request *req)
 			req->nodelay = 1;
 		}
 #endif
-		switch ((b->roleB1 << 8) + b->roleB0) {
+		switch ((((fcgi_begin_request*)buf)->roleB1 << 8) + ((fcgi_begin_request*)buf)->roleB0) {
 			case FCGI_RESPONDER:
 				fcgi_hash_set(&req->env, FCGI_HASH_FUNC("FCGI_ROLE", sizeof("FCGI_ROLE")-1), "FCGI_ROLE", sizeof("FCGI_ROLE")-1, "RESPONDER", sizeof("RESPONDER")-1);
 				break;
@@ -1429,8 +1431,6 @@ int fcgi_accept_request(fcgi_request *req)
 					struct pollfd fds;
 					int ret;
 
-					req->hook.on_read();
-
 					fds.fd = req->fd;
 					fds.events = POLLIN;
 					fds.revents = 0;
@@ -1443,8 +1443,6 @@ int fcgi_accept_request(fcgi_request *req)
 					}
 					fcgi_close(req, 1, 0);
 #else
-					req->hook.on_read();
-
 					if (req->fd < FD_SETSIZE) {
 						struct timeval tv = {5,0};
 						fd_set set;
@@ -1471,6 +1469,7 @@ int fcgi_accept_request(fcgi_request *req)
 		} else if (in_shutdown) {
 			return -1;
 		}
+		req->hook.on_read();
 		if (fcgi_read_request(req)) {
 #ifdef _WIN32
 			if (is_impersonate && !req->tcp) {
@@ -1590,7 +1589,7 @@ int fcgi_write(fcgi_request *req, fcgi_request_type type, const char *str, int l
 		}
 		memcpy(req->out_pos, str, len);
 		req->out_pos += len;
-	} else if (len - limit < (int)(sizeof(req->out_buf) - sizeof(fcgi_header))) {
+	} else if (len - limit < sizeof(req->out_buf) - sizeof(fcgi_header)) {
 		if (!req->out_hdr) {
 			open_packet(req, type);
 		}

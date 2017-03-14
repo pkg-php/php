@@ -258,9 +258,8 @@ static int print_extension_info(zend_extension *ext, void *arg) /* {{{ */
 
 static int extension_name_cmp(const zend_llist_element **f, const zend_llist_element **s) /* {{{ */
 {
-	zend_extension *fe = (zend_extension*)(*f)->data;
-	zend_extension *se = (zend_extension*)(*s)->data;
-	return strcmp(fe->name, se->name);
+	return strcmp(	((zend_extension *)(*f)->data)->name,
+					((zend_extension *)(*s)->data)->name);
 }
 /* }}} */
 
@@ -660,7 +659,7 @@ void sapi_cgi_log_fastcgi(int level, char *message, size_t len)
 
 /* {{{ sapi_cgi_log_message
  */
-static void sapi_cgi_log_message(char *message, int syslog_type_int)
+static void sapi_cgi_log_message(char *message)
 {
 	zlog(ZLOG_NOTICE, "PHP message: %s", message);
 }
@@ -1549,7 +1548,7 @@ PHP_FUNCTION(fastcgi_finish_request) /* {{{ */
 
 static const zend_function_entry cgi_fcgi_sapi_functions[] = {
 	PHP_FE(fastcgi_finish_request,              NULL)
-	PHP_FE_END
+	{NULL, NULL, NULL}
 };
 
 static zend_module_entry cgi_module_entry = {
@@ -1612,7 +1611,9 @@ int main(int argc, char *argv[])
 	tsrm_ls = ts_resource(0);
 #endif
 
+#ifdef ZEND_SIGNALS
 	zend_signal_startup();
+#endif
 
 	sapi_startup(&cgi_sapi_module);
 	cgi_sapi_module.php_ini_path_override = NULL;
@@ -1995,7 +1996,8 @@ fastcgi_request_done:
 
 			requests++;
 			if (UNEXPECTED(max_requests && (requests == max_requests))) {
-				fcgi_finish_request(request, 1);
+				fcgi_request_set_keep(request, 0);
+				fcgi_finish_request(request, 0);
 				break;
 			}
 			/* end of fastcgi loop */

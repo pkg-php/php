@@ -172,8 +172,7 @@ static php_stream_wrapper_ops gzip_stream_wops = {
 	NULL, /* unlink */
 	NULL, /* rename */
 	NULL, /* mkdir */
-	NULL, /* rmdir */
-	NULL
+	NULL  /* rmdir */
 };
 
 php_stream_wrapper php_stream_gzip_wrapper =	{

@@ -22,14 +22,14 @@ $offsets = array(
 
 foreach ($offsets as $offset) {
 	$r = file_get_contents($filename, false, null, $offset);
-	if ($r !== false) var_dump(strlen($r));
+	var_dump(strlen($r));
 }
 
 @unlink($filename);
 echo "Done\n";
 ?>
---EXPECTF-- 
-int(1)
+--EXPECTF--	
+int(13824)
 int(13824)
 int(0)
 int(1)

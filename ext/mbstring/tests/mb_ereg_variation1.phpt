@@ -95,58 +95,47 @@ echo "Done";
 
 -- Iteration 1 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 2 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 3 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 4 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 5 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 6 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 7 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 8 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 9 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 10 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 11 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 12 --
 int(6)
@@ -164,16 +153,13 @@ array(1) {
 
 -- Iteration 14 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 15 --
 bool(false)
-array(0) {
-}
+NULL
 
 -- Iteration 16 --
 bool(false)
-array(0) {
-}
+NULL
 Done

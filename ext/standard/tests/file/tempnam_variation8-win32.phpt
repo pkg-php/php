@@ -115,15 +115,11 @@ File permissions are => 100666
 File created in => directory specified
 
 -- Iteration 6 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation8-win32.php on line %d
 File name is => %s\t%s
 File permissions are => 100666
 File created in => temp dir
 
 -- Iteration 7 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation8-win32.php on line %d
 File name is => %s\t%s
 File permissions are => 100666
 File created in => temp dir
@@ -144,8 +140,6 @@ File permissions are => 100666
 File created in => directory specified
 
 -- Iteration 11 --
-
-Notice: tempnam(): file created in the system's temporary directory in %stempnam_variation8-win32.php on line %d
 File name is => %s\t%s
 File permissions are => 100666
 File created in => temp dir

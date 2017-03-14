@@ -39,7 +39,8 @@
 #include "spl_heap.h"
 #include "zend_exceptions.h"
 #include "zend_interfaces.h"
-#include "ext/standard/php_mt_rand.h"
+#include "ext/standard/php_rand.h"
+#include "ext/standard/php_lcg.h"
 #include "main/snprintf.h"
 
 #ifdef COMPILE_DL_SPL
@@ -377,13 +378,13 @@ static void autoload_func_info_dtor(zval *element)
 	if (!Z_ISUNDEF(alfi->obj)) {
 		zval_ptr_dtor(&alfi->obj);
 	}
-	if (!Z_ISUNDEF(alfi->closure)) {
-		zval_ptr_dtor(&alfi->closure);
-	}
 	if (alfi->func_ptr &&
 		UNEXPECTED(alfi->func_ptr->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE)) {
 		zend_string_release(alfi->func_ptr->common.function_name);
 		zend_free_trampoline(alfi->func_ptr);
+	}
+	if (!Z_ISUNDEF(alfi->closure)) {
+		zval_ptr_dtor(&alfi->closure);
 	}
 	efree(alfi);
 }
@@ -770,6 +771,10 @@ PHPAPI zend_string *php_spl_object_hash(zval *obj) /* {{{*/
 	intptr_t hash_handle, hash_handlers;
 
 	if (!SPL_G(hash_mask_init)) {
+		if (!BG(mt_rand_is_seeded)) {
+			php_mt_srand((uint32_t)GENERATE_SEED());
+		}
+
 		SPL_G(hash_mask_handle)   = (intptr_t)(php_mt_rand() >> 1);
 		SPL_G(hash_mask_handlers) = (intptr_t)(php_mt_rand() >> 1);
 		SPL_G(hash_mask_init) = 1;
@@ -778,7 +783,7 @@ PHPAPI zend_string *php_spl_object_hash(zval *obj) /* {{{*/
 	hash_handle   = SPL_G(hash_mask_handle)^(intptr_t)Z_OBJ_HANDLE_P(obj);
 	hash_handlers = SPL_G(hash_mask_handlers);
 
-	return strpprintf(32, "%016zx%016zx", hash_handle, hash_handlers);
+	return strpprintf(32, "%016lx%016lx", hash_handle, hash_handlers);
 }
 /* }}} */
 

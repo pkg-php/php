@@ -25,7 +25,7 @@ foreach($intervals as $iv) {
 echo "==DONE==\n";
 ?>
 --EXPECTF--
-object(DateInterval)#%d (16) {
+object(DateInterval)#%d (15) {
   ["y"]=>
   int(1)
   ["m"]=>
@@ -38,8 +38,6 @@ object(DateInterval)#%d (16) {
   int(30)
   ["s"]=>
   int(0)
-  ["f"]=>
-  float(0)
   ["weekday"]=>
   int(0)
   ["weekday_behavior"]=>
@@ -59,7 +57,7 @@ object(DateInterval)#%d (16) {
   ["have_special_relative"]=>
   int(0)
 }
-object(DateInterval)#%d (16) {
+object(DateInterval)#%d (15) {
   ["y"]=>
   int(0)
   ["m"]=>
@@ -72,8 +70,6 @@ object(DateInterval)#%d (16) {
   int(30)
   ["s"]=>
   int(0)
-  ["f"]=>
-  float(0)
   ["weekday"]=>
   int(0)
   ["weekday_behavior"]=>
@@ -93,7 +89,7 @@ object(DateInterval)#%d (16) {
   ["have_special_relative"]=>
   int(0)
 }
-object(DateInterval)#%d (16) {
+object(DateInterval)#%d (15) {
   ["y"]=>
   int(0)
   ["m"]=>
@@ -106,8 +102,6 @@ object(DateInterval)#%d (16) {
   int(30)
   ["s"]=>
   int(0)
-  ["f"]=>
-  float(0)
   ["weekday"]=>
   int(0)
   ["weekday_behavior"]=>

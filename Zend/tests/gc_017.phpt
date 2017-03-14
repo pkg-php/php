@@ -10,6 +10,7 @@ class Node {
 	public $parent;
 	function __construct($name) {
 		$this->name = $name;
+		$this->children = array();
 		$this->parent = null;
 	}
 	function insert($node) {
@@ -31,12 +32,12 @@ $a->insert($c);
 unset($a);
 unset($b);
 unset($c);
-var_dump(gc_collect_cycles() >= 7);
+var_dump(gc_collect_cycles());
 echo "ok\n"
 ?>
 --EXPECTF--
 string(1) "%s"
 string(1) "%s"
 string(1) "%s"
-bool(true)
+int(10)
 ok

@@ -7,23 +7,11 @@ Bug #28800 (Incorrect string to number conversion for strings starting with 'inf
 		echo ($v+0)."\n";
 	}
 ?>
---EXPECTF--
-
-Warning: A non-numeric value encountered in %s on line %d
+--EXPECT--
 0
-
-Warning: A non-numeric value encountered in %s on line %d
 0
-
-Warning: A non-numeric value encountered in %s on line %d
 0
-
-Warning: A non-numeric value encountered in %s on line %d
 0
-
-Warning: A non-numeric value encountered in %s on line %d
 0
-
-Warning: A non-numeric value encountered in %s on line %d
 0
 

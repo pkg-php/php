@@ -23,19 +23,11 @@ function test3($a, $b) {
 test1();
 test1(10);
 test2(1);
-try {
-	test2();
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+test2();
 test3(1,2);
 
 call_user_func("test1");
-try {
-	call_user_func("test3", 1);
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+call_user_func("test3", 1);
 call_user_func("test3", 1, 2);
 
 class test {
@@ -70,7 +62,14 @@ int(1)
 
 Warning: func_get_arg():  Argument 1 not passed to function in %s on line %d
 bool(false)
-Exception: Too few arguments to function test2(), 0 passed in %s002.php on line %d and exactly 1 expected
+
+Warning: Missing argument 1 for test2(), called in %s on line %d and defined in %s on line %d
+
+Warning: func_get_arg():  Argument 0 not passed to function in %s on line %d
+bool(false)
+
+Warning: func_get_arg():  Argument 1 not passed to function in %s on line %d
+bool(false)
 int(1)
 int(2)
 
@@ -85,7 +84,15 @@ bool(false)
 
 Warning: func_get_arg():  Argument 1 not passed to function in %s on line %d
 bool(false)
-Exception: Too few arguments to function test3(), 1 passed in %s002.php on line %d and exactly 2 expected
+
+Warning: Missing argument 2 for test3()%s
+int(1)
+
+Warning: func_get_arg():  Argument 1 not passed to function in %s on line %d
+bool(false)
+
+Warning: func_get_arg():  Argument 2 not passed to function in %s on line %d
+bool(false)
 int(1)
 int(2)
 

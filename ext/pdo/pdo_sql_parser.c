@@ -380,7 +380,7 @@ PDO_API int pdo_parse_params(pdo_stmt_t *stmt, char *inquery, size_t inquery_len
 	Scanner s;
 	char *ptr, *newbuffer;
 	int t;
-	uint32_t bindno = 0;
+	int bindno = 0;
 	int ret = 0;
 	size_t newbuffer_len;
 	HashTable *params;

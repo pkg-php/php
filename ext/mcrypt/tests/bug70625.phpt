@@ -12,9 +12,6 @@ $plaintext = mcrypt_decrypt(MCRYPT_ARCFOUR, $key, $ciphertext, MCRYPT_MODE_STREA
 var_dump($plaintext);
 
 ?>
---EXPECTF--
-Deprecated: Function mcrypt_encrypt() is deprecated in %s%ebug70625.php on line 4
+--EXPECT--
 string(14) "d5c9a57023d0f1"
-
-Deprecated: Function mcrypt_decrypt() is deprecated in %s%ebug70625.php on line 6
 string(7) "payload"

@@ -8,7 +8,7 @@ class MyClass {
 		$this->myRef = $value;
 	}
 }
-$myGlobal=new MyClass();
+$myGlobal=new MyClass($myGlobal);
 $myGlobal->myRef=&$myGlobal;
 $myGlobal->myNonExistentProperty="ok\n";
 echo $myGlobal;

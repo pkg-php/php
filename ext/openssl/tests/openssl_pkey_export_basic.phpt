@@ -2,10 +2,8 @@
 openssl_pkey_export() with EC key
 --SKIPIF--
 <?php
-if (!extension_loaded("openssl"))
-    die("skip");
-if (!defined('OPENSSL_KEYTYPE_EC'))
-    die("skip no EC available");
+if (!extension_loaded("openssl")) die("skip");
+if (!defined('OPENSSL_KEYTYPE_EC')) die("skip no EC available");
 ?>
 --FILE--
 <?php
@@ -30,9 +28,9 @@ var_dump(OPENSSL_KEYTYPE_EC === $details['type']);
 // Read public key
 $pKey = openssl_pkey_get_public('file://' . dirname(__FILE__) . '/public_ec.key');
 var_dump($pKey);
-// The details are the same for a public or private key, expect the private key parameter 'd
-$detailsPKey = openssl_pkey_get_details($pKey);
-var_dump(array_diff_assoc($details['ec'], $detailsPKey['ec']));
+// The details are the same for a public or private key
+var_dump($details === openssl_pkey_get_details($pKey));
+
 
 // Export to file
 $tempname = tempnam(sys_get_temp_dir(), 'openssl_ec');
@@ -42,6 +40,7 @@ var_dump(OPENSSL_KEYTYPE_EC === $details['type']);
 
 // Clean the temporary file
 @unlink($tempname);
+
 ?>
 --EXPECTF--
 resource(%d) of type (OpenSSL key)
@@ -50,9 +49,6 @@ bool(true)
 bool(true)
 bool(true)
 resource(%d) of type (OpenSSL key)
-array(1) {
-  ["d"]=>
-  string(32) "%a"
-}
+bool(true)
 bool(true)
 bool(true)

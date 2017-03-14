@@ -7,7 +7,7 @@ class VariableStream {
 	var $position;
 	var $varname;
 
-	function __construct($var = null) {
+	function __construct($var) {
 		throw new Exception("constructor");
 	}
 
@@ -102,6 +102,7 @@ var_dump($myvar);
 echo "Done\n";
 ?>
 --EXPECTF--	
+Warning: Missing argument 1 for VariableStream::__construct() in %s on line %d
 
 Warning: fopen(var://myvar): failed to open stream: "VariableStream::stream_open" call failed in %s on line %d
 
