@@ -31,7 +31,7 @@ r1: initial revision
  2 files changed, 562 insertions(+), 11 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 20d7eeac1..ed7717ec7 100644
+index 20d7eea..ed7717e 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -24,6 +24,16 @@
@@ -662,13 +662,13 @@ index 20d7eeac1..ed7717ec7 100644
  		tmp = NULL;
  	}
 diff --git a/ext/date/lib/timelib.m4 b/ext/date/lib/timelib.m4
-index 99bf9fad2..4bf7e4603 100644
+index c725572..2cdf1ff 100644
 --- a/ext/date/lib/timelib.m4
 +++ b/ext/date/lib/timelib.m4
 @@ -78,3 +78,16 @@ stdlib.h
  
  dnl Check for strtoll, atoll
- AC_CHECK_FUNCS(strtoll atoll strftime gettimeofday)
+ AC_CHECK_FUNCS(strtoll atoll strftime)
 +
 +PHP_ARG_WITH(system-tzdata, for use of system timezone data,
 +[  --with-system-tzdata[=DIR]      to specify use of system timezone data],
