@@ -206,7 +206,7 @@ static void dom_copy_doc_props(php_libxml_ref_obj *source_doc, php_libxml_ref_ob
 	}
 }
 
-void dom_set_doc_classmap(php_libxml_ref_obj *document, zend_class_entry *basece, zend_class_entry *ce)
+int dom_set_doc_classmap(php_libxml_ref_obj *document, zend_class_entry *basece, zend_class_entry *ce)
 {
 	dom_doc_propsptr doc_props;
 
@@ -214,7 +214,7 @@ void dom_set_doc_classmap(php_libxml_ref_obj *document, zend_class_entry *basece
 		doc_props = dom_get_doc_props(document);
 		if (doc_props->classmap == NULL) {
 			if (ce == NULL) {
-				return;
+				return SUCCESS;
 			}
 			ALLOC_HASHTABLE(doc_props->classmap);
 			zend_hash_init(doc_props->classmap, 0, NULL, NULL, 0);
@@ -225,6 +225,7 @@ void dom_set_doc_classmap(php_libxml_ref_obj *document, zend_class_entry *basece
 			zend_hash_del(doc_props->classmap, basece->name);
 		}
 	}
+	return SUCCESS;
 }
 
 zend_class_entry *dom_get_doc_classmap(php_libxml_ref_obj *document, zend_class_entry *basece)
@@ -285,7 +286,7 @@ PHP_DOM_EXPORT dom_object *php_dom_object_get_data(xmlNodePtr obj)
 /* {{{ dom_read_na */
 static int dom_read_na(dom_object *obj, zval *retval)
 {
-	zend_throw_error(NULL, "Cannot read property");
+	php_error_docref(NULL, E_ERROR, "Cannot read property");
 	return FAILURE;
 }
 /* }}} */
@@ -293,7 +294,7 @@ static int dom_read_na(dom_object *obj, zval *retval)
 /* {{{ dom_write_na */
 static int dom_write_na(dom_object *obj, zval *newval)
 {
-	zend_throw_error(NULL, "Cannot write property");
+	php_error_docref(NULL, E_ERROR, "Cannot write property");
 	return FAILURE;
 }
 /* }}} */
@@ -419,7 +420,7 @@ static HashTable* dom_get_debug_info_helper(zval *object, int *is_temp) /* {{{ *
 						*std_props;
 	zend_string			*string_key;
 	dom_prop_handler	*entry;
-	zend_string         *object_str;
+	zval object_value;
 
 	*is_temp = 1;
 
@@ -430,7 +431,7 @@ static HashTable* dom_get_debug_info_helper(zval *object, int *is_temp) /* {{{ *
 		return debug_info;
 	}
 
-	object_str = zend_string_init("(object value omitted)", sizeof("(object value omitted)")-1, 0);
+	ZVAL_STRING(&object_value, "(object value omitted)");
 
 	ZEND_HASH_FOREACH_STR_KEY_PTR(prop_handlers, string_key, entry) {
 		zval value;
@@ -441,14 +442,13 @@ static HashTable* dom_get_debug_info_helper(zval *object, int *is_temp) /* {{{ *
 
 		if (Z_TYPE(value) == IS_OBJECT) {
 			zval_dtor(&value);
-			ZVAL_NEW_STR(&value, object_str);
-			zend_string_addref(object_str);
+			ZVAL_COPY(&value, &object_value);
 		}
 
 		zend_hash_add(debug_info, string_key, &value);
 	} ZEND_HASH_FOREACH_END();
 
-	zend_string_release(object_str);
+	zval_dtor(&object_value);
 
 	return debug_info;
 }

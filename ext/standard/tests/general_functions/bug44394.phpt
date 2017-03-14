@@ -1,8 +1,5 @@
 --TEST--
 Bug #44394 (Last two bytes missing from output)
---INI--
-session.trans_sid_tags="a=href,area=href,frame=src,form="
-url_rewriter.tags="a=href,area=href,frame=src,form="
 --FILE--
 <?php
 

@@ -15,14 +15,13 @@ var_dump($df,
 	$df->h,
 	$df->i,
 	$df->s,
-	$df->f,
 	$df->invert,
 	$df->days);
 
 ?>
 ==DONE==
 --EXPECTF--
-object(DateInterval)#%d (16) {
+object(DateInterval)#%d (15) {
   ["y"]=>
   int(0)
   ["m"]=>
@@ -35,8 +34,6 @@ object(DateInterval)#%d (16) {
   int(0)
   ["s"]=>
   int(0)
-  ["f"]=>
-  float(0)
   ["weekday"]=>
   int(0)
   ["weekday_behavior"]=>
@@ -62,7 +59,6 @@ int(2)
 int(0)
 int(0)
 int(0)
-float(0)
 int(0)
 int(2)
 ==DONE==

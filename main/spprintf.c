@@ -152,9 +152,13 @@
 
 /*
  * NUM_BUF_SIZE is the size of the buffer used for arithmetic conversions
- * which can be at most max length of double
+ *
+ * XXX: this is a magic number; do not decrease it
+ * Emax = 1023
+ * NDIG = 320
+ * NUM_BUF_SIZE >= strlen("-") + Emax + strlrn(".") + NDIG + strlen("E+1023") + 1;
  */
-#define NUM_BUF_SIZE PHP_DOUBLE_MAX_LENGTH
+#define NUM_BUF_SIZE		2048
 
 #define NUM(c) (c - '0')
 
@@ -178,7 +182,7 @@
  */
 #define FIX_PRECISION(adjust, precision, s, s_len) do {	\
     if (adjust)					                    	\
-		while (s_len < (size_t)precision) {				\
+		while (s_len < precision) {                 	\
 			*--s = '0';                             	\
 			s_len++;                                	\
 		}												\
@@ -302,8 +306,8 @@ static void xbuf_format_converter(void *xbuf, zend_bool is_char, const char *fmt
 					} else if (*fmt == '*') {
 						precision = va_arg(ap, int);
 						fmt++;
-						if (precision < -1)
-							precision = -1;
+						if (precision < 0)
+							precision = 0;
 					} else
 						precision = 0;
 
@@ -413,7 +417,7 @@ static void xbuf_format_converter(void *xbuf, zend_bool is_char, const char *fmt
 					}
 					s_len = Z_STRLEN_P(zvp);
 					s = Z_STRVAL_P(zvp);
-					if (adjust_precision && (size_t)precision < s_len) {
+					if (adjust_precision && precision < s_len) {
 						s_len = precision;
 					}
 					break;
@@ -799,7 +803,7 @@ fmt_error:
 				*--s = prefix_char;
 				s_len++;
 			}
-			if (adjust_width && adjust == RIGHT && (size_t)min_width > s_len) {
+			if (adjust_width && adjust == RIGHT && min_width > s_len) {
 				if (pad_char == '0' && prefix_char != NUL) {
 					INS_CHAR(xbuf, *s, is_char);
 					s++;
@@ -813,7 +817,7 @@ fmt_error:
 			 */
 			INS_STRING(xbuf, s, s_len, is_char);
 
-			if (adjust_width && adjust == LEFT && (size_t)min_width > s_len) {
+			if (adjust_width && adjust == LEFT && min_width > s_len) {
 				PAD_CHAR(xbuf, pad_char, min_width - s_len, is_char);
 			}
 

@@ -1,7 +1,5 @@
 --TEST--
 GC 033: Crash in GC while run with phpspec
---INI--
-zend.enable_gc = 1
 --FILE--
 <?php
 $a = new stdClass();

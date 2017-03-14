@@ -113,6 +113,5 @@ array(3) {
   string(8) "MTIzNA=="
 }
 bool(false)
-array(0) {
-}
+NULL
 Done

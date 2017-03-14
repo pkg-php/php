@@ -29,11 +29,7 @@
 # define SIGRTMAX 64
 #endif
 
-#ifdef HAVE_STRUCT_SIGINFO_T
-typedef void Sigfunc(int, siginfo_t*, void*);
-#else
 typedef void Sigfunc(int);
-#endif
 Sigfunc *php_signal(int signo, Sigfunc *func, int restart);
 Sigfunc *php_signal4(int signo, Sigfunc *func, int restart, int mask_all);
 

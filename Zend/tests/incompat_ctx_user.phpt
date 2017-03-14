@@ -10,12 +10,11 @@ class B {
 	   function bar() { A::foo(); }
 }
 $b = new B;
-try {
-	$b->bar();
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+$b->bar();
+
 ?>
 --EXPECTF--
 Deprecated: Non-static method A::foo() should not be called statically in %s on line %d
-Exception: Using $this when not in object context
+
+Notice: Undefined variable: this in %s on line %d
+string(1) "A"

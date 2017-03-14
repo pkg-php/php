@@ -5,7 +5,7 @@ Calling method from array
 
 class Hello {
 	public function world($x) {
-		echo "Hello, $x\n";return $this;
+		echo "Hello, $x\n"; return $this;
 	}
 }
 
@@ -37,16 +37,8 @@ class Magic3 {
 }
 
 $f = array('Hello','world');
-try {
-	var_dump($f('you'));
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
-try {
-	var_dump(call_user_func($f, 'you'));
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump($f('you'));
+var_dump(call_user_func($f, 'you'));
 
 printf("-----\n");
 
@@ -109,31 +101,35 @@ var_dump(call_user_func($f, 'you'));
 --EXPECTF--
 Deprecated: Non-static method Hello::world() should not be called statically in %s on line %d
 Hello, you
-Exception: Using $this when not in object context
+
+Notice: Undefined variable: this in %s on line %d
+NULL
 
 Deprecated: %son-static method Hello::world() should not be called statically in %s on line %d
 Hello, you
-Exception: Using $this when not in object context
+
+Notice: Undefined variable: this in %s on line %d
+NULL
 -----
 Hello, again
-object(Hello)#%d (0) {
+object(Hello)#1 (0) {
 }
 Hello, again
-object(Hello)#%d (0) {
+object(Hello)#1 (0) {
 }
 -----
 Hello, there
-object(Hello)#%d (0) {
+object(Hello)#2 (0) {
 }
 Hello, there
-object(Hello)#%d (0) {
+object(Hello)#2 (0) {
 }
 -----
 Hello, devs
-object(Hello)#%d (0) {
+object(Hello)#4 (0) {
 }
 Hello, devs
-object(Hello)#%d (0) {
+object(Hello)#4 (0) {
 }
 -----
 Magic::__call called (foo)!

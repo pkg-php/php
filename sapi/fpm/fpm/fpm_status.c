@@ -386,8 +386,7 @@ int fpm_status_handle_request(void) /* {{{ */
 
 		/* no need to test the var 'full' */
 		if (full_syntax) {
-			unsigned int i;
-			int first;
+			int i, first;
 			zend_string *tmp_query_string;
 			char *query_string;
 			struct timeval duration, now;

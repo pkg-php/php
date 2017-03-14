@@ -25,7 +25,7 @@ blah blah blah blah blah blah blah
 
 EOD;
 
-$filename = tempnam(sys_get_temp_dir(), "phpt");
+$filename = tempnam("/tmp", "phpt");
 
 $fp = gzopen($filename, "wb");
 gzwrite($fp, $original);

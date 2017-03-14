@@ -22,11 +22,7 @@ class TestClass {
 
     public static function staticMethod() {
         echo "Called staticMethod()\n";
-        try {
-	        var_dump($this);
-		} catch (Throwable $e) {
-			echo "Exception: " . $e->getMessage() . "\n";
-		}
+        var_dump($this);
     }
 
     private static function privateMethod() {
@@ -97,11 +93,15 @@ Static method:
 
 Warning: ReflectionMethod::invoke() expects at least 1 parameter, 0 given in %s on line %d
 NULL
+Called staticMethod()
 
-Warning: ReflectionMethod::invoke() expects parameter 1 to be object, boolean given in %s on line %d
+Notice: Undefined variable: this in %s on line %d
+NULL
 NULL
 Called staticMethod()
-Exception: Using $this when not in object context
+
+Notice: Undefined variable: this in %s on line %d
+NULL
 NULL
 
 Method that throws an exception:

@@ -3,7 +3,6 @@ Test session_set_save_handler() function: create_sid
 --INI--
 session.save_handler=files
 session.name=PHPSESSID
-session.save_path=/tmp
 --SKIPIF--
 <?php include('skipif.inc'); ?>
 --FILE--
@@ -75,13 +74,4 @@ session_unset();
 --EXPECTF--
 *** Testing session_set_save_handler() function: create_sid ***
 
-Fatal error: Uncaught Error: Session id must be a string in %s:%d
-Stack trace:
-#0 %s(%d): session_start()
-#1 {main}
-
-Next Error: Failed to create session ID: user (path: %s) in %s:%d
-Stack trace:
-#0 %s(%d): session_start()
-#1 {main}
-  thrown in %s on line %d
+Fatal error: session_start(): Session id must be a string in %s on line %d

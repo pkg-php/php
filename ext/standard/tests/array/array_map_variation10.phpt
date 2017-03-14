@@ -20,11 +20,7 @@ echo "-- anonymous function with all parameters and body --\n";
 var_dump( array_map( create_function('$a, $b', 'return array($a, $b);'), $array1, $array2));
 
 echo "-- anonymous function with two parameters and passing one array --\n";
-try {
-	var_dump( array_map( create_function('$a, $b', 'return array($a, $b);'), $array1));
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump( array_map( create_function('$a, $b', 'return array($a, $b);'), $array1));
 
 echo "-- anonymous function with NULL parameter --\n";
 var_dump( array_map( create_function(NULL, 'return NULL;'), $array1));
@@ -64,7 +60,41 @@ array(3) {
   }
 }
 -- anonymous function with two parameters and passing one array --
-Exception: Too few arguments to function __lambda_func(), 1 passed and exactly 2 expected
+
+Warning: Missing argument 2 for __lambda_func() in %s(20) : runtime-created function on line %d
+
+Notice: Undefined variable: b in %s(20) : runtime-created function on line %d
+
+Warning: Missing argument 2 for __lambda_func() in %s(20) : runtime-created function on line %d
+
+Notice: Undefined variable: b in %s(20) : runtime-created function on line %d
+
+Warning: Missing argument 2 for __lambda_func() in %s(20) : runtime-created function on line %d
+
+Notice: Undefined variable: b in %s(20) : runtime-created function on line %d
+array(3) {
+  [0]=>
+  array(2) {
+    [0]=>
+    int(1)
+    [1]=>
+    NULL
+  }
+  [1]=>
+  array(2) {
+    [0]=>
+    int(2)
+    [1]=>
+    NULL
+  }
+  [2]=>
+  array(2) {
+    [0]=>
+    int(3)
+    [1]=>
+    NULL
+  }
+}
 -- anonymous function with NULL parameter --
 array(3) {
   [0]=>

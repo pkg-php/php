@@ -28,7 +28,7 @@ foreach ([
     if ($ra) {
       var_dump($ra->allowsNull());
       var_dump($ra->isBuiltin());
-      var_dump($ra->getName());
+      var_dump((string)$ra);
     }
   }
 }
@@ -48,7 +48,7 @@ foreach ([
     if ($ra) {
       var_dump($ra->allowsNull());
       var_dump($ra->isBuiltin());
-      var_dump($ra->getName());
+      var_dump((string)$ra);
     }
   }
 }
@@ -70,11 +70,9 @@ foreach ([
   if ($ra) {
     var_dump($ra->allowsNull());
     var_dump($ra->isBuiltin());
-    var_dump($ra->getName());
+    var_dump((string)$ra);
   }
 }
-
-?>
 --EXPECT--
 *** functions
 ** Function 0 - Parameter 0

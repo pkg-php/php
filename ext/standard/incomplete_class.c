@@ -54,8 +54,7 @@ static zval *incomplete_class_get_property(zval *object, zval *member, int type,
 	incomplete_class_message(object, E_NOTICE);
 
 	if (type == BP_VAR_W || type == BP_VAR_RW) {
-		ZVAL_ERROR(rv);
-		return rv;
+		return &EG(error_zval);
 	} else {
 		return &EG(uninitialized_zval);
 	}

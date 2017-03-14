@@ -249,7 +249,6 @@ zend_object_iterator_funcs php_dom_iterator_funcs = {
 	php_dom_iterator_current_data,
 	php_dom_iterator_current_key,
 	php_dom_iterator_move_forward,
-	NULL,
 	NULL
 };
 

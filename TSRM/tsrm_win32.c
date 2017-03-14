@@ -33,7 +33,6 @@
 #include <Sddl.h>
 #include "tsrm_win32.h"
 #include "zend_virtual_cwd.h"
-#include "win32/ioutil.h"
 
 #ifdef ZTS
 static ts_rsrc_id win32_globals_id;
@@ -208,42 +207,29 @@ TSRM_API int tsrm_win32_access(const char *pathname, int mode)
 	DWORD sec_desc_length = 0, desired_access = 0, granted_access = 0;
 	BYTE * psec_desc = NULL;
 	BOOL fAccess = FALSE;
+
 	realpath_cache_bucket * bucket = NULL;
 	char * real_path = NULL;
 
-	PHP_WIN32_IOUTIL_INIT_W(pathname)
-	if (!pathw) {
-		return -1;
-	}
-
 	if (mode == 1 /*X_OK*/) {
 		DWORD type;
-		int ret;
-
-		ret = GetBinaryTypeW(pathw, &type) ? 0 : -1;
-
-		PHP_WIN32_IOUTIL_CLEANUP_W()
-
-		return ret;
+		return GetBinaryType(pathname, &type) ? 0 : -1;
 	} else {
 		if(!IS_ABSOLUTE_PATH(pathname, strlen(pathname)+1)) {
-			real_path = (char *)malloc(MAXPATHLEN);
+			real_path = (char *)malloc(MAX_PATH);
 			if(tsrm_realpath(pathname, real_path) == NULL) {
 				goto Finished;
 			}
 			pathname = real_path;
-			PHP_WIN32_IOUTIL_REINIT_W(pathname);
  		}
 
-		if(php_win32_ioutil_access(pathname, mode)) {
-			PHP_WIN32_IOUTIL_CLEANUP_W()
+		if(access(pathname, mode)) {
 			free(real_path);
 			return errno;
 		}
 
  		/* If only existence check is made, return now */
  		if (mode == 0) {
-			PHP_WIN32_IOUTIL_CLEANUP_W()
 			free(real_path);
 			return 0;
 		}
@@ -299,11 +285,10 @@ TSRM_API int tsrm_win32_access(const char *pathname, int mode)
 			if(bucket == NULL && real_path == NULL) {
 				/* We used the pathname directly. Call tsrm_realpath */
 				/* so that entry is created in realpath cache */
-				real_path = (char *)malloc(MAXPATHLEN);
+				real_path = (char *)malloc(MAX_PATH);
 				if(tsrm_realpath(pathname, real_path) != NULL) {
 					pathname = real_path;
 					bucket = realpath_cache_lookup(pathname, (int)strlen(pathname), t);
-					PHP_WIN32_IOUTIL_REINIT_W(pathname);
 				}
 			}
  		}
@@ -340,13 +325,13 @@ TSRM_API int tsrm_win32_access(const char *pathname, int mode)
 		}
 
 		/* Get size of security buffer. Call is expected to fail */
-		if(GetFileSecurityW(pathw, sec_info, NULL, 0, &sec_desc_length)) {
+		if(GetFileSecurity(pathname, sec_info, NULL, 0, &sec_desc_length)) {
 			goto Finished;
 		}
 
 		psec_desc = (BYTE *)malloc(sec_desc_length);
 		if(psec_desc == NULL ||
-			 !GetFileSecurityW(pathw, sec_info, (PSECURITY_DESCRIPTOR)psec_desc, sec_desc_length, &sec_desc_length)) {
+			 !GetFileSecurity(pathname, sec_info, (PSECURITY_DESCRIPTOR)psec_desc, sec_desc_length, &sec_desc_length)) {
 			goto Finished;
 		}
 
@@ -388,7 +373,6 @@ Finished:
 			real_path = NULL;
 		}
 
-		PHP_WIN32_IOUTIL_CLEANUP_W()
 		if(fAccess == FALSE) {
 			errno = EACCES;
 			return errno;
@@ -475,15 +459,14 @@ TSRM_API FILE *popen_ex(const char *command, const char *type, const char *cwd, 
 {
 	FILE *stream = NULL;
 	int fno, type_len, read, mode;
-	STARTUPINFOW startup;
+	STARTUPINFO startup;
 	PROCESS_INFORMATION process;
 	SECURITY_ATTRIBUTES security;
 	HANDLE in, out;
 	DWORD dwCreateFlags = 0;
 	BOOL res;
 	process_pair *proc;
-	char *cmd = NULL;
-	wchar_t *cmdw = NULL, *cwdw = NULL, *envw = NULL;
+	char *cmd;
 	int i;
 	char *ptype = (char *)type;
 	HANDLE thread_token = NULL;
@@ -507,42 +490,18 @@ TSRM_API FILE *popen_ex(const char *command, const char *type, const char *cwd, 
 		ptype++;
 	}
 
-	cmd = (char*)malloc(strlen(command)+strlen(TWG(comspec))+sizeof(" /c ")+2);
-	if (!cmd) {
-		return NULL;
-	}
-
-	sprintf(cmd, "%s /c \"%s\"", TWG(comspec), command);
-	cmdw = php_win32_cp_any_to_w(cmd);
-	if (!cmdw) {
-		free(cmd);
-		return NULL;
-	}
-
-	if (cwd) {
-		cwdw = php_win32_ioutil_any_to_w(cwd);
-		if (!cwdw) {
-			free(cmd);
-			free(cmdw);
-			return NULL;
-		}
-	}
-
 	security.nLength				= sizeof(SECURITY_ATTRIBUTES);
 	security.bInheritHandle			= TRUE;
 	security.lpSecurityDescriptor	= NULL;
 
 	if (!type_len || !CreatePipe(&in, &out, &security, 2048L)) {
-		free(cmdw);
-		free(cwdw);
-		free(cmd);
 		return NULL;
 	}
 
-	memset(&startup, 0, sizeof(STARTUPINFOW));
+	memset(&startup, 0, sizeof(STARTUPINFO));
 	memset(&process, 0, sizeof(PROCESS_INFORMATION));
 
-	startup.cb			= sizeof(STARTUPINFOW);
+	startup.cb			= sizeof(STARTUPINFO);
 	startup.dwFlags		= STARTF_USESTDHANDLES;
 	startup.hStdError	= GetStdHandle(STD_ERROR_HANDLE);
 
@@ -574,28 +533,19 @@ TSRM_API FILE *popen_ex(const char *command, const char *type, const char *cwd, 
 		}
 	}
 
-	envw = php_win32_cp_env_any_to_w(env);
-	if (envw) {
-		dwCreateFlags |= CREATE_UNICODE_ENVIRONMENT;
-	} else {
-		if (env) {
-			free(cmd);
-			free(cmdw);
-			free(cwdw);
-			return NULL;
-		}
+	cmd = (char*)malloc(strlen(command)+strlen(TWG(comspec))+sizeof(" /c ")+2);
+	if (!cmd) {
+		return NULL;
 	}
 
+	sprintf(cmd, "%s /c \"%s\"", TWG(comspec), command);
 	if (asuser) {
-		res = CreateProcessAsUserW(token_user, NULL, cmdw, &security, &security, security.bInheritHandle, dwCreateFlags, envw, cwdw, &startup, &process);
+		res = CreateProcessAsUser(token_user, NULL, cmd, &security, &security, security.bInheritHandle, dwCreateFlags, env, cwd, &startup, &process);
 		CloseHandle(token_user);
 	} else {
-		res = CreateProcessW(NULL, cmdw, &security, &security, security.bInheritHandle, dwCreateFlags, envw, cwdw, &startup, &process);
+		res = CreateProcess(NULL, cmd, &security, &security, security.bInheritHandle, dwCreateFlags, env, cwd, &startup, &process);
 	}
 	free(cmd);
-	free(cmdw);
-	free(cwdw);
-	free(envw);
 
 	if (!res) {
 		return NULL;
@@ -731,7 +681,10 @@ TSRM_API void *shmat(int key, const void *shmaddr, int flags)
 
 	err = GetLastError();
 	if (err) {
-		SET_ERRNO_FROM_WIN32_CODE(err);
+		/* Catch more errors */
+		if (ERROR_NOT_ENOUGH_MEMORY == err) {
+			_set_errno(ENOMEM);
+		}
 		return (void*)-1;
 	}
 
@@ -812,16 +765,9 @@ TSRM_API int win32_utime(const char *filename, struct utimbuf *buf) /* {{{ */
 {
 	FILETIME mtime, atime;
 	HANDLE hFile;
-	PHP_WIN32_IOUTIL_INIT_W(filename)
 
-	if (!pathw) {
-		return -1;
-	}
-
-	hFile = CreateFileW(pathw, GENERIC_WRITE, FILE_SHARE_WRITE|FILE_SHARE_READ, NULL,
+	hFile = CreateFile(filename, GENERIC_WRITE, FILE_SHARE_WRITE|FILE_SHARE_READ, NULL,
 				 OPEN_ALWAYS, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-
-	PHP_WIN32_IOUTIL_CLEANUP_W()
 
 	/* OPEN_ALWAYS mode sets the last error to ERROR_ALREADY_EXISTS but
 	   the CreateFile operation succeeds */

@@ -18,11 +18,7 @@ class Object1 {
 }
 
 $class= new ReflectionClass('Object1');
-try {
-	var_dump($class->newInstanceArgs());
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump($class->newInstanceArgs());
 var_dump($class->newInstanceArgs(array('test')));
 
 
@@ -31,7 +27,13 @@ echo "Done\n";
 --EXPECTF--	
 object(Object)#%d (0) {
 }
-Exception: Too few arguments to function Object1::__construct(), 0 passed and exactly 1 expected
+
+Warning: Missing argument 1 for Object1::__construct() in %s on line %d
+
+Notice: Undefined variable: var in %s on line %d
+NULL
+object(Object1)#%d (0) {
+}
 string(4) "test"
 object(Object1)#%d (0) {
 }

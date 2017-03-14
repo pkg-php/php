@@ -229,6 +229,7 @@ const zend_function_entry pdo_mysql_functions[] = {
 /* }}} */
 
 /* {{{ pdo_mysql_deps[] */
+#if ZEND_MODULE_API_NO >= 20050922
 static const zend_module_dep pdo_mysql_deps[] = {
 	ZEND_MOD_REQUIRED("pdo")
 #ifdef PDO_USE_MYSQLND
@@ -236,6 +237,7 @@ static const zend_module_dep pdo_mysql_deps[] = {
 #endif
 	ZEND_MOD_END
 };
+#endif
 /* }}} */
 
 /* {{{ pdo_mysql_module_entry */

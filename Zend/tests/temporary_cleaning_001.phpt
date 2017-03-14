@@ -1,5 +1,7 @@
 --TEST--
 Temporary leak on exception
+--XFAIL--
+See Bug #62210 and attempt to fix it in "tmp_livelibess" branch
 --FILE--
 <?php
 

@@ -5,8 +5,7 @@ mcrypt_list_modes
 --FILE--
 <?php
 var_dump(mcrypt_list_modes());
---EXPECTF--
-Deprecated: Function mcrypt_list_modes() is deprecated in %s%emcrypt_list_modes.php on line 2
+--EXPECT--
 array(8) {
   [0]=>
   string(3) "cbc"

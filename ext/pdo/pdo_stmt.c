@@ -113,6 +113,12 @@ ZEND_END_ARG_INFO()
 	  RETURN_FALSE;	\
   }	\
 
+static PHP_FUNCTION(dbrow_constructor) /* {{{ */
+{
+	zend_throw_exception_ex(php_pdo_get_exception(), 0, "You may not create a PDORow manually");
+}
+/* }}} */
+
 static inline int rewrite_name_to_position(pdo_stmt_t *stmt, struct pdo_bound_param_data *param) /* {{{ */
 {
 	if (stmt->bound_param_map) {
@@ -269,7 +275,7 @@ static void param_dtor(zval *el) /* {{{ */
 
 	/* tell the driver that it is going away */
 	if (param->stmt->methods->param_hook) {
-		param->stmt->methods->param_hook(param->stmt, param, PDO_PARAM_EVT_FREE);
+			param->stmt->methods->param_hook(param->stmt, param, PDO_PARAM_EVT_FREE);
 	}
 
 	if (param->name) {
@@ -545,7 +551,7 @@ static inline void fetch_value(pdo_stmt_t *stmt, zval *dest, int colno, int *typ
 
 	col = &stmt->columns[colno];
 	type = PDO_PARAM_TYPE(col->param_type);
-	new_type =  type_override ? (int)PDO_PARAM_TYPE(*type_override) : type;
+	new_type =  type_override ? PDO_PARAM_TYPE(*type_override) : type;
 
 	value = NULL;
 	value_len = 0;
@@ -734,7 +740,9 @@ static int do_fetch_class_prepare(pdo_stmt_t *stmt) /* {{{ */
 	}
 
 	if (ce->constructor) {
+		fci->function_table = &ce->function_table;
 		ZVAL_UNDEF(&fci->function_name);
+		fci->symbol_table = NULL;
 		fci->retval = &stmt->fetch.cls.retval;
 		fci->param_count = 0;
 		fci->params = NULL;
@@ -744,7 +752,7 @@ static int do_fetch_class_prepare(pdo_stmt_t *stmt) /* {{{ */
 
 		fcc->initialized = 1;
 		fcc->function_handler = ce->constructor;
-		fcc->calling_scope = zend_get_executed_scope();
+		fcc->calling_scope = EG(scope);
 		fcc->called_scope = ce;
 		return 1;
 	} else if (!Z_ISUNDEF(stmt->fetch.cls.ctor_args)) {
@@ -1531,11 +1539,10 @@ static PHP_METHOD(PDOStatement, fetchAll)
 
 static int register_bound_param(INTERNAL_FUNCTION_PARAMETERS, pdo_stmt_t *stmt, int is_param) /* {{{ */
 {
-	struct pdo_bound_param_data param;
+	struct pdo_bound_param_data param = {{{0}}};
 	zend_long param_type = PDO_PARAM_STR;
 	zval *parameter, *driver_params = NULL;
 
-	memset(&param, 0, sizeof(param));
 	param.paramno = -1;
 
 	if (FAILURE == zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS(),
@@ -1575,12 +1582,11 @@ static int register_bound_param(INTERNAL_FUNCTION_PARAMETERS, pdo_stmt_t *stmt, 
    bind an input parameter to the value of a PHP variable.  $paramno is the 1-based position of the placeholder in the SQL statement (but can be the parameter name for drivers that support named placeholders).  It should be called prior to execute(). */
 static PHP_METHOD(PDOStatement, bindValue)
 {
-	struct pdo_bound_param_data param;
+	struct pdo_bound_param_data param = {{{0}}};
 	zend_long param_type = PDO_PARAM_STR;
 	zval *parameter;
 	PHP_STMT_GET_OBJ;
 
-	memset(&param, 0, sizeof(param));
 	param.paramno = -1;
 
 	if (FAILURE == zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET, ZEND_NUM_ARGS(),
@@ -2119,7 +2125,7 @@ static PHP_METHOD(PDOStatement, debugDumpParams)
 				php_stream_printf(out, "Key: Name: [%zd] %.*s\n",
 					ZSTR_LEN(key), (int) ZSTR_LEN(key), ZSTR_VAL(key));
 			} else {
-				php_stream_printf(out, "Key: Position #" ZEND_ULONG_FMT ":\n", num);
+				php_stream_printf(out, "Key: Position #%pd:\n", num);
 			}
 
 			php_stream_printf(out, "paramno=%pd\nname=[%zd] \"%.*s\"\nis_param=%d\nparam_type=%d\n",
@@ -2173,7 +2179,7 @@ const zend_function_entry pdo_dbstmt_functions[] = {
 	PHP_ME(PDOStatement, debugDumpParams, arginfo_pdostatement__void,		ZEND_ACC_PUBLIC)
 	PHP_ME(PDOStatement, __wakeup,		arginfo_pdostatement__void,			ZEND_ACC_PUBLIC|ZEND_ACC_FINAL)
 	PHP_ME(PDOStatement, __sleep,		arginfo_pdostatement__void,			ZEND_ACC_PUBLIC|ZEND_ACC_FINAL)
-	PHP_FE_END
+	{NULL, NULL, NULL}
 };
 
 /* {{{ overloaded handlers for PDOStatement class */
@@ -2445,7 +2451,6 @@ static zend_object_iterator_funcs pdo_stmt_iter_funcs = {
 	pdo_stmt_iter_get_data,
 	pdo_stmt_iter_get_key,
 	pdo_stmt_iter_move_forwards,
-	NULL,
 	NULL
 };
 
@@ -2478,7 +2483,7 @@ zend_object_iterator *pdo_stmt_iter_get(zend_class_entry *ce, zval *object, int 
 /* {{{ overloaded handlers for PDORow class (used by PDO_FETCH_LAZY) */
 
 const zend_function_entry pdo_row_functions[] = {
-	PHP_FE_END
+	{NULL, NULL, NULL}
 };
 
 static zval *row_prop_read(zval *object, zval *member, int type, void **cache_slot, zval *rv)
@@ -2640,8 +2645,15 @@ static int row_call_method(zend_string *method, zend_object *object, INTERNAL_FU
 
 static union _zend_function *row_get_ctor(zend_object *object)
 {
-	zend_throw_exception_ex(php_pdo_get_exception(), 0, "You may not create a PDORow manually");
-	return NULL;
+	static zend_internal_function ctor = {0};
+
+	ctor.type = ZEND_INTERNAL_FUNCTION;
+	ctor.function_name = zend_string_init("__construct", sizeof("__construct") - 1, 0);
+	ctor.scope = pdo_row_ce;
+	ctor.handler = ZEND_FN(dbrow_constructor);
+	ctor.fn_flags = ZEND_ACC_PUBLIC;
+
+	return (union _zend_function*)&ctor;
 }
 
 static zend_string *row_get_classname(const zend_object *object)
@@ -2677,11 +2689,6 @@ zend_object_handlers pdo_row_object_handlers = {
 	row_get_classname,
 	row_compare,
 	NULL, /* cast */
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
 	NULL
 };
 

@@ -54,25 +54,21 @@ try {
 --EXPECTF--
 Warning: The magic method __call() must have public visibility and cannot be static in %s on line 3
 ---> Invoke __call via simple method call.
-object(A)#1 (0) {
-}
+NULL
 Exception caught OK; continuing.
 
 
 ---> Invoke __call via scope resolution operator within instance.
-object(A)#1 (0) {
-}
+NULL
 Exception caught OK; continuing.
 
 
 ---> Invoke __call via scope resolution operator within child instance.
-object(B)#2 (0) {
-}
+NULL
 Exception caught OK; continuing.
 
 
 ---> Invoke __call via callback.
-object(B)#2 (0) {
-}
+NULL
 Exception caught OK; continuing.
 ==DONE==

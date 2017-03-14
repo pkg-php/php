@@ -17,11 +17,7 @@ var_dump(libxml_set_external_entity_loader());
 var_dump(libxml_set_external_entity_loader(function() {}, 2));
 
 var_dump(libxml_set_external_entity_loader(function($a, $b, $c, $d) {}));
-try {
-	var_dump($dd->validate());
-} catch (Throwable $e) {
-	echo "Exception: " . $e->getMessage() . "\n";
-}
+var_dump($dd->validate());
 
 echo "Done.\n";
 
@@ -36,6 +32,8 @@ Warning: libxml_set_external_entity_loader() expects exactly 1 parameter, 2 give
 NULL
 bool(true)
 
+Warning: Missing argument 4 for {closure}() in %s on line %d
+
 Warning: DOMDocument::validate(): Could not load the external subset "http://example.com/foobar" in %s on line %d
-Exception: Too few arguments to function {closure}(), 3 passed and exactly 4 expected
+bool(false)
 Done.

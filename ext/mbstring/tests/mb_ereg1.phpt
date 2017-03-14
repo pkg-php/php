@@ -27,8 +27,7 @@ array(3) {
   [1]=>
   int(2)
   [2]=>
-  array(0) {
-  }
+  int(3)
 }
 
 Warning: mb_ereg(): empty pattern in %s on line %d
@@ -39,8 +38,7 @@ array(3) {
   [1]=>
   string(0) ""
   [2]=>
-  array(0) {
-  }
+  string(0) ""
 }
 
 Notice: Array to string conversion in %s on line %d
@@ -52,8 +50,7 @@ array(3) {
   [1]=>
   int(1)
   [2]=>
-  array(0) {
-  }
+  string(0) ""
 }
 
 Warning: mb_ereg() expects parameter 2 to be string, array given in %s on line %d

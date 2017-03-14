@@ -46,6 +46,7 @@ ZEND_API void zend_object_std_init(zend_object *object, zend_class_entry *ce)
 	}
 	if (UNEXPECTED(ce->ce_flags & ZEND_ACC_USE_GUARDS)) {
 		GC_FLAGS(object) |= IS_OBJ_USE_GUARDS;
+		Z_PTR_P(p) = NULL;
 		ZVAL_UNDEF(p);
 	}
 }
@@ -70,17 +71,11 @@ ZEND_API void zend_object_std_dtor(zend_object *object)
 		} while (p != end);
 	}
 	if (UNEXPECTED(GC_FLAGS(object) & IS_OBJ_HAS_GUARDS)) {
-		if (EXPECTED(Z_TYPE_P(p) == IS_STRING)) {
-			zend_string_release(Z_STR_P(p));
-		} else {
-			HashTable *guards;
+		HashTable *guards = Z_PTR_P(p);
 
-			ZEND_ASSERT(Z_TYPE_P(p) == IS_ARRAY);
-			guards = Z_ARRVAL_P(p);
-			ZEND_ASSERT(guards != NULL);
-			zend_hash_destroy(guards);
-			FREE_HASHTABLE(guards);
-		}
+		ZEND_ASSERT(guards != NULL);
+		zend_hash_destroy(guards);
+		FREE_HASHTABLE(guards);
 	}
 }
 
@@ -91,52 +86,51 @@ ZEND_API void zend_objects_destroy_object(zend_object *object)
 	if (destructor) {
 		zend_object *old_exception;
 		zval obj;
-		zend_class_entry *orig_fake_scope;
 
 		if (destructor->op_array.fn_flags & (ZEND_ACC_PRIVATE|ZEND_ACC_PROTECTED)) {
 			if (destructor->op_array.fn_flags & ZEND_ACC_PRIVATE) {
 				/* Ensure that if we're calling a private function, we're allowed to do so.
 				 */
-				if (EG(current_execute_data)) {
-					zend_class_entry *scope = zend_get_executed_scope();
+				if (object->ce != EG(scope)) {
+					zend_class_entry *ce = object->ce;
 
-					if (object->ce != scope) {
+					if (EG(current_execute_data)) {
 						zend_throw_error(NULL,
 							"Call to private %s::__destruct() from context '%s'",
-							ZSTR_VAL(object->ce->name),
-							scope ? ZSTR_VAL(scope->name) : "");
-						return;
+							ZSTR_VAL(ce->name),
+							EG(scope) ? ZSTR_VAL(EG(scope)->name) : "");
+					} else {
+						zend_error(E_WARNING,
+							"Call to private %s::__destruct() from context '%s' during shutdown ignored",
+							ZSTR_VAL(ce->name),
+							EG(scope) ? ZSTR_VAL(EG(scope)->name) : "");
 					}
-				} else {
-					zend_error(E_WARNING,
-						"Call to private %s::__destruct() from context '' during shutdown ignored",
-						ZSTR_VAL(object->ce->name));
 					return;
 				}
 			} else {
 				/* Ensure that if we're calling a protected function, we're allowed to do so.
 				 */
-				if (EG(current_execute_data)) {
-					zend_class_entry *scope = zend_get_executed_scope();
+				if (!zend_check_protected(zend_get_function_root_class(destructor), EG(scope))) {
+					zend_class_entry *ce = object->ce;
 
-					if (!zend_check_protected(zend_get_function_root_class(destructor), scope)) {
+					if (EG(current_execute_data)) {
 						zend_throw_error(NULL,
 							"Call to protected %s::__destruct() from context '%s'",
-							ZSTR_VAL(object->ce->name),
-							scope ? ZSTR_VAL(scope->name) : "");
-						return;
+							ZSTR_VAL(ce->name),
+							EG(scope) ? ZSTR_VAL(EG(scope)->name) : "");
+					} else {
+						zend_error(E_WARNING,
+							"Call to protected %s::__destruct() from context '%s' during shutdown ignored",
+							ZSTR_VAL(ce->name),
+							EG(scope) ? ZSTR_VAL(EG(scope)->name) : "");
 					}
-				} else {
-					zend_error(E_WARNING,
-						"Call to protected %s::__destruct() from context '' during shutdown ignored",
-						ZSTR_VAL(object->ce->name));
 					return;
 				}
 			}
 		}
 
-		GC_REFCOUNT(object)++;
 		ZVAL_OBJ(&obj, object);
+		Z_ADDREF(obj);
 
 		/* Make sure that destructors are protected from previously thrown exceptions.
 		 * For example, if an exception was thrown in a function and when the function's
@@ -151,8 +145,6 @@ ZEND_API void zend_objects_destroy_object(zend_object *object)
 				EG(exception) = NULL;
 			}
 		}
-		orig_fake_scope = EG(fake_scope);
-		EG(fake_scope) = NULL;
 		zend_call_method_with_0_params(&obj, object->ce, &destructor, ZEND_DESTRUCTOR_FUNC_NAME, NULL);
 		if (old_exception) {
 			if (EG(exception)) {
@@ -162,7 +154,6 @@ ZEND_API void zend_objects_destroy_object(zend_object *object)
 			}
 		}
 		zval_ptr_dtor(&obj);
-		EG(fake_scope) = orig_fake_scope;
 	}
 }
 
@@ -236,7 +227,7 @@ ZEND_API void zend_objects_clone_members(zend_object *new_object, zend_object *o
 		zval new_obj;
 
 		ZVAL_OBJ(&new_obj, new_object);
-		Z_ADDREF(new_obj);
+		zval_copy_ctor(&new_obj);
 		zend_call_method_with_0_params(&new_obj, old_object->ce, &old_object->ce->clone, ZEND_CLONE_FUNC_NAME, NULL);
 		zval_ptr_dtor(&new_obj);
 	}

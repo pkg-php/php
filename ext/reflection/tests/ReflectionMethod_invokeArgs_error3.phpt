@@ -14,11 +14,7 @@ class TestClass {
 
     public static function staticMethod() {
         echo "Called staticMethod()\n";
-        try {
-	        var_dump($this);
-		} catch (Throwable $e) {
-			echo "Exception: " . $e->getMessage() . "\n";
-		}
+        var_dump($this);
     }
 
     private static function privateMethod() {
@@ -107,7 +103,9 @@ NULL
 Warning: ReflectionMethod::invokeArgs() expects parameter 1 to be object, boolean given in %s on line %d
 NULL
 Called staticMethod()
-Exception: Using $this when not in object context
+
+Notice: Undefined variable: this in %s on line %d
+NULL
 NULL
 
 Private method:
@@ -115,4 +113,5 @@ string(86) "Trying to invoke private method TestClass::privateMethod() from scop
 
 Abstract method:
 string(53) "Trying to invoke abstract method AbstractClass::foo()"
-string(53) "Trying to invoke abstract method AbstractClass::foo()"
+
+Warning: ReflectionMethod::invokeArgs() expects exactly 2 parameters, 1 given in %s on line %d

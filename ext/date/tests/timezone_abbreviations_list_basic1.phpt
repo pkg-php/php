@@ -29,7 +29,7 @@ string(5) "array"
 int(%d)
 
 -- Format a sample entry --
-array(17) {
+array(11) {
   [0]=>
   array(3) {
     ["dst"]=>
@@ -44,20 +44,11 @@ array(17) {
     ["dst"]=>
     bool(false)
     ["offset"]=>
-    int(32400)
-    ["timezone_id"]=>
-    string(18) "Australia/Adelaide"
-  }
-  [2]=>
-  array(3) {
-    ["dst"]=>
-    bool(false)
-    ["offset"]=>
     int(34200)
     ["timezone_id"]=>
     string(18) "Australia/Adelaide"
   }
-  [3]=>
+  [2]=>
   array(3) {
     ["dst"]=>
     bool(true)
@@ -66,7 +57,7 @@ array(17) {
     ["timezone_id"]=>
     string(16) "America/Eirunepe"
   }
-  [4]=>
+  [3]=>
   array(3) {
     ["dst"]=>
     bool(true)
@@ -75,7 +66,7 @@ array(17) {
     ["timezone_id"]=>
     string(18) "America/Rio_Branco"
   }
-  [5]=>
+  [4]=>
   array(3) {
     ["dst"]=>
     bool(true)
@@ -84,52 +75,7 @@ array(17) {
     ["timezone_id"]=>
     string(11) "Brazil/Acre"
   }
-  [6]=>
-  array(3) {
-    ["dst"]=>
-    bool(false)
-    ["offset"]=>
-    int(32400)
-    ["timezone_id"]=>
-    string(21) "Australia/Broken_Hill"
-  }
-  [7]=>
-  array(3) {
-    ["dst"]=>
-    bool(false)
-    ["offset"]=>
-    int(32400)
-    ["timezone_id"]=>
-    string(16) "Australia/Darwin"
-  }
-  [8]=>
-  array(3) {
-    ["dst"]=>
-    bool(false)
-    ["offset"]=>
-    int(32400)
-    ["timezone_id"]=>
-    string(15) "Australia/North"
-  }
-  [9]=>
-  array(3) {
-    ["dst"]=>
-    bool(false)
-    ["offset"]=>
-    int(32400)
-    ["timezone_id"]=>
-    string(15) "Australia/South"
-  }
-  [10]=>
-  array(3) {
-    ["dst"]=>
-    bool(false)
-    ["offset"]=>
-    int(32400)
-    ["timezone_id"]=>
-    string(20) "Australia/Yancowinna"
-  }
-  [11]=>
+  [5]=>
   array(3) {
     ["dst"]=>
     bool(false)
@@ -138,7 +84,7 @@ array(17) {
     ["timezone_id"]=>
     string(13) "Asia/Jayapura"
   }
-  [12]=>
+  [6]=>
   array(3) {
     ["dst"]=>
     bool(false)
@@ -147,7 +93,7 @@ array(17) {
     ["timezone_id"]=>
     string(21) "Australia/Broken_Hill"
   }
-  [13]=>
+  [7]=>
   array(3) {
     ["dst"]=>
     bool(false)
@@ -156,7 +102,7 @@ array(17) {
     ["timezone_id"]=>
     string(16) "Australia/Darwin"
   }
-  [14]=>
+  [8]=>
   array(3) {
     ["dst"]=>
     bool(false)
@@ -165,7 +111,7 @@ array(17) {
     ["timezone_id"]=>
     string(15) "Australia/North"
   }
-  [15]=>
+  [9]=>
   array(3) {
     ["dst"]=>
     bool(false)
@@ -174,7 +120,7 @@ array(17) {
     ["timezone_id"]=>
     string(15) "Australia/South"
   }
-  [16]=>
+  [10]=>
   array(3) {
     ["dst"]=>
     bool(false)

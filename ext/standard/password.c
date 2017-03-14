@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "php.h"
+#if HAVE_CRYPT
 
 #include "fcntl.h"
 #include "php_password.h"
@@ -194,7 +195,7 @@ PHP_FUNCTION(password_needs_rehash)
 
 	algo = php_password_determine_algo(hash, (size_t) hash_len);
 
-	if ((zend_long)algo != new_algo) {
+	if (algo != new_algo) {
 		RETURN_TRUE;
 	}
 
@@ -224,8 +225,8 @@ PHP_FUNCTION(password_needs_rehash)
 Verify a hash created using crypt() or password_hash() */
 PHP_FUNCTION(password_verify)
 {
-	int status = 0;
-	size_t i, password_len, hash_len;
+	int status = 0, i;
+	size_t password_len, hash_len;
 	char *password, *hash;
 	zend_string *ret;
 
@@ -383,6 +384,7 @@ PHP_FUNCTION(password_hash)
 }
 /* }}} */
 
+#endif /* HAVE_CRYPT */
 /*
  * Local variables:
  * tab-width: 4

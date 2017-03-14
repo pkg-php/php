@@ -323,7 +323,7 @@ char * php_md5_crypt_r(const char *pw, const char *salt, char *out)
 	unsigned char final[16];
 	unsigned int i, sl, pwl;
 	PHP_MD5_CTX	ctx, ctx1;
-	uint32_t l;
+	php_uint32 l;
 	int pl;
 
 	pwl = strlen(pw);

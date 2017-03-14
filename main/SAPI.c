@@ -262,7 +262,7 @@ SAPI_API size_t sapi_read_post_block(char *buffer, size_t buflen)
 SAPI_API SAPI_POST_READER_FUNC(sapi_read_standard_form_data)
 {
 	if ((SG(post_max_size) > 0) && (SG(request_info).content_length > SG(post_max_size))) {
-		php_error_docref(NULL, E_WARNING, "POST Content-Length of " ZEND_LONG_FMT " bytes exceeds the limit of " ZEND_LONG_FMT " bytes",
+		php_error_docref(NULL, E_WARNING, "POST Content-Length of %pd bytes exceeds the limit of %pd bytes",
 					SG(request_info).content_length, SG(post_max_size));
 		return;
 	}
@@ -479,9 +479,10 @@ SAPI_API void sapi_activate(void)
 
 		/* Cookies */
 		SG(request_info).cookie_data = sapi_module.read_cookies();
-	}
-	if (sapi_module.activate) {
-		sapi_module.activate();
+
+		if (sapi_module.activate) {
+			sapi_module.activate();
+		}
 	}
 	if (sapi_module.input_filter_init) {
 		sapi_module.input_filter_init();

@@ -51,7 +51,7 @@ object(DatePeriod)#1 (6) {
   ["end"]=>
   NULL
   ["interval"]=>
-  object(DateInterval)#5 (16) {
+  object(DateInterval)#5 (15) {
     ["y"]=>
     int(0)
     ["m"]=>
@@ -64,8 +64,6 @@ object(DatePeriod)#1 (6) {
     int(0)
     ["s"]=>
     int(0)
-    ["f"]=>
-    float(0)
     ["weekday"]=>
     int(0)
     ["weekday_behavior"]=>
@@ -112,7 +110,7 @@ object(DatePeriod)#5 (6) {
   ["end"]=>
   NULL
   ["interval"]=>
-  object(DateInterval)#8 (16) {
+  object(DateInterval)#8 (15) {
     ["y"]=>
     int(0)
     ["m"]=>
@@ -125,8 +123,6 @@ object(DatePeriod)#5 (6) {
     int(0)
     ["s"]=>
     int(0)
-    ["f"]=>
-    float(0)
     ["weekday"]=>
     int(0)
     ["weekday_behavior"]=>

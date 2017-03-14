@@ -54,7 +54,6 @@ fclose($fp);
 --EXPECTF--
 HTTP/1.1 200 OK
 Host: %s
-Date: %s
 Connection: close
 X-Powered-By: PHP/%s
 Content-type: text/html; charset=UTF-8
@@ -62,7 +61,6 @@ Content-type: text/html; charset=UTF-8
 string(8) "HTTP/1.1"
 HTTP/1.0 200 OK
 Host: %s
-Date: %s
 Connection: close
 X-Powered-By: PHP/%s
 Content-type: text/html; charset=UTF-8

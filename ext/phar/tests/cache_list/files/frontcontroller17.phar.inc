@@ -6,7 +6,7 @@ echo "hi";
 ';
 $a->setStub('<?php
 try {
-Phar::webPhar("test.phar", "/index.php", null, array(), function() { throw new Exception; });
+Phar::webPhar("test.phar", "/index.php", null, array(), "sort");
 } catch (Exception $e) {
 die($e->getMessage() . "\n");
 }

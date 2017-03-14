@@ -14,6 +14,7 @@
   +----------------------------------------------------------------------+
   | Authors: Andrey Hristov <andrey@php.net>                             |
   |          Ulf Wendel <uw@php.net>                                     |
+  |          Georg Richter <georg@php.net>                               |
   +----------------------------------------------------------------------+
 */
 
@@ -60,7 +61,6 @@ static struct st_mysqlnd_typeii_plugin_example mysqlnd_example_plugin =
 		}
 	},
 	NULL,	/* methods */
-	0
 };
 
 

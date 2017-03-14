@@ -54,8 +54,8 @@ static void lcg_seed(void);
 
 PHPAPI double php_combined_lcg(void) /* {{{ */
 {
-	int32_t q;
-	int32_t z;
+	php_int32 q;
+	php_int32 z;
 
 	if (!LCG(seeded)) {
 		lcg_seed();

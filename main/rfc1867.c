@@ -40,9 +40,7 @@
 # define HAVE_ATOLL 1
 #endif
 
-#ifndef DEBUG_FILE_UPLOAD
-# define DEBUG_FILE_UPLOAD 0
-#endif
+#define DEBUG_FILE_UPLOAD ZEND_DEBUG
 
 static int dummy_encoding_translation(void)
 {
@@ -622,7 +620,7 @@ static int multipart_buffer_read(multipart_buffer *self, char *buf, size_t bytes
 	char *bound;
 
 	/* fill buffer if needed */
-	if (bytes > (size_t)self->bytes_in_buffer) {
+	if (bytes > self->bytes_in_buffer) {
 		fill_buffer(self);
 	}
 
@@ -1050,7 +1048,7 @@ SAPI_API SAPI_POST_HANDLER_FUNC(rfc1867_post_handler) /* {{{ */
 					cancel_upload = UPLOAD_ERROR_A;
 				} else if (max_file_size && ((zend_long)(total_bytes+blen) > max_file_size)) {
 #if DEBUG_FILE_UPLOAD
-					sapi_module.sapi_error(E_NOTICE, "MAX_FILE_SIZE of %" PRId64 " bytes exceeded - file [%s=%s] not saved", max_file_size, param, filename);
+					sapi_module.sapi_error(E_NOTICE, "MAX_FILE_SIZE of " ZEND_LONG_FMT " bytes exceeded - file [%s=%s] not saved", max_file_size, param, filename);
 #endif
 					cancel_upload = UPLOAD_ERROR_B;
 				} else if (blen > 0) {
@@ -1060,7 +1058,7 @@ SAPI_API SAPI_POST_HANDLER_FUNC(rfc1867_post_handler) /* {{{ */
 					wlen = write(fd, buff, blen);
 #endif
 
-					if (wlen == (size_t)-1) {
+					if (wlen == -1) {
 						/* write failed */
 #if DEBUG_FILE_UPLOAD
 						sapi_module.sapi_error(E_NOTICE, "write() failed - %s", strerror(errno));
@@ -1068,7 +1066,7 @@ SAPI_API SAPI_POST_HANDLER_FUNC(rfc1867_post_handler) /* {{{ */
 						cancel_upload = UPLOAD_ERROR_F;
 					} else if (wlen < blen) {
 #if DEBUG_FILE_UPLOAD
-						sapi_module.sapi_error(E_NOTICE, "Only %zd bytes were written, expected to write %zd", wlen, blen);
+						sapi_module.sapi_error(E_NOTICE, "Only %d bytes were written, expected to write %d", wlen, blen);
 #endif
 						cancel_upload = UPLOAD_ERROR_F;
 					} else {
@@ -1259,7 +1257,7 @@ SAPI_API SAPI_POST_HANDLER_FUNC(rfc1867_post_handler) /* {{{ */
 						}
 #else
 						{
-							int __len = snprintf(file_size_buf, 65, "%" PRId64, total_bytes);
+							int __len = snprintf(file_size_buf, 65, "%lld", total_bytes);
 							file_size_buf[__len] = '\0';
 						}
 #endif

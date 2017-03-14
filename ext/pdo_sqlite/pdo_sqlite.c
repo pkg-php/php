@@ -39,10 +39,12 @@ const zend_function_entry pdo_sqlite_functions[] = {
 
 /* {{{ pdo_sqlite_deps
  */
+#if ZEND_MODULE_API_NO >= 20050922
 static const zend_module_dep pdo_sqlite_deps[] = {
 	ZEND_MOD_REQUIRED("pdo")
 	ZEND_MOD_END
 };
+#endif
 /* }}} */
 
 /* {{{ pdo_sqlite_module_entry

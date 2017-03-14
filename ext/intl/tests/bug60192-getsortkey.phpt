@@ -17,8 +17,4 @@ $c = new Collator2();
 $c->getSortKey('h');
 --EXPECTF--
 
-Fatal error: Uncaught Error: Object not initialized in %s:%d
-Stack trace:
-#0 %s(%d): Collator->getSortKey('h')
-#1 {main}
-  thrown in %s on line %d
+Catchable fatal error: Collator::getSortKey(): Object not initialized in %s on line %d

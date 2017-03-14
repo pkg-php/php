@@ -13,14 +13,8 @@ display_errors = 1
 var_dump($r2 = assert("0 $ 0"));
 --EXPECTF--
 
-Fatal error: Uncaught ParseError: syntax error, unexpected '$', expecting ';' in %s(%d) : assert code:1
-Stack trace:
-#0 %s(%d): assert('0 $ 0')
-#1 {main}
+Parse error: syntax error, unexpected '$', expecting ';' in %s(2) : assert code on line 1
 
-Next Error: Failure evaluating code: 
-0 $ 0 in %s:%d
-Stack trace:
-#0 %s(%d): assert('0 $ 0')
-#1 {main}
-  thrown in %s on line %d
+Catchable fatal error: assert(): Failure evaluating code: 
+0 $ 0 in %s on line 2
+

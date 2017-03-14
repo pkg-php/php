@@ -39,7 +39,7 @@
 		max = i;							\
 	}
 
-void zend_optimize_temporary_variables(zend_op_array *op_array, zend_optimizer_ctx *ctx)
+void optimize_temporary_variables(zend_op_array *op_array, zend_optimizer_ctx *ctx)
 {
 	int T = op_array->T;
 	int offset = op_array->last_var;
@@ -139,6 +139,13 @@ void zend_optimize_temporary_variables(zend_op_array *op_array, zend_optimizer_c
 			}
 		}
 
+		/* Skip OP_DATA */
+		if (opline->opcode == ZEND_OP_DATA &&
+		    (opline-1)->opcode == ZEND_ASSIGN_DIM) {
+		    opline--;
+		    continue;
+		}
+
 		if ((ZEND_OP2_TYPE(opline) & (IS_VAR | IS_TMP_VAR))) {
 			currT = VAR_NUM(ZEND_OP2(opline).var) - offset;
 			if (!zend_bitset_in(valid_T, currT)) {
@@ -147,6 +154,31 @@ void zend_optimize_temporary_variables(zend_op_array *op_array, zend_optimizer_c
 				zend_bitset_incl(valid_T, currT);
 			}
 			ZEND_OP2(opline).var = NUM_VAR(map_T[currT] + offset);
+		}
+
+		if (opline->opcode == ZEND_DECLARE_INHERITED_CLASS ||
+		    opline->opcode == ZEND_DECLARE_ANON_INHERITED_CLASS ||
+            opline->opcode == ZEND_DECLARE_INHERITED_CLASS_DELAYED) {
+			currT = VAR_NUM(opline->extended_value) - offset;
+			if (!zend_bitset_in(valid_T, currT)) {
+				GET_AVAILABLE_T();
+				map_T[currT] = i;
+				zend_bitset_incl(valid_T, currT);
+			}
+			opline->extended_value = NUM_VAR(map_T[currT] + offset);
+		}
+
+		/* Allocate OP_DATA->op2 after "operands", but before "result" */
+		if (opline->opcode == ZEND_ASSIGN_DIM &&
+		    (opline + 1)->opcode == ZEND_OP_DATA &&
+		    ZEND_OP2_TYPE(opline + 1) & (IS_VAR | IS_TMP_VAR)) {
+			currT = VAR_NUM(ZEND_OP2(opline + 1).var) - offset;
+			GET_AVAILABLE_T();
+			map_T[currT] = i;
+			zend_bitset_incl(valid_T, currT);
+			zend_bitset_excl(taken_T, i);
+			ZEND_OP2(opline + 1).var = NUM_VAR(i + offset);
+			var_to_free = i;
 		}
 
 		if (ZEND_RESULT_TYPE(opline) & (IS_VAR | IS_TMP_VAR)) {
@@ -170,11 +202,16 @@ void zend_optimize_temporary_variables(zend_op_array *op_array, zend_optimizer_c
 						}
 					}
 				}
-			} else {
-				/* Code which gets here is using a wrongly built opcode such as RECV() */
+			} else { /* Au still needs to be assigned a T which is a bit dumb. Should consider changing Zend */
 				GET_AVAILABLE_T();
-				map_T[currT] = i;
-				zend_bitset_incl(valid_T, currT);
+
+				if (RESULT_UNUSED(opline)) {
+					zend_bitset_excl(taken_T, i);
+				} else {
+					/* Code which gets here is using a wrongly built opcode such as RECV() */
+					map_T[currT] = i;
+					zend_bitset_incl(valid_T, currT);
+				}
 				ZEND_RESULT(opline).var = NUM_VAR(i + offset);
 			}
 		}
@@ -185,14 +222,6 @@ void zend_optimize_temporary_variables(zend_op_array *op_array, zend_optimizer_c
 		}
 
 		opline--;
-	}
-
-	if (op_array->live_range) {
-		for (i = 0; i < op_array->last_live_range; i++) {
-			op_array->live_range[i].var =
-				NUM_VAR(map_T[VAR_NUM(op_array->live_range[i].var & ~ZEND_LIVE_MASK) - offset] + offset) |
-				(op_array->live_range[i].var & ZEND_LIVE_MASK);
-		}
 	}
 
 	zend_arena_release(&ctx->arena, checkpoint);

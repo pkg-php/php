@@ -95,13 +95,13 @@ Error: 8 - Undefined variable: undefined_var, %s(%d)
 Error: 8 - Undefined variable: unset_var, %s(%d)
 
 -- Arg value 0 --
-bool(false)
+string(0) ""
 
 -- Arg value 1 --
-bool(false)
+string(0) ""
 
 -- Arg value 12345 --
-bool(false)
+string(6) "d76df8"
 
 -- Arg value -2345 --
 bool(false)
@@ -148,13 +148,13 @@ string(0) ""
 string(0) ""
 
 -- Arg value true --
-bool(false)
+string(0) ""
 
 -- Arg value false --
 string(0) ""
 
 -- Arg value TRUE --
-bool(false)
+string(0) ""
 
 -- Arg value FALSE --
 string(0) ""

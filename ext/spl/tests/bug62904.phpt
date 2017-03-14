@@ -10,9 +10,10 @@ class foo extends SplFixedArray {
 
 $x = new foo(2);
 
-$z = clone $x;
-echo "No crash.";
-
+try {
+    $z = clone $x;
+} catch (Exception $e) {
+    var_dump($e->getMessage());
+}
 --EXPECTF--
-No crash.
-
+string(40) "The instance wasn't initialized properly"

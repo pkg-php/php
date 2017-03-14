@@ -327,8 +327,7 @@ static php_stream_wrapper_ops bzip2_stream_wops = {
 	NULL, /* unlink */
 	NULL, /* rename */
 	NULL, /* mkdir */
-	NULL, /* rmdir */
-	NULL
+	NULL  /* rmdir */
 };
 
 static php_stream_wrapper php_stream_bzip2_wrapper = {

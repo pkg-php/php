@@ -153,7 +153,7 @@ static size_t browscap_compute_regex_len(zend_string *pattern) {
 
 static zend_string *browscap_convert_pattern(zend_string *pattern, int persistent) /* {{{ */
 {
-	size_t i, j=0;
+	int i, j=0;
 	char *t;
 	zend_string *res;
 	char *lc_pattern;
@@ -392,7 +392,7 @@ static void php_browscap_parser_cb(zval *arg1, zval *arg2, zval *arg3, int callb
 
 static int browscap_read_file(char *filename, browser_data *browdata, int persistent) /* {{{ */
 {
-	zend_file_handle fh;
+	zend_file_handle fh = {{0}};
 	browscap_parser_ctx ctx = {0};
 
 	if (filename == NULL || filename[0] == '\0') {
