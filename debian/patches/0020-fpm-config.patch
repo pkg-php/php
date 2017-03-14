@@ -3,14 +3,14 @@ Date: Sat, 2 May 2015 10:26:54 +0200
 Subject: fpm-config
 
 ---
- sapi/fpm/php-fpm.conf.in | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sapi/fpm/php-fpm.conf.in | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/sapi/fpm/php-fpm.conf.in b/sapi/fpm/php-fpm.conf.in
-index 9e5b593..6232e56 100644
+index 56c18e862..47411952e 100644
 --- a/sapi/fpm/php-fpm.conf.in
 +++ b/sapi/fpm/php-fpm.conf.in
-@@ -14,7 +14,7 @@
+@@ -14,14 +14,14 @@
  ; Pid file
  ; Note: the default prefix is @EXPANDED_LOCALSTATEDIR@
  ; Default Value: none
@@ -19,15 +19,15 @@ index 9e5b593..6232e56 100644
  
  ; Error log file
  ; If it's set to "syslog", log is sent to syslogd instead of being written
-@@ -22,6 +22,7 @@
+ ; into a local file.
  ; Note: the default prefix is @EXPANDED_LOCALSTATEDIR@
  ; Default Value: log/php-fpm.log
- ;error_log = log/php-fpm.log
+-;error_log = log/php-fpm.log
 +error_log = @EXPANDED_LOCALSTATEDIR@/log/php@PHP_MAJOR_VERSION@.@PHP_MINOR_VERSION@-fpm.log
  
  ; syslog_facility is used to specify what type of program is logging the
  ; message. This lets syslogd specify that messages from different facilities
-@@ -122,4 +123,4 @@
+@@ -122,4 +122,4 @@
  ; Relative path can also be used. They will be prefixed by:
  ;  - the global prefix if it's been set (-p argument)
  ;  - @prefix@ otherwise

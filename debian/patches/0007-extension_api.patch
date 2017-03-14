@@ -8,7 +8,7 @@ Subject: extension_api
  2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/configure.in b/configure.in
-index 0262776..ea66a79 100644
+index 5f7708c43..5c1aa7085 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1206,8 +1206,10 @@ ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modul
@@ -32,7 +32,7 @@ index 0262776..ea66a79 100644
  PHP_SUBST_OLD(EXTRA_LDFLAGS)
  PHP_SUBST_OLD(EXTRA_LDFLAGS_PROGRAM)
 diff --git a/scripts/php-config.in b/scripts/php-config.in
-index fa25dc7..746a58e 100644
+index fa25dc7d3..746a58ee4 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
 @@ -19,6 +19,7 @@ php_cli_binary=NONE

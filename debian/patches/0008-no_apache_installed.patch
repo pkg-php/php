@@ -7,7 +7,7 @@ Subject: no_apache_installed
  1 file changed, 8 deletions(-)
 
 diff --git a/sapi/apache2handler/config.m4 b/sapi/apache2handler/config.m4
-index 2e64b21..f286b1a 100644
+index 2e64b215e..f286b1ae8 100644
 --- a/sapi/apache2handler/config.m4
 +++ b/sapi/apache2handler/config.m4
 @@ -58,14 +58,6 @@ if test "$PHP_APXS2" != "no"; then
