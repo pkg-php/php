@@ -4,7 +4,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 
 ---
  ext/openssl/config0.m4                             |    2 +-
- ext/openssl/openssl.c                              | 1858 +++++++++++++++-----
+ ext/openssl/openssl.c                              | 1940 +++++++++++++++-----
  ext/openssl/php_openssl.h                          |   23 +
  ext/openssl/tests/001.phpt                         |    2 +-
  ext/openssl/tests/bug38261.phpt                    |    2 +-
@@ -12,6 +12,8 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ext/openssl/tests/bug61124.phpt                    |    4 +-
  ext/openssl/tests/bug66501.phpt                    |    2 +-
  ext/openssl/tests/bug69882.phpt                    |   17 -
+ ext/openssl/tests/bug73478.phpt                    |   25 +
+ ext/openssl/tests/bug74099.phpt                    |   20 +
  ext/openssl/tests/cipher_tests.inc                 |  111 ++
  ext/openssl/tests/ecc.phpt                         |  110 ++
  ext/openssl/tests/openssl_decrypt_ccm.phpt         |   41 +
@@ -26,10 +28,12 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ext/openssl/tests/openssl_pkcs7_sign_basic.phpt    |    2 +-
  ext/openssl/tests/openssl_pkey_export_basic.phpt   |   18 +-
  .../tests/openssl_pkey_get_details_basic.phpt      |    7 +-
- ext/openssl/xp_ssl.c                               |  112 +-
+ ext/openssl/xp_ssl.c                               |  171 +-
  ext/phar/util.c                                    |   13 +-
- 25 files changed, 1905 insertions(+), 602 deletions(-)
+ 27 files changed, 2055 insertions(+), 638 deletions(-)
  delete mode 100644 ext/openssl/tests/bug69882.phpt
+ create mode 100644 ext/openssl/tests/bug73478.phpt
+ create mode 100644 ext/openssl/tests/bug74099.phpt
  create mode 100644 ext/openssl/tests/cipher_tests.inc
  create mode 100644 ext/openssl/tests/ecc.phpt
  create mode 100644 ext/openssl/tests/openssl_decrypt_ccm.phpt
@@ -37,8 +41,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  create mode 100644 ext/openssl/tests/openssl_encrypt_ccm.phpt
  create mode 100644 ext/openssl/tests/openssl_encrypt_gcm.phpt
 
---- php7.0.orig/ext/openssl/config0.m4
-+++ php7.0/ext/openssl/config0.m4
+diff --git a/ext/openssl/config0.m4 b/ext/openssl/config0.m4
+index 01fc89b..a7bbf05 100644
+--- a/ext/openssl/config0.m4
++++ b/ext/openssl/config0.m4
 @@ -3,7 +3,7 @@ dnl $Id$
  dnl
  
@@ -48,8 +54,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  PHP_ARG_WITH(kerberos, for Kerberos support,
  [  --with-kerberos[=DIR]     OPENSSL: Include Kerberos support], no, no)
---- php7.0.orig/ext/openssl/openssl.c
-+++ php7.0/ext/openssl/openssl.c
+diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
+index da60bb9..c1b433e 100644
+--- a/ext/openssl/openssl.c
++++ b/ext/openssl/openssl.c
 @@ -17,6 +17,7 @@
     |          Sascha Kettler <kettler@gmx.net>                            |
     |          Pierre-Alain Joye <pierre@php.net>                          |
@@ -93,7 +101,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  PHP_FUNCTION(openssl_digest);
  PHP_FUNCTION(openssl_encrypt);
-@@ -262,7 +268,6 @@ ZEND_BEGIN_ARG_INFO(arginfo_openssl_pkey
+@@ -262,7 +268,6 @@ ZEND_BEGIN_ARG_INFO(arginfo_openssl_pkey_get_details, 0)
  	ZEND_ARG_INFO(0, key)
  ZEND_END_ARG_INFO()
  
@@ -101,7 +109,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_pbkdf2, 0, 0, 4)
  	ZEND_ARG_INFO(0, password)
  	ZEND_ARG_INFO(0, salt)
-@@ -270,7 +275,6 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_p
+@@ -270,7 +275,6 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_pbkdf2, 0, 0, 4)
  	ZEND_ARG_INFO(0, iterations)
  	ZEND_ARG_INFO(0, digest_algorithm)
  ZEND_END_ARG_INFO()
@@ -109,7 +117,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_pkcs7_verify, 0, 0, 2)
  	ZEND_ARG_INFO(0, filename)
-@@ -377,6 +381,11 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_g
+@@ -377,6 +381,11 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_get_cipher_methods, 0, 0, 0)
  	ZEND_ARG_INFO(0, aliases)
  ZEND_END_ARG_INFO()
  
@@ -121,7 +129,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_digest, 0, 0, 2)
  	ZEND_ARG_INFO(0, data)
  	ZEND_ARG_INFO(0, method)
-@@ -389,6 +398,9 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_e
+@@ -389,6 +398,9 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_encrypt, 0, 0, 3)
  	ZEND_ARG_INFO(0, password)
  	ZEND_ARG_INFO(0, options)
  	ZEND_ARG_INFO(0, iv)
@@ -131,7 +139,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ZEND_END_ARG_INFO()
  
  ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_decrypt, 0, 0, 3)
-@@ -397,6 +409,8 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_d
+@@ -397,6 +409,8 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_openssl_decrypt, 0, 0, 3)
  	ZEND_ARG_INFO(0, password)
  	ZEND_ARG_INFO(0, options)
  	ZEND_ARG_INFO(0, iv)
@@ -140,7 +148,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ZEND_END_ARG_INFO()
  
  ZEND_BEGIN_ARG_INFO(arginfo_openssl_cipher_iv_length, 0)
-@@ -491,9 +505,7 @@ const zend_function_entry openssl_functi
+@@ -491,9 +505,7 @@ const zend_function_entry openssl_functions[] = {
  	PHP_FE(openssl_seal,				arginfo_openssl_seal)
  	PHP_FE(openssl_open,				arginfo_openssl_open)
  
@@ -150,7 +158,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  /* for S/MIME handling */
  	PHP_FE(openssl_pkcs7_verify,		arginfo_openssl_pkcs7_verify)
-@@ -508,6 +520,9 @@ const zend_function_entry openssl_functi
+@@ -508,6 +520,9 @@ const zend_function_entry openssl_functions[] = {
  
  	PHP_FE(openssl_get_md_methods,		arginfo_openssl_get_md_methods)
  	PHP_FE(openssl_get_cipher_methods,	arginfo_openssl_get_cipher_methods)
@@ -160,7 +168,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	PHP_FE(openssl_dh_compute_key,		arginfo_openssl_dh_compute_key)
  
-@@ -529,7 +544,11 @@ zend_module_entry openssl_module_entry =
+@@ -529,7 +544,11 @@ zend_module_entry openssl_module_entry = {
  	NULL,
  	PHP_MINFO(openssl),
  	PHP_OPENSSL_VERSION,
@@ -173,7 +181,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  };
  /* }}} */
  
-@@ -537,6 +556,131 @@ zend_module_entry openssl_module_entry =
+@@ -537,6 +556,131 @@ zend_module_entry openssl_module_entry = {
  ZEND_GET_MODULE(openssl)
  #endif
  
@@ -338,7 +346,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  static int le_key;
  static int le_x509;
-@@ -616,13 +786,8 @@ int php_openssl_get_ssl_stream_data_inde
+@@ -616,13 +786,8 @@ int php_openssl_get_ssl_stream_data_index()
  static char default_ssl_conf_filename[MAXPATHLEN];
  
  struct php_x509_request { /* {{{ */
@@ -363,7 +371,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	EVP_PKEY * priv_key;
  
  	const EVP_CIPHER * priv_key_encrypt_cipher;
-@@ -705,6 +874,8 @@ static void add_assoc_name_entry(zval *
+@@ -705,6 +874,8 @@ static void add_assoc_name_entry(zval * val, char * key, X509_NAME * name, int s
  			} else {
  				add_assoc_stringl(&subitem, sname, (char *)to_add, to_add_len);
  			}
@@ -372,7 +380,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		}
  
  		if (needs_free) {
-@@ -731,7 +902,7 @@ static time_t asn1_time_to_time_t(ASN1_U
+@@ -731,7 +902,7 @@ static time_t asn1_time_to_time_t(ASN1_UTCTIME * timestr) /* {{{ */
  	This is how the time string is formatted:
  
     snprintf(p, sizeof(p), "%02d%02d%02d%02d%02d%02dZ",ts->tm_year%100,
@@ -381,7 +389,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  */
  
  	time_t ret;
-@@ -745,7 +916,7 @@ static time_t asn1_time_to_time_t(ASN1_U
+@@ -745,7 +916,7 @@ static time_t asn1_time_to_time_t(ASN1_UTCTIME * timestr) /* {{{ */
  		return (time_t)-1;
  	}
  
@@ -390,7 +398,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "illegal length in timestamp");
  		return (time_t)-1;
  	}
-@@ -817,17 +988,14 @@ static time_t asn1_time_to_time_t(ASN1_U
+@@ -817,17 +988,14 @@ static time_t asn1_time_to_time_t(ASN1_UTCTIME * timestr) /* {{{ */
  }
  /* }}} */
  
@@ -409,7 +417,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "Error loading %s section %s of %s",
  				section_label,
  				section,
-@@ -847,16 +1015,20 @@ static int add_oid_section(struct php_x5
+@@ -847,16 +1015,20 @@ static int add_oid_section(struct php_x509_request * req) /* {{{ */
  
  	str = CONF_get_string(req->req_config, NULL, "oid_section");
  	if (str == NULL) {
@@ -431,7 +439,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			php_error_docref(NULL, E_WARNING, "problem creating object %s=%s", cnf->name, cnf->value);
  			return FAILURE;
  		}
-@@ -873,10 +1045,16 @@ static int add_oid_section(struct php_x5
+@@ -873,10 +1045,16 @@ static int add_oid_section(struct php_x509_request * req) /* {{{ */
  			req->config_filename, req->var, req->req_config) == FAILURE) return FAILURE
  
  #define SET_OPTIONAL_STRING_ARG(key, varname, defval)	\
@@ -452,7 +460,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  #define SET_OPTIONAL_LONG_ARG(key, varname, defval)	\
  	if (optional_args && (item = zend_hash_str_find(Z_ARRVAL_P(optional_args), key, sizeof(key)-1)) != NULL && Z_TYPE_P(item) == IS_LONG) \
-@@ -913,19 +1091,25 @@ static int php_openssl_parse_config(stru
+@@ -913,19 +1091,25 @@ static int php_openssl_parse_config(struct php_x509_request * req, zval * option
  	SET_OPTIONAL_STRING_ARG("config", req->config_filename, default_ssl_conf_filename);
  	SET_OPTIONAL_STRING_ARG("config_section_name", req->section_name, "req");
  	req->global_config = CONF_load(NULL, default_ssl_conf_filename, NULL);
@@ -480,7 +488,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		}
  	}
  	if (add_oid_section(req) == FAILURE) {
-@@ -948,8 +1132,10 @@ static int php_openssl_parse_config(stru
+@@ -948,8 +1132,10 @@ static int php_openssl_parse_config(struct php_x509_request * req, zval * option
  		str = CONF_get_string(req->req_config, req->section_name, "encrypt_rsa_key");
  		if (str == NULL) {
  			str = CONF_get_string(req->req_config, req->section_name, "encrypt_key");
@@ -492,7 +500,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			req->priv_key_encrypt = 0;
  		} else {
  			req->priv_key_encrypt = 1;
-@@ -976,18 +1162,35 @@ static int php_openssl_parse_config(stru
+@@ -976,18 +1162,35 @@ static int php_openssl_parse_config(struct php_x509_request * req, zval * option
  	if (req->digest_name == NULL) {
  		req->digest_name = CONF_get_string(req->req_config, req->section_name, "default_md");
  	}
@@ -530,7 +538,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "Invalid global string mask setting %s", str);
  		return FAILURE;
  	}
-@@ -1015,7 +1218,7 @@ static void php_openssl_dispose_config(s
+@@ -1015,7 +1218,7 @@ static void php_openssl_dispose_config(struct php_x509_request * req) /* {{{ */
  }
  /* }}} */
  
@@ -539,7 +547,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  #define PHP_OPENSSL_RAND_ADD_TIME() ((void) 0)
  #else
  #define PHP_OPENSSL_RAND_ADD_TIME() php_openssl_rand_add_timeval()
-@@ -1050,6 +1253,7 @@ static int php_openssl_load_rand_file(co
+@@ -1050,6 +1253,7 @@ static int php_openssl_load_rand_file(const char * file, int *egdsocket, int *se
  	}
  	if (file == NULL || !RAND_load_file(file, -1)) {
  		if (RAND_status() == 0) {
@@ -547,7 +555,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			php_error_docref(NULL, E_WARNING, "unable to load random state; not enough random data!");
  			return FAILURE;
  		}
-@@ -1075,6 +1279,7 @@ static int php_openssl_write_rand_file(c
+@@ -1075,6 +1279,7 @@ static int php_openssl_write_rand_file(const char * file, int egdsocket, int see
  	}
  	PHP_OPENSSL_RAND_ADD_TIME();
  	if (file == NULL || !RAND_write_file(file)) {
@@ -555,7 +563,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "unable to write random state");
  		return FAILURE;
  	}
-@@ -1100,10 +1305,11 @@ static EVP_MD * php_openssl_get_evp_md_f
+@@ -1100,10 +1305,11 @@ static EVP_MD * php_openssl_get_evp_md_from_algo(zend_long algo) { /* {{{ */
  			mdtype = (EVP_MD *) EVP_md2();
  			break;
  #endif
@@ -568,7 +576,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		case OPENSSL_ALGO_SHA224:
  			mdtype = (EVP_MD *) EVP_sha224();
  			break;
-@@ -1119,7 +1325,6 @@ static EVP_MD * php_openssl_get_evp_md_f
+@@ -1119,7 +1325,6 @@ static EVP_MD * php_openssl_get_evp_md_from_algo(zend_long algo) { /* {{{ */
  		case OPENSSL_ALGO_RMD160:
  			mdtype = (EVP_MD *) EVP_ripemd160();
  			break;
@@ -699,7 +707,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	if (resourceval) {
  		*resourceval = NULL;
-@@ -1439,8 +1660,6 @@ static X509 * php_openssl_x509_from_zval
+@@ -1439,8 +1660,6 @@ static X509 * php_openssl_x509_from_zval(zval * val, int makeresource, zend_reso
  	convert_to_string_ex(val);
  
  	if (Z_STRLEN_P(val) > 7 && memcmp(Z_STRVAL_P(val), "file://", sizeof("file://") - 1) == 0) {
@@ -708,7 +716,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  		if (php_openssl_open_base_dir_chk(Z_STRVAL_P(val) + (sizeof("file://") - 1))) {
  			return NULL;
-@@ -1448,15 +1667,16 @@ static X509 * php_openssl_x509_from_zval
+@@ -1448,15 +1667,16 @@ static X509 * php_openssl_x509_from_zval(zval * val, int makeresource, zend_reso
  
  		in = BIO_new_file(Z_STRVAL_P(val) + (sizeof("file://") - 1), "r");
  		if (in == NULL) {
@@ -727,7 +735,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			return NULL;
  		}
  #ifdef TYPEDEF_D2I_OF
-@@ -1464,10 +1684,18 @@ static X509 * php_openssl_x509_from_zval
+@@ -1464,10 +1684,18 @@ static X509 * php_openssl_x509_from_zval(zval * val, int makeresource, zend_reso
  #else
  		cert = (X509 *) PEM_ASN1_read_bio((char *(*)())d2i_X509, PEM_STRING_X509, in, NULL, NULL, NULL);
  #endif
@@ -748,7 +756,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		*resourceval = zend_register_resource(cert, le_x509);
  	}
  	return cert;
-@@ -1504,19 +1732,25 @@ PHP_FUNCTION(openssl_x509_export_to_file
+@@ -1504,19 +1732,25 @@ PHP_FUNCTION(openssl_x509_export_to_file)
  
  	bio_out = BIO_new_file(filename, "w");
  	if (bio_out) {
@@ -861,7 +869,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	}
  	goto cleanup;
  
-@@ -1784,6 +2031,7 @@ PHP_FUNCTION(openssl_spki_export_challen
+@@ -1784,6 +2031,7 @@ PHP_FUNCTION(openssl_spki_export_challenge)
  
  	spki = NETSCAPE_SPKI_b64_decode(spkstr_cleaned, spkstr_cleaned_len);
  	if (spki == NULL) {
@@ -903,7 +911,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  }
  /* }}} */
  
-@@ -1851,6 +2107,7 @@ zend_string* php_openssl_x509_fingerprin
+@@ -1851,6 +2107,7 @@ zend_string* php_openssl_x509_fingerprint(X509 *peer, const char *method, zend_b
  		php_error_docref(NULL, E_WARNING, "Unknown signature algorithm");
  		return NULL;
  	} else if (!X509_digest(peer, mdtype, md, &n)) {
@@ -911,7 +919,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_ERROR, "Could not generate signature");
  		return NULL;
  	}
-@@ -1938,6 +2195,7 @@ static int openssl_x509v3_subjectAltName
+@@ -1938,6 +2195,7 @@ static int openssl_x509v3_subjectAltName(BIO *bio, X509_EXTENSION *extension)
  {
  	GENERAL_NAMES *names;
  	const X509V3_EXT_METHOD *method = NULL;
@@ -919,7 +927,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	long i, length, num;
  	const unsigned char *p;
  
-@@ -1946,8 +2204,9 @@ static int openssl_x509v3_subjectAltName
+@@ -1946,8 +2204,9 @@ static int openssl_x509v3_subjectAltName(BIO *bio, X509_EXTENSION *extension)
  		return -1;
  	}
  
@@ -931,7 +939,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	if (method->it) {
  		names = (GENERAL_NAMES*) (ASN1_item_d2i(NULL, &p, length,
  			ASN1_ITEM_ptr(method->it)));
-@@ -1955,6 +2214,7 @@ static int openssl_x509v3_subjectAltName
+@@ -1955,6 +2214,7 @@ static int openssl_x509v3_subjectAltName(BIO *bio, X509_EXTENSION *extension)
  		names = (GENERAL_NAMES*) (method->d2i(NULL, &p, length));
  	}
  	if (names == NULL) {
@@ -1002,7 +1010,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		if (nid == NID_subject_alt_name) {
  			if (openssl_x509v3_subjectAltName(bio_out, extension) == 0) {
  				BIO_get_mem_ptr(bio_out, &bio_buf);
-@@ -2164,6 +2432,7 @@ static STACK_OF(X509) * load_all_certs_f
+@@ -2164,6 +2432,7 @@ static STACK_OF(X509) * load_all_certs_from_file(char *certfile)
  	X509_INFO *xi;
  
  	if(!(stack = sk_X509_new_null())) {
@@ -1010,7 +1018,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_ERROR, "memory allocation failure");
  		goto end;
  	}
-@@ -2174,6 +2443,7 @@ static STACK_OF(X509) * load_all_certs_f
+@@ -2174,6 +2443,7 @@ static STACK_OF(X509) * load_all_certs_from_file(char *certfile)
  	}
  
  	if(!(in=BIO_new_file(certfile, "r"))) {
@@ -1018,7 +1026,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "error opening the file, %s", certfile);
  		sk_X509_free(stack);
  		goto end;
-@@ -2181,6 +2451,7 @@ static STACK_OF(X509) * load_all_certs_f
+@@ -2181,6 +2451,7 @@ static STACK_OF(X509) * load_all_certs_from_file(char *certfile)
  
  	/* This loads from a file, a stack of x509/crl/pkey sets */
  	if(!(sk=PEM_X509_INFO_read_bio(in, NULL, NULL, NULL))) {
@@ -1026,7 +1034,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "error reading the file, %s", certfile);
  		sk_X509_free(stack);
  		goto end;
-@@ -2217,14 +2488,22 @@ static int check_cert(X509_STORE *ctx, X
+@@ -2217,14 +2488,22 @@ static int check_cert(X509_STORE *ctx, X509 *x, STACK_OF(X509) *untrustedchain,
  
  	csc = X509_STORE_CTX_new();
  	if (csc == NULL) {
@@ -1052,7 +1060,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	X509_STORE_CTX_free(csc);
  
  	return ret;
-@@ -2302,6 +2581,7 @@ static X509_STORE * setup_verify(zval *
+@@ -2302,6 +2581,7 @@ static X509_STORE * setup_verify(zval * calist)
  	store = X509_STORE_new();
  
  	if (store == NULL) {
@@ -1060,7 +1068,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		return NULL;
  	}
  
-@@ -2317,6 +2597,7 @@ static X509_STORE * setup_verify(zval *
+@@ -2317,6 +2597,7 @@ static X509_STORE * setup_verify(zval * calist)
  			if ((sb.st_mode & S_IFREG) == S_IFREG) {
  				file_lookup = X509_STORE_add_lookup(store, X509_LOOKUP_file());
  				if (file_lookup == NULL || !X509_LOOKUP_load_file(file_lookup, Z_STRVAL_P(item), X509_FILETYPE_PEM)) {
@@ -1068,7 +1076,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					php_error_docref(NULL, E_WARNING, "error loading file %s", Z_STRVAL_P(item));
  				} else {
  					nfiles++;
-@@ -2325,6 +2606,7 @@ static X509_STORE * setup_verify(zval *
+@@ -2325,6 +2606,7 @@ static X509_STORE * setup_verify(zval * calist)
  			} else {
  				dir_lookup = X509_STORE_add_lookup(store, X509_LOOKUP_hash_dir());
  				if (dir_lookup == NULL || !X509_LOOKUP_add_dir(dir_lookup, Z_STRVAL_P(item), X509_FILETYPE_PEM)) {
@@ -1076,7 +1084,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					php_error_docref(NULL, E_WARNING, "error loading directory %s", Z_STRVAL_P(item));
  				} else {
  					ndirs++;
-@@ -2335,14 +2617,14 @@ static X509_STORE * setup_verify(zval *
+@@ -2335,14 +2617,14 @@ static X509_STORE * setup_verify(zval * calist)
  	}
  	if (nfiles == 0) {
  		file_lookup = X509_STORE_add_lookup(store, X509_LOOKUP_file());
@@ -1095,7 +1103,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		}
  	}
  	return store;
-@@ -2422,6 +2704,7 @@ static STACK_OF(X509) * php_array_to_X50
+@@ -2422,6 +2704,7 @@ static STACK_OF(X509) * php_array_to_X509_sk(zval * zcerts) /* {{{ */
  				cert = X509_dup(cert);
  
  				if (cert == NULL) {
@@ -1103,7 +1111,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					goto clean_exit;
  				}
  
-@@ -2439,6 +2722,7 @@ static STACK_OF(X509) * php_array_to_X50
+@@ -2439,6 +2722,7 @@ static STACK_OF(X509) * php_array_to_X509_sk(zval * zcerts) /* {{{ */
  		if (certresource != NULL) {
  			cert = X509_dup(cert);
  			if (cert == NULL) {
@@ -1111,7 +1119,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  				goto clean_exit;
  			}
  		}
-@@ -2484,6 +2768,7 @@ PHP_FUNCTION(openssl_pkcs12_export_to_fi
+@@ -2484,6 +2768,7 @@ PHP_FUNCTION(openssl_pkcs12_export_to_file)
  		goto cleanup;
  	}
  	if (cert && !X509_check_private_key(cert, priv_key)) {
@@ -1119,7 +1127,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "private key does not correspond to cert");
  		goto cleanup;
  	}
-@@ -2507,19 +2792,24 @@ PHP_FUNCTION(openssl_pkcs12_export_to_fi
+@@ -2507,19 +2792,24 @@ PHP_FUNCTION(openssl_pkcs12_export_to_file)
  				int nid_key, int nid_cert, int iter, int mac_iter, int keytype);*/
  
  	p12 = PKCS12_create(pass, friendly_name, priv_key, cert, ca, 0, 0, 0, 0, 0);
@@ -1314,7 +1322,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	}
  
  	cleanup:
-@@ -2723,18 +3014,22 @@ static int php_openssl_make_REQ(struct p
+@@ -2723,18 +3014,22 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  
  	dn_sect = CONF_get_string(req->req_config, req->section_name, "distinguished_name");
  	if (dn_sect == NULL) {
@@ -1337,7 +1345,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			return FAILURE;
  		}
  	}
-@@ -2760,6 +3055,7 @@ static int php_openssl_make_REQ(struct p
+@@ -2760,6 +3055,7 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  					if (!X509_NAME_add_entry_by_NID(subj, nid, MBSTRING_UTF8,
  								(unsigned char*)Z_STRVAL_P(item), -1, -1, 0))
  					{
@@ -1345,7 +1353,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  						php_error_docref(NULL, E_WARNING,
  							"dn: add_entry_by_NID %d -> %s (failed; check error"
  							" queue and value of string_mask OpenSSL option "
-@@ -2775,13 +3071,13 @@ static int php_openssl_make_REQ(struct p
+@@ -2775,13 +3071,13 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  
  		/* Finally apply defaults from config file */
  		for(i = 0; i < sk_CONF_VALUE_num(dn_sk); i++) {
@@ -1361,7 +1369,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			if (len < sizeof("_default")) {
  				continue;
  			}
-@@ -2813,6 +3109,7 @@ static int php_openssl_make_REQ(struct p
+@@ -2813,6 +3109,7 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  				continue;
  			}
  			if (!X509_NAME_add_entry_by_txt(subj, type, MBSTRING_UTF8, (unsigned char*)v->value, -1, -1, 0)) {
@@ -1369,7 +1377,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  				php_error_docref(NULL, E_WARNING, "add_entry_by_txt %s -> %s (failed)", type, v->value);
  				return FAILURE;
  			}
-@@ -2835,6 +3132,7 @@ static int php_openssl_make_REQ(struct p
+@@ -2835,6 +3132,7 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  				nid = OBJ_txt2nid(ZSTR_VAL(strindex));
  				if (nid != NID_undef) {
  					if (!X509_NAME_add_entry_by_NID(subj, nid, MBSTRING_UTF8, (unsigned char*)Z_STRVAL_P(item), -1, -1, 0)) {
@@ -1377,7 +1385,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  						php_error_docref(NULL, E_WARNING, "attribs: add_entry_by_NID %d -> %s (failed)", nid, Z_STRVAL_P(item));
  						return FAILURE;
  					}
-@@ -2850,6 +3148,7 @@ static int php_openssl_make_REQ(struct p
+@@ -2850,6 +3148,7 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  					continue;
  				}
  				if (!X509_REQ_add1_attr_by_txt(csr, v->name, MBSTRING_UTF8, (unsigned char*)v->value, -1)) {
@@ -1385,7 +1393,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					php_error_docref(NULL, E_WARNING,
  						"add1_attr_by_txt %s -> %s (failed; check error queue "
  						"and value of string_mask OpenSSL option if illegal "
-@@ -2859,9 +3158,13 @@ static int php_openssl_make_REQ(struct p
+@@ -2859,9 +3158,13 @@ static int php_openssl_make_REQ(struct php_x509_request * req, X509_REQ * csr, z
  				}
  			}
  		}
@@ -1400,7 +1408,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	return SUCCESS;
  }
  /* }}} */
-@@ -2904,7 +3207,17 @@ static X509_REQ * php_openssl_csr_from_z
+@@ -2904,7 +3207,17 @@ static X509_REQ * php_openssl_csr_from_zval(zval * val, int makeresource, zend_r
  	} else {
  		in = BIO_new_mem_buf(Z_STRVAL_P(val), (int)Z_STRLEN_P(val));
  	}
@@ -1428,15 +1436,15 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +	if (bio_out != NULL) {
 +		if (!notext && !X509_REQ_print(bio_out, csr)) {
 +			php_openssl_store_errors();
-+		}
+ 		}
+-		PEM_write_bio_X509_REQ(bio_out, csr);
+-		RETVAL_TRUE;
 +		if (!PEM_write_bio_X509_REQ(bio_out, csr)) {
 +			php_error_docref(NULL, E_WARNING, "error writing PEM to file %s", filename);
 +			php_openssl_store_errors();
 +		} else {
 +			RETVAL_TRUE;
- 		}
--		PEM_write_bio_X509_REQ(bio_out, csr);
--		RETVAL_TRUE;
++		}
 +		BIO_free(bio_out);
  	} else {
 +		php_openssl_store_errors();
@@ -1567,11 +1575,14 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		}
  	}
  	if (csr) {
-@@ -3267,7 +3601,27 @@ PHP_FUNCTION(openssl_csr_get_public_key)
+@@ -3267,12 +3601,32 @@ PHP_FUNCTION(openssl_csr_get_public_key)
  		RETURN_FALSE;
  	}
  
 -	tpubkey=X509_REQ_get_pubkey(csr);
+-	RETURN_RES(zend_register_resource(tpubkey, le_key));
+-}
+-/* }}} */
 +#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	/* Due to changes in OpenSSL 1.1 related to locking when decoding CSR,
 +	 * the pub key is not changed after assigning. It means if we pass
@@ -1582,7 +1593,8 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +#endif
 +	/* Retrieve the public key from the CSR */
 +	tpubkey = X509_REQ_get_pubkey(csr);
-+
+ 
+-/* }}} */
 +#if OPENSSL_VERSION_NUMBER >= 0x10100000L && !defined(LIBRESSL_VERSION_NUMBER)
 +	/* We need to free the CSR as it was duplicated */
 +	X509_REQ_free(csr);
@@ -1593,10 +1605,15 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +		RETURN_FALSE;
 +	}
 +
- 	RETURN_RES(zend_register_resource(tpubkey, le_key));
- }
- /* }}} */
-@@ -3402,6 +3756,7 @@ static EVP_PKEY * php_openssl_evp_from_z
++	RETURN_RES(zend_register_resource(tpubkey, le_key));
++}
++/* }}} */
++
++/* }}} */
+ 
+ /* {{{ EVP Public/Private key functions */
+ 
+@@ -3402,6 +3756,7 @@ static EVP_PKEY * php_openssl_evp_from_zval(zval * val, int public_key, char * p
  					in = BIO_new_mem_buf(Z_STRVAL_P(val), (int)Z_STRLEN_P(val));
  				}
  				if (in == NULL) {
@@ -1604,7 +1621,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					TMP_CLEAN;
  				}
  				key = PEM_read_bio_PUBKEY(in, NULL,NULL, NULL);
-@@ -3428,9 +3783,16 @@ static EVP_PKEY * php_openssl_evp_from_z
+@@ -3428,9 +3783,16 @@ static EVP_PKEY * php_openssl_evp_from_zval(zval * val, int public_key, char * p
  		}
  	}
  
@@ -1624,7 +1641,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	}
  
  	if (free_cert && cert) {
-@@ -3460,6 +3822,9 @@ static EVP_PKEY * php_openssl_generate_p
+@@ -3460,6 +3822,9 @@ static EVP_PKEY * php_openssl_generate_private_key(struct php_x509_request * req
  	}
  
  	randfile = CONF_get_string(req->req_config, req->section_name, "RANDFILE");
@@ -1634,7 +1651,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	php_openssl_load_rand_file(randfile, &egdsocket, &seeded);
  
  	if ((req->priv_key = EVP_PKEY_new()) != NULL) {
-@@ -3481,12 +3846,16 @@ static EVP_PKEY * php_openssl_generate_p
+@@ -3481,12 +3846,16 @@ static EVP_PKEY * php_openssl_generate_private_key(struct php_x509_request * req
  						}
  						rsaparam = RSA_new();
  						PHP_OPENSSL_RAND_ADD_TIME();
@@ -1652,7 +1669,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					}
  				}
  				break;
-@@ -3505,10 +3874,15 @@ static EVP_PKEY * php_openssl_generate_p
+@@ -3505,10 +3874,15 @@ static EVP_PKEY * php_openssl_generate_private_key(struct php_x509_request * req
  						if (DSA_generate_key(dsaparam)) {
  							if (EVP_PKEY_assign_DSA(req->priv_key, dsaparam)) {
  								return_val = req->priv_key;
@@ -1668,7 +1685,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					}
  				}
  				break;
-@@ -3529,10 +3903,35 @@ static EVP_PKEY * php_openssl_generate_p
+@@ -3529,10 +3903,35 @@ static EVP_PKEY * php_openssl_generate_private_key(struct php_x509_request * req
  						if (DH_check(dhparam, &codes) && codes == 0 && DH_generate_key(dhparam)) {
  							if (EVP_PKEY_assign_DH(req->priv_key, dhparam)) {
  								return_val = req->priv_key;
@@ -1704,7 +1721,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					}
  				}
  				break;
-@@ -3540,6 +3939,8 @@ static EVP_PKEY * php_openssl_generate_p
+@@ -3540,6 +3939,8 @@ static EVP_PKEY * php_openssl_generate_private_key(struct php_x509_request * req
  			default:
  				php_error_docref(NULL, E_WARNING, "Unsupported private key type");
  		}
@@ -1713,7 +1730,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	}
  
  	php_openssl_write_rand_file(randfile, egdsocket, seeded);
-@@ -3560,44 +3961,68 @@ static int php_openssl_is_private_key(EV
+@@ -3560,44 +3961,68 @@ static int php_openssl_is_private_key(EVP_PKEY* pkey)
  {
  	assert(pkey != NULL);
  
@@ -1802,7 +1819,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			}
  			break;
  #endif
-@@ -3609,42 +4034,93 @@ static int php_openssl_is_private_key(EV
+@@ -3609,42 +4034,93 @@ static int php_openssl_is_private_key(EVP_PKEY* pkey)
  }
  /* }}} */
  
@@ -1919,7 +1936,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		return 0;
  	}
  	/* all good */
-@@ -3652,17 +4128,76 @@ zend_bool php_openssl_pkey_init_dsa(DSA
+@@ -3652,17 +4128,76 @@ zend_bool php_openssl_pkey_init_dsa(DSA *dsa)
  }
  /* }}} */
  
@@ -2076,12 +2093,12 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					DH_free(dh);
 +				} else {
 +					php_openssl_store_errors();
-+				}
-+				EVP_PKEY_free(pkey);
+ 				}
+ 				EVP_PKEY_free(pkey);
 +			} else {
 +				php_openssl_store_errors();
-+			}
-+			RETURN_FALSE;
+ 			}
+ 			RETURN_FALSE;
 +#ifdef HAVE_EVP_PKEY_EC
 +		} else if ((data = zend_hash_str_find(Z_ARRVAL_P(args), "ec", sizeof("ec") - 1)) != NULL &&
 +			Z_TYPE_P(data) == IS_ARRAY) {
@@ -2175,7 +2192,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +					}
 +				} else {
 +					php_openssl_store_errors();
- 				}
++				}
 +			} else {
 +				php_openssl_store_errors();
 +			}
@@ -2190,14 +2207,14 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +				EC_KEY_free(eckey);
 +			}
 +			if (pkey != NULL) {
- 				EVP_PKEY_free(pkey);
- 			}
- 			RETURN_FALSE;
++				EVP_PKEY_free(pkey);
++			}
++			RETURN_FALSE;
 +#endif
  		}
  	}
  
-@@ -3808,6 +4452,10 @@ PHP_FUNCTION(openssl_pkey_export_to_file
+@@ -3808,6 +4452,10 @@ PHP_FUNCTION(openssl_pkey_export_to_file)
  
  	if (PHP_SSL_REQ_PARSE(&req, args) == SUCCESS) {
  		bio_out = BIO_new_file(filename, "w");
@@ -2208,7 +2225,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  		if (passphrase && req.priv_key_encrypt) {
  			if (req.priv_key_encrypt_cipher) {
-@@ -3819,10 +4467,10 @@ PHP_FUNCTION(openssl_pkey_export_to_file
+@@ -3819,10 +4467,10 @@ PHP_FUNCTION(openssl_pkey_export_to_file)
  			cipher = NULL;
  		}
  
@@ -2221,7 +2238,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  				break;
  #endif
  			default:
-@@ -3834,8 +4482,12 @@ PHP_FUNCTION(openssl_pkey_export_to_file
+@@ -3834,8 +4482,12 @@ PHP_FUNCTION(openssl_pkey_export_to_file)
  			/* Success!
  			 * If returning the output as a string, do so now */
  			RETVAL_TRUE;
@@ -3135,7 +3152,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	}
  
  	iv_new = ecalloc(1, iv_required_len + 1);
-@@ -5313,83 +6197,183 @@ static zend_bool php_openssl_validate_iv
+@@ -5313,83 +6197,183 @@ static zend_bool php_openssl_validate_iv(char **piv, size_t *piv_len, size_t iv_
  		/* BC behavior */
  		*piv_len = iv_required_len;
  		*piv = iv_new;
@@ -3168,34 +3185,20 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 -	return 1;
 +	*free_iv = 1;
 +	return SUCCESS;
- 
- }
++
++}
 +/* }}} */
- 
--/* {{{ proto string openssl_encrypt(string data, string method, string password [, long options=0 [, string $iv='']])
--   Encrypts given data with given method and key, returns raw or base64 encoded string */
--PHP_FUNCTION(openssl_encrypt)
++
 +static int php_openssl_cipher_init(const EVP_CIPHER *cipher_type,
 +		EVP_CIPHER_CTX *cipher_ctx, struct php_openssl_cipher_mode *mode,
 +		char **ppassword, size_t *ppassword_len, zend_bool *free_password,
 +		char **piv, size_t *piv_len, zend_bool *free_iv,
 +		char *tag, int tag_len, zend_long options, int enc)  /* {{{ */
- {
--	zend_long options = 0;
--	char *data, *method, *password, *iv = "";
--	size_t data_len, method_len, password_len, iv_len = 0, max_iv_len;
--	const EVP_CIPHER *cipher_type;
--	EVP_CIPHER_CTX cipher_ctx;
--	int i=0, keylen;
--	size_t outlen;
--	zend_string *outbuf;
- 	unsigned char *key;
--	zend_bool free_iv;
++{
++	unsigned char *key;
 +	int key_len, password_len;
 +	size_t max_iv_len;
- 
--	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss|ls", &data, &data_len, &method, &method_len, &password, &password_len, &options, &iv, &iv_len) == FAILURE) {
--		return;
++
 +	/* check and set key */
 +	password_len = (int) *ppassword_len;
 +	key_len = EVP_CIPHER_key_length(cipher_type);
@@ -3209,19 +3212,14 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +	} else {
 +		key = (unsigned char*)*ppassword;
 +		*free_password = 0;
- 	}
--	cipher_type = EVP_get_cipherbyname(method);
--	if (!cipher_type) {
--		php_error_docref(NULL, E_WARNING, "Unknown cipher algorithm");
--		RETURN_FALSE;
++	}
 +
 +	max_iv_len = EVP_CIPHER_iv_length(cipher_type);
 +	if (enc && *piv_len == 0 && max_iv_len > 0 && !mode->is_aead) {
 +		php_error_docref(NULL, E_WARNING,
 +				"Using an empty Initialization Vector (iv) is potentially insecure and not recommended");
- 	}
- 
--	PHP_OPENSSL_CHECK_SIZE_T_TO_INT(data_len, data);
++	}
++
 +	if (!EVP_CipherInit_ex(cipher_ctx, cipher_type, NULL, NULL, NULL, enc)) {
 +		php_openssl_store_errors();
 +		return FAILURE;
@@ -3249,14 +3247,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +	if (options & OPENSSL_ZERO_PADDING) {
 +		EVP_CIPHER_CTX_set_padding(cipher_ctx, 0);
 +	}
- 
--	keylen = EVP_CIPHER_key_length(cipher_type);
--	if (keylen > password_len) {
--		key = emalloc(keylen);
--		memset(key, 0, keylen);
--		memcpy(key, password, password_len);
--	} else {
--		key = (unsigned char*)password;
++
 +	return SUCCESS;
 +}
 +/* }}} */
@@ -3272,26 +3263,16 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +		php_openssl_store_errors();
 +		php_error_docref(NULL, E_WARNING, "Setting of data length failed");
 +		return FAILURE;
- 	}
++	}
  
--	max_iv_len = EVP_CIPHER_iv_length(cipher_type);
--	if (iv_len == 0 && max_iv_len > 0) {
--		php_error_docref(NULL, E_WARNING, "Using an empty Initialization Vector (iv) is potentially insecure and not recommended");
 +	if (mode->is_aead && !EVP_CipherUpdate(cipher_ctx, NULL, &i, (unsigned char *)aad, (int)aad_len)) {
 +		php_openssl_store_errors();
 +		php_error_docref(NULL, E_WARNING, "Setting of additional application data failed");
 +		return FAILURE;
- 	}
--	free_iv = php_openssl_validate_iv(&iv, &iv_len, max_iv_len);
- 
--	outlen = data_len + EVP_CIPHER_block_size(cipher_type);
--	outbuf = zend_string_alloc(outlen, 0);
++	}
++
 +	*poutbuf = zend_string_alloc((int)data_len + EVP_CIPHER_block_size(cipher_type), 0);
- 
--	EVP_EncryptInit(&cipher_ctx, cipher_type, NULL, NULL);
--	if (password_len > keylen) {
--		PHP_OPENSSL_CHECK_SIZE_T_TO_INT(password_len, password);
--		EVP_CIPHER_CTX_set_key_length(&cipher_ctx, (int)password_len);
++
 +	if (!EVP_CipherUpdate(cipher_ctx, (unsigned char*)ZSTR_VAL(*poutbuf),
 +					&i, (unsigned char *)data, (int)data_len)) {
 +		/* we don't show warning when we fail but if we ever do, then it should look like this:
@@ -3304,59 +3285,94 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +		php_openssl_store_errors();
 +		zend_string_release(*poutbuf);
 +		return FAILURE;
- 	}
--	EVP_EncryptInit_ex(&cipher_ctx, NULL, NULL, key, (unsigned char *)iv);
--	if (options & OPENSSL_ZERO_PADDING) {
--		EVP_CIPHER_CTX_set_padding(&cipher_ctx, 0);
++	}
 +
 +	*poutlen = i;
 +
 +	return SUCCESS;
-+}
+ }
 +/* }}} */
-+
+ 
+-/* {{{ proto string openssl_encrypt(string data, string method, string password [, long options=0 [, string $iv='']])
 +/* {{{ proto string openssl_encrypt(string data, string method, string password [, long options=0 [, string $iv=''[, string &$tag = ''[, string $aad = ''[, long $tag_length = 16]]]]])
-+   Encrypts given data with given method and key, returns raw or base64 encoded string */
-+PHP_FUNCTION(openssl_encrypt)
-+{
+    Encrypts given data with given method and key, returns raw or base64 encoded string */
+ PHP_FUNCTION(openssl_encrypt)
+ {
+-	zend_long options = 0;
+-	char *data, *method, *password, *iv = "";
+-	size_t data_len, method_len, password_len, iv_len = 0, max_iv_len;
 +	zend_long options = 0, tag_len = 16;
 +	char *data, *method, *password, *iv = "", *aad = "";
 +	size_t data_len, method_len, password_len, iv_len = 0, aad_len = 0;
 +	zval *tag = NULL;
-+	const EVP_CIPHER *cipher_type;
+ 	const EVP_CIPHER *cipher_type;
+-	EVP_CIPHER_CTX cipher_ctx;
+-	int i=0, keylen;
+-	size_t outlen;
 +	EVP_CIPHER_CTX *cipher_ctx;
 +	struct php_openssl_cipher_mode mode;
 +	int i=0, outlen;
-+	zend_string *outbuf;
+ 	zend_string *outbuf;
+-	unsigned char *key;
+-	zend_bool free_iv;
 +	zend_bool free_iv = 0, free_password = 0;
-+
+ 
+-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss|ls", &data, &data_len, &method, &method_len, &password, &password_len, &options, &iv, &iv_len) == FAILURE) {
 +	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss|lsz/sl", &data, &data_len, &method, &method_len,
 +					&password, &password_len, &options, &iv, &iv_len, &tag, &aad, &aad_len, &tag_len) == FAILURE) {
-+		return;
+ 		return;
  	}
--	if (data_len > 0) {
--		EVP_EncryptUpdate(&cipher_ctx, (unsigned char*)ZSTR_VAL(outbuf), &i, (unsigned char *)data, (int)data_len);
 +
 +	PHP_OPENSSL_CHECK_SIZE_T_TO_INT(data_len, data);
 +	PHP_OPENSSL_CHECK_SIZE_T_TO_INT(password_len, password);
 +	PHP_OPENSSL_CHECK_SIZE_T_TO_INT(aad_len, aad);
 +	PHP_OPENSSL_CHECK_LONG_TO_INT(tag_len, tag_len);
 +
-+	cipher_type = EVP_get_cipherbyname(method);
-+	if (!cipher_type) {
-+		php_error_docref(NULL, E_WARNING, "Unknown cipher algorithm");
-+		RETURN_FALSE;
-+	}
-+
+ 	cipher_type = EVP_get_cipherbyname(method);
+ 	if (!cipher_type) {
+ 		php_error_docref(NULL, E_WARNING, "Unknown cipher algorithm");
+ 		RETURN_FALSE;
+ 	}
+ 
+-	PHP_OPENSSL_CHECK_SIZE_T_TO_INT(data_len, data);
+-
+-	keylen = EVP_CIPHER_key_length(cipher_type);
+-	if (keylen > password_len) {
+-		key = emalloc(keylen);
+-		memset(key, 0, keylen);
+-		memcpy(key, password, password_len);
+-	} else {
+-		key = (unsigned char*)password;
+-	}
+-
+-	max_iv_len = EVP_CIPHER_iv_length(cipher_type);
+-	if (iv_len == 0 && max_iv_len > 0) {
+-		php_error_docref(NULL, E_WARNING, "Using an empty Initialization Vector (iv) is potentially insecure and not recommended");
 +	cipher_ctx = EVP_CIPHER_CTX_new();
 +	if (!cipher_ctx) {
 +		php_error_docref(NULL, E_WARNING, "Failed to create cipher context");
 +		RETURN_FALSE;
  	}
+-	free_iv = php_openssl_validate_iv(&iv, &iv_len, max_iv_len);
++	php_openssl_load_cipher_mode(&mode, cipher_type);
+ 
+-	outlen = data_len + EVP_CIPHER_block_size(cipher_type);
+-	outbuf = zend_string_alloc(outlen, 0);
+-
+-	EVP_EncryptInit(&cipher_ctx, cipher_type, NULL, NULL);
+-	if (password_len > keylen) {
+-		PHP_OPENSSL_CHECK_SIZE_T_TO_INT(password_len, password);
+-		EVP_CIPHER_CTX_set_key_length(&cipher_ctx, (int)password_len);
+-	}
+-	EVP_EncryptInit_ex(&cipher_ctx, NULL, NULL, key, (unsigned char *)iv);
+-	if (options & OPENSSL_ZERO_PADDING) {
+-		EVP_CIPHER_CTX_set_padding(&cipher_ctx, 0);
+-	}
+-	if (data_len > 0) {
+-		EVP_EncryptUpdate(&cipher_ctx, (unsigned char*)ZSTR_VAL(outbuf), &i, (unsigned char *)data, (int)data_len);
+-	}
 -	outlen = i;
 -	if (EVP_EncryptFinal(&cipher_ctx, (unsigned char *)ZSTR_VAL(outbuf) + i, &i)) {
-+	php_openssl_load_cipher_mode(&mode, cipher_type);
-+
 +	if (php_openssl_cipher_init(cipher_type, cipher_ctx, &mode,
 +				&password, &password_len, &free_password,
 +				&iv, &iv_len, &free_iv, NULL, tag_len, options, 1) == FAILURE ||
@@ -3589,7 +3605,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  /* {{{ proto string openssl_random_pseudo_bytes(integer length [, &bool returned_strong_result])
     Returns a string of the length specified filled with random pseudo bytes */
  PHP_FUNCTION(openssl_random_pseudo_bytes)
-@@ -5620,6 +6588,8 @@ PHP_FUNCTION(openssl_random_pseudo_bytes
+@@ -5620,6 +6588,8 @@ PHP_FUNCTION(openssl_random_pseudo_bytes)
  			ZVAL_FALSE(zstrong_result_returned);
  		}
  		RETURN_FALSE;
@@ -3598,9 +3614,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	}
  #endif
  
---- php7.0.orig/ext/openssl/php_openssl.h
-+++ php7.0/ext/openssl/php_openssl.h
-@@ -46,11 +46,33 @@ extern zend_module_entry openssl_module_
+diff --git a/ext/openssl/php_openssl.h b/ext/openssl/php_openssl.h
+index a324a73..08f240e 100644
+--- a/ext/openssl/php_openssl.h
++++ b/ext/openssl/php_openssl.h
+@@ -46,11 +46,33 @@ extern zend_module_entry openssl_module_entry;
  	"DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:" \
  	"AES256-GCM-SHA384:AES128:AES256:HIGH:!SSLv2:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!RC4:!ADH"
  
@@ -3634,7 +3652,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  PHP_FUNCTION(openssl_pkey_get_private);
  PHP_FUNCTION(openssl_pkey_get_public);
-@@ -110,6 +132,7 @@ PHP_FUNCTION(openssl_get_cert_locations)
+@@ -110,6 +132,7 @@ PHP_FUNCTION(openssl_get_cert_locations);
  
  #endif
  
@@ -3642,8 +3660,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  #endif
  
  /*
---- php7.0.orig/ext/openssl/tests/001.phpt
-+++ php7.0/ext/openssl/tests/001.phpt
+diff --git a/ext/openssl/tests/001.phpt b/ext/openssl/tests/001.phpt
+index 4ca9970..d62612b 100644
+--- a/ext/openssl/tests/001.phpt
++++ b/ext/openssl/tests/001.phpt
 @@ -24,7 +24,7 @@ if ($privkey === false)
  	die("failed to create private key");
  
@@ -3653,17 +3673,21 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  if ($key_file_name === false)
  	die("failed to get a temporary filename!");
  
---- php7.0.orig/ext/openssl/tests/bug38261.phpt
-+++ php7.0/ext/openssl/tests/bug38261.phpt
-@@ -31,4 +31,4 @@ Warning: openssl_x509_parse() expects at
+diff --git a/ext/openssl/tests/bug38261.phpt b/ext/openssl/tests/bug38261.phpt
+index b06fa4f..66de8b8 100644
+--- a/ext/openssl/tests/bug38261.phpt
++++ b/ext/openssl/tests/bug38261.phpt
+@@ -31,4 +31,4 @@ Warning: openssl_x509_parse() expects at least 1 parameter, 0 given in %sbug3826
  NULL
  bool(false)
  
 -Catchable fatal error: Object of class stdClass could not be converted to string in %sbug38261.php on line %d 
 +Recoverable fatal error: Object of class stdClass could not be converted to string in %sbug38261.php on line %d 
---- php7.0.orig/ext/openssl/tests/bug41033.phpt
-+++ php7.0/ext/openssl/tests/bug41033.phpt
-@@ -13,11 +13,11 @@ $pub = 'file://' . dirname(__FILE__) . '
+diff --git a/ext/openssl/tests/bug41033.phpt b/ext/openssl/tests/bug41033.phpt
+index 4aeae66..4e9bea3 100644
+--- a/ext/openssl/tests/bug41033.phpt
++++ b/ext/openssl/tests/bug41033.phpt
+@@ -13,11 +13,11 @@ $pub = 'file://' . dirname(__FILE__) . '/' . 'bug41033pub.pem';
  
  $prkeyid = openssl_get_privatekey($prv, "1234");
  $ct = "Hello I am some text!";
@@ -3677,9 +3701,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  echo "Signature validity: " . $valid . "\n";
  
  
---- php7.0.orig/ext/openssl/tests/bug61124.phpt
-+++ php7.0/ext/openssl/tests/bug61124.phpt
-@@ -8,5 +8,5 @@ if (!extension_loaded("openssl")) die("s
+diff --git a/ext/openssl/tests/bug61124.phpt b/ext/openssl/tests/bug61124.phpt
+index 2fc192d..9b21da5 100644
+--- a/ext/openssl/tests/bug61124.phpt
++++ b/ext/openssl/tests/bug61124.phpt
+@@ -8,5 +8,5 @@ if (!extension_loaded("openssl")) die("skip");
  var_dump(openssl_decrypt('kzo w2RMExUTYQXW2Xzxmg==', 'aes-128-cbc', 'pass', false, 'pass'));
  
  --EXPECTF--
@@ -3688,9 +3714,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 \ No newline at end of file
 +Warning: openssl_decrypt(): IV passed is only 4 bytes long, cipher expects an IV of precisely 16 bytes, padding with \0 in %s on line %d
 +bool(false)
---- php7.0.orig/ext/openssl/tests/bug66501.phpt
-+++ php7.0/ext/openssl/tests/bug66501.phpt
-@@ -16,7 +16,7 @@ AwEHoUQDQgAEPq4hbIWHvB51rdWr8ejrjWo4qVNW
+diff --git a/ext/openssl/tests/bug66501.phpt b/ext/openssl/tests/bug66501.phpt
+index 7ad5e21..99ac4f5 100644
+--- a/ext/openssl/tests/bug66501.phpt
++++ b/ext/openssl/tests/bug66501.phpt
+@@ -16,7 +16,7 @@ AwEHoUQDQgAEPq4hbIWHvB51rdWr8ejrjWo4qVNWVugYFtPg/xLQw0mHkIPZ4DvK
  sqOTOnMoezkbSmVVMuwz9flvnqHGmQvmug==
  -----END EC PRIVATE KEY-----';
  $key = openssl_pkey_get_private($pkey);
@@ -3699,7 +3727,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  var_dump($res);
  --EXPECTF--
  bool(true)
---- php7.0.orig/ext/openssl/tests/bug69882.phpt
+diff --git a/ext/openssl/tests/bug69882.phpt b/ext/openssl/tests/bug69882.phpt
+deleted file mode 100644
+index 6963f8d..0000000
+--- a/ext/openssl/tests/bug69882.phpt
 +++ /dev/null
 @@ -1,17 +0,0 @@
 ---TEST--
@@ -3719,8 +3750,68 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 ---EXPECTF--
 -bool(true)
 -bool(false)
+diff --git a/ext/openssl/tests/bug73478.phpt b/ext/openssl/tests/bug73478.phpt
+new file mode 100644
+index 0000000..1dfc584
 --- /dev/null
-+++ php7.0/ext/openssl/tests/cipher_tests.inc
++++ b/ext/openssl/tests/bug73478.phpt
+@@ -0,0 +1,25 @@
++--TEST--
++Bug #73478: openssl_pkey_new() generates wrong pub/priv keys with Diffie Hellman
++--SKIPIF--
++<?php
++if (!extension_loaded("openssl")) die("skip openssl not loaded");
++?>
++--FILE--
++<?php
++$details = [
++  'p' => base64_decode('3Pk6C4g5cuwOGZiaxaLOMQ4dN3F+jZVxu3Yjcxhm5h73Wi4niYsFf5iRwuJ6Y5w/KbYIFFgc07LKOYbSaDcFV31FwuflLcgcehcYduXOp0sUSL/frxiCjv0lGfFOReOCZjSvGUnltTXMgppIO4p2Ij5dSQolfwW9/xby+yLFg6s='),
++  'g' => base64_decode('Ag=='),
++  'priv_key' => base64_decode('jUdcV++P/m7oUodWiqKqKXZVenHRuj92Ig6Fmzs7QlqVdUc5mNBxmEWjug+ObffanPpOeab/LyXwjNMzevtBz3tW4oROau++9EIMJVVQr8fW9zdYBJcYieC5l4t8nRj5/Uu/Z0G2rWVLBleSi28mqqNEvnUs7uxYxrar69lwQYs=')
++];
++
++$opensslKeyResource = openssl_pkey_new(['dh' => $details]);
++$data = openssl_pkey_get_details($opensslKeyResource);
++
++printf("Private key:\n%s\n", base64_encode($data['dh']['priv_key']));
++printf("Public key:\n%s\n", base64_encode($data['dh']['pub_key']));
++?>
++--EXPECT--
++Private key:
++jUdcV++P/m7oUodWiqKqKXZVenHRuj92Ig6Fmzs7QlqVdUc5mNBxmEWjug+ObffanPpOeab/LyXwjNMzevtBz3tW4oROau++9EIMJVVQr8fW9zdYBJcYieC5l4t8nRj5/Uu/Z0G2rWVLBleSi28mqqNEvnUs7uxYxrar69lwQYs=
++Public key:
++0DmJUe9dr02pAtVoGyLHdC+rfBU3mDCelKGPXRDFHofx6mFfN2gcZCmp/ab4ezDXfpIBOatpVdbn2fTNUGo64DtKE2WGTsZCl90RgrGUv8XW/4WDPXeE7g5u7KWHBG/LCE5+XsilE5P5/GIyqr9gsiudTmk+H/hiYZl9Smar9k0=
+diff --git a/ext/openssl/tests/bug74099.phpt b/ext/openssl/tests/bug74099.phpt
+new file mode 100644
+index 0000000..c0e02ba
+--- /dev/null
++++ b/ext/openssl/tests/bug74099.phpt
+@@ -0,0 +1,20 @@
++--TEST--
++Bug #74099 Memory leak with openssl_encrypt()
++--SKIPIF--
++<?php
++if (!extension_loaded("openssl")) die("skip");
++?>
++--FILE--
++<?php
++$aad = random_bytes(32);
++$iv = random_bytes(16);
++$key = random_bytes(32);
++
++$plaintext = '';
++$tag = null;
++
++$ciphertext = openssl_encrypt($plaintext, 'aes-256-gcm', $key, \OPENSSL_RAW_DATA, $iv, $tag, $aad);
++var_dump($ciphertext);
++?>
++--EXPECTF--
++string(0) ""
+diff --git a/ext/openssl/tests/cipher_tests.inc b/ext/openssl/tests/cipher_tests.inc
+new file mode 100644
+index 0000000..b9e84af
+--- /dev/null
++++ b/ext/openssl/tests/cipher_tests.inc
 @@ -0,0 +1,111 @@
 +<?php
 +$php_openssl_cipher_tests = array(
@@ -3833,8 +3924,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +
 +	return $tests;
 +}
+diff --git a/ext/openssl/tests/ecc.phpt b/ext/openssl/tests/ecc.phpt
+new file mode 100644
+index 0000000..e4c1d20
 --- /dev/null
-+++ php7.0/ext/openssl/tests/ecc.phpt
++++ b/ext/openssl/tests/ecc.phpt
 @@ -0,0 +1,110 @@
 +--TEST--
 +openssl_*() with OPENSSL_KEYTYPE_EC
@@ -3946,8 +4040,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +Testing openssl_get_curve_names
 +bool(true)
 +Found secp384r1 in curve names
+diff --git a/ext/openssl/tests/openssl_decrypt_ccm.phpt b/ext/openssl/tests/openssl_decrypt_ccm.phpt
+new file mode 100644
+index 0000000..2107fea
 --- /dev/null
-+++ php7.0/ext/openssl/tests/openssl_decrypt_ccm.phpt
++++ b/ext/openssl/tests/openssl_decrypt_ccm.phpt
 @@ -0,0 +1,41 @@
 +--TEST--
 +openssl_decrypt() with CCM cipher algorithm tests
@@ -3990,8 +4087,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +bool(false)
 +bool(false)
 +bool(false)
---- php7.0.orig/ext/openssl/tests/openssl_decrypt_error.phpt
-+++ php7.0/ext/openssl/tests/openssl_decrypt_error.phpt
+diff --git a/ext/openssl/tests/openssl_decrypt_error.phpt b/ext/openssl/tests/openssl_decrypt_error.phpt
+index 40debbd..b34397a 100644
+--- a/ext/openssl/tests/openssl_decrypt_error.phpt
++++ b/ext/openssl/tests/openssl_decrypt_error.phpt
 @@ -7,7 +7,7 @@ openssl_decrypt() error tests
  $data = "openssl_decrypt() tests";
  $method = "AES-128-CBC";
@@ -4001,7 +4100,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  $iv = str_repeat("\0", openssl_cipher_iv_length($method));
  
  $encrypted = openssl_encrypt($data, $method, $password);
-@@ -22,6 +22,9 @@ var_dump(openssl_decrypt($wrong, $wrong,
+@@ -22,6 +22,9 @@ var_dump(openssl_decrypt($wrong, $wrong, $wrong));
  var_dump(openssl_decrypt(array(), $method, $password));
  var_dump(openssl_decrypt($encrypted, array(), $password));
  var_dump(openssl_decrypt($encrypted, $method, array()));
@@ -4018,8 +4117,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +
 +Warning: openssl_encrypt(): The authenticated tag cannot be provided for cipher that doesn not support AEAD in %s on line %d
 +string(44) "yof6cPPH4mLee6TOc0YQSrh4dvywMqxGUyjp0lV6+aM="
+diff --git a/ext/openssl/tests/openssl_decrypt_gcm.phpt b/ext/openssl/tests/openssl_decrypt_gcm.phpt
+new file mode 100644
+index 0000000..d8c4643
 --- /dev/null
-+++ php7.0/ext/openssl/tests/openssl_decrypt_gcm.phpt
++++ b/ext/openssl/tests/openssl_decrypt_gcm.phpt
 @@ -0,0 +1,51 @@
 +--TEST--
 +openssl_decrypt() with GCM cipher algorithm tests
@@ -4072,8 +4174,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +bool(false)
 +bool(false)
 +bool(false)
+diff --git a/ext/openssl/tests/openssl_encrypt_ccm.phpt b/ext/openssl/tests/openssl_encrypt_ccm.phpt
+new file mode 100644
+index 0000000..1606044
 --- /dev/null
-+++ php7.0/ext/openssl/tests/openssl_encrypt_ccm.phpt
++++ b/ext/openssl/tests/openssl_encrypt_ccm.phpt
 @@ -0,0 +1,39 @@
 +--TEST--
 +openssl_encrypt() with CCM cipher algorithm tests
@@ -4114,8 +4219,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +bool(false)
 +string(8) "p/lvgA=="
 +int(1024)
---- php7.0.orig/ext/openssl/tests/openssl_encrypt_error.phpt
-+++ php7.0/ext/openssl/tests/openssl_encrypt_error.phpt
+diff --git a/ext/openssl/tests/openssl_encrypt_error.phpt b/ext/openssl/tests/openssl_encrypt_error.phpt
+index 7376f48..791c431 100644
+--- a/ext/openssl/tests/openssl_encrypt_error.phpt
++++ b/ext/openssl/tests/openssl_encrypt_error.phpt
 @@ -7,10 +7,12 @@ openssl_encrypt() error tests
  $data = "openssl_encrypt() tests";
  $method = "AES-128-CBC";
@@ -4129,7 +4236,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  var_dump(openssl_encrypt($data, $wrong, $password));
  var_dump(openssl_encrypt($object, $method, $password));
  var_dump(openssl_encrypt($data, $object, $password));
-@@ -18,6 +20,9 @@ var_dump(openssl_encrypt($data, $method,
+@@ -18,6 +20,9 @@ var_dump(openssl_encrypt($data, $method, $object));
  var_dump(openssl_encrypt($arr, $method, $object));
  var_dump(openssl_encrypt($data, $arr, $object));
  var_dump(openssl_encrypt($data, $method, $arr));
@@ -4145,8 +4252,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
 +Warning: openssl_encrypt(): The authenticated tag cannot be provided for cipher that doesn not support AEAD in %s on line %d
 +string(44) "iPR4HulskuaP5Z6me5uImk6BqVyJG73+63tkPauVZYk="
+diff --git a/ext/openssl/tests/openssl_encrypt_gcm.phpt b/ext/openssl/tests/openssl_encrypt_gcm.phpt
+new file mode 100644
+index 0000000..91fe23a
 --- /dev/null
-+++ php7.0/ext/openssl/tests/openssl_encrypt_gcm.phpt
++++ b/ext/openssl/tests/openssl_encrypt_gcm.phpt
 @@ -0,0 +1,60 @@
 +--TEST--
 +openssl_encrypt() with GCM cipher algorithm tests
@@ -4208,9 +4318,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +
 +Warning: openssl_encrypt(): A tag should be provided when using AEAD mode in %s on line %d
 +bool(false)
---- php7.0.orig/ext/openssl/tests/openssl_error_string_basic.phpt
-+++ php7.0/ext/openssl/tests/openssl_error_string_basic.phpt
-@@ -89,7 +89,7 @@ expect_openssl_errors('openssl_pkey_expo
+diff --git a/ext/openssl/tests/openssl_error_string_basic.phpt b/ext/openssl/tests/openssl_error_string_basic.phpt
+index 82f3099..04cc550 100644
+--- a/ext/openssl/tests/openssl_error_string_basic.phpt
++++ b/ext/openssl/tests/openssl_error_string_basic.phpt
+@@ -89,7 +89,7 @@ expect_openssl_errors('openssl_pkey_export_to_file opening', ['02001002', '2006D
  expect_openssl_errors('openssl_pkey_export_to_file pem', ['0906D06C']);
  // file to export cannot be written
  @openssl_pkey_export_to_file($private_key_file, $invalid_file_for_write);
@@ -4219,7 +4331,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  // succesful export
  @openssl_pkey_export($private_key_file_with_pass, $out, 'wrong pwd');
  expect_openssl_errors('openssl_pkey_export', ['06065064', '0906A065']);
-@@ -105,7 +105,7 @@ expect_openssl_errors('openssl_private_d
+@@ -105,7 +105,7 @@ expect_openssl_errors('openssl_private_decrypt', ['04065072']);
  // public encrypt and decrypt with failed padding check and padding
  @openssl_public_encrypt("data", $crypted, $public_key_file, 1000);
  @openssl_public_decrypt("data", $crypted, $public_key_file);
@@ -4228,7 +4340,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  // X509
  echo "X509 errors\n";
-@@ -126,7 +126,7 @@ expect_openssl_errors('openssl_x509_chec
+@@ -126,7 +126,7 @@ expect_openssl_errors('openssl_x509_checkpurpose purpose', ['0B086079']);
  echo "CSR errors\n";
  // file for csr (file:///) fails when opennig (BIO_new_file)
  @openssl_csr_get_subject("file://" . $invalid_file_for_read);
@@ -4237,8 +4349,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  // file or str csr is not correct PEM - failing PEM_read_bio_X509_REQ
  @openssl_csr_get_subject($crt_file);
  expect_openssl_errors('openssl_csr_get_subjec pem', ['0906D06C']);
---- php7.0.orig/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
-+++ php7.0/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
+diff --git a/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt b/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
+index 5589abb..27ca4d2 100644
+--- a/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
++++ b/ext/openssl/tests/openssl_pkcs7_decrypt_basic.phpt
 @@ -6,10 +6,10 @@ openssl_pkcs7_decrypt() tests
  <?php
  $infile = dirname(__FILE__) . "/cert.crt";
@@ -4252,8 +4366,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  if ($outfile === false) {
  	unlink($outfile);
  	die("failed to get a temporary filename!");
---- php7.0.orig/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
-+++ php7.0/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
+diff --git a/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt b/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
+index 5f74f97..09a7093 100644
+--- a/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
++++ b/ext/openssl/tests/openssl_pkcs7_encrypt_basic.phpt
 @@ -5,10 +5,10 @@ openssl_pkcs7_encrypt() tests
  --FILE--
  <?php
@@ -4267,8 +4383,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  if ($outfile2 === false)
  	die("failed to get a temporary filename!");
  
---- php7.0.orig/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
-+++ php7.0/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
+diff --git a/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt b/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
+index ac8edf1..e06553f 100644
+--- a/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
++++ b/ext/openssl/tests/openssl_pkcs7_sign_basic.phpt
 @@ -5,7 +5,7 @@ openssl_pkcs7_sign() tests
  --FILE--
  <?php
@@ -4278,8 +4396,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  if ($outfile === false) {
  	die("failed to get a temporary filename!");
  }
---- php7.0.orig/ext/openssl/tests/openssl_pkey_export_basic.phpt
-+++ php7.0/ext/openssl/tests/openssl_pkey_export_basic.phpt
+diff --git a/ext/openssl/tests/openssl_pkey_export_basic.phpt b/ext/openssl/tests/openssl_pkey_export_basic.phpt
+index d229d6b..530158d 100644
+--- a/ext/openssl/tests/openssl_pkey_export_basic.phpt
++++ b/ext/openssl/tests/openssl_pkey_export_basic.phpt
 @@ -2,8 +2,10 @@
  openssl_pkey_export() with EC key
  --SKIPIF--
@@ -4293,7 +4413,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  ?>
  --FILE--
  <?php
-@@ -28,9 +30,9 @@ var_dump(OPENSSL_KEYTYPE_EC === $details
+@@ -28,9 +30,9 @@ var_dump(OPENSSL_KEYTYPE_EC === $details['type']);
  // Read public key
  $pKey = openssl_pkey_get_public('file://' . dirname(__FILE__) . '/public_ec.key');
  var_dump($pKey);
@@ -4306,7 +4426,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  // Export to file
  $tempname = tempnam(sys_get_temp_dir(), 'openssl_ec');
-@@ -40,7 +42,6 @@ var_dump(OPENSSL_KEYTYPE_EC === $details
+@@ -40,7 +42,6 @@ var_dump(OPENSSL_KEYTYPE_EC === $details['type']);
  
  // Clean the temporary file
  @unlink($tempname);
@@ -4325,8 +4445,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 +}
  bool(true)
  bool(true)
---- php7.0.orig/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
-+++ php7.0/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
+diff --git a/ext/openssl/tests/openssl_pkey_get_details_basic.phpt b/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
+index 8e0cef4..3c239af 100644
+--- a/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
++++ b/ext/openssl/tests/openssl_pkey_get_details_basic.phpt
 @@ -3,11 +3,11 @@ openssl_pkey_get_details() with EC key
  --SKIPIF--
  <?php
@@ -4351,8 +4473,10 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
          )
  
      [type] => 3
---- php7.0.orig/ext/openssl/xp_ssl.c
-+++ php7.0/ext/openssl/xp_ssl.c
+diff --git a/ext/openssl/xp_ssl.c b/ext/openssl/xp_ssl.c
+index b4387cd..6fa25b5 100644
+--- a/ext/openssl/xp_ssl.c
++++ b/ext/openssl/xp_ssl.c
 @@ -56,28 +56,19 @@
  #include <sys/select.h>
  #endif
@@ -4393,7 +4517,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  static RSA *tmp_rsa_cb(SSL *s, int is_export, int keylength);
  #endif
  
-@@ -413,7 +404,7 @@ static zend_bool matches_san_list(X509 *
+@@ -413,7 +404,7 @@ static zend_bool matches_san_list(X509 *peer, const char *subject_name) /* {{{ *
  
  		if (san->type == GEN_DNS) {
  			ASN1_STRING_to_UTF8(&cert_name, san->d.dNSName);
@@ -4402,7 +4526,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  				OPENSSL_free(cert_name);
  				/* prevent null-byte poisoning*/
  				continue;
-@@ -465,7 +456,7 @@ static zend_bool matches_common_name(X50
+@@ -465,7 +456,7 @@ static zend_bool matches_common_name(X509 *peer, const char *subject_name) /* {{
  
  	if (cert_name_len == -1) {
  		php_error_docref(NULL, E_WARNING, "Unable to locate peer certificate CN");
@@ -4411,7 +4535,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		php_error_docref(NULL, E_WARNING, "Peer certificate CN=`%.*s' is malformed", cert_name_len, buf);
  	} else if (matches_wildcard_name(subject_name, buf)) {
  		is_match = 1;
-@@ -579,7 +570,7 @@ static int passwd_callback(char *buf, in
+@@ -579,7 +570,7 @@ static int passwd_callback(char *buf, int num, int verify, void *data) /* {{{ */
  	GET_VER_OPT_STRING("passphrase", passphrase);
  
  	if (passphrase) {
@@ -4420,7 +4544,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			memcpy(buf, Z_STRVAL_P(val), Z_STRLEN_P(val)+1);
  			return (int)Z_STRLEN_P(val);
  		}
-@@ -588,12 +579,17 @@ static int passwd_callback(char *buf, in
+@@ -588,12 +579,17 @@ static int passwd_callback(char *buf, int num, int verify, void *data) /* {{{ */
  }
  /* }}} */
  
@@ -4439,7 +4563,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	php_stream *stream;
  	php_openssl_netstream_data_t *sslsock;
-@@ -608,7 +604,7 @@ static int win_cert_verify_callback(X509
+@@ -608,7 +604,7 @@ static int win_cert_verify_callback(X509_STORE_CTX *x509_store_ctx, void *arg) /
  		unsigned char *der_buf = NULL;
  		int der_len;
  
@@ -4448,7 +4572,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		if (der_len < 0) {
  			unsigned long err_code, e;
  			char err_buf[512];
-@@ -685,7 +681,7 @@ static int win_cert_verify_callback(X509
+@@ -685,7 +681,7 @@ static int win_cert_verify_callback(X509_STORE_CTX *x509_store_ctx, void *arg) /
  			int index, cert_name_utf8_len;
  			DWORD num_wchars;
  
@@ -4457,7 +4581,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			index = X509_NAME_get_index_by_NID(cert_name, NID_commonName, -1);
  			if (index < 0) {
  				php_error_docref(NULL, E_WARNING, "Unable to locate certificate CN");
-@@ -868,7 +864,7 @@ static int enable_peer_verification(SSL_
+@@ -868,7 +864,7 @@ static int enable_peer_verification(SSL_CTX *ctx, php_stream *stream) /* {{{ */
  			}
  		}
  	} else {
@@ -4466,7 +4590,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		SSL_CTX_set_cert_verify_callback(ctx, win_cert_verify_callback, (void *)stream);
  		SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL);
  #else
-@@ -926,22 +922,6 @@ static int set_local_cert(SSL_CTX *ctx,
+@@ -926,22 +922,6 @@ static int set_local_cert(SSL_CTX *ctx, php_stream *stream) /* {{{ */
  				}
  			}
  
@@ -4489,7 +4613,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			if (!SSL_CTX_check_private_key(ctx)) {
  				php_error_docref(NULL, E_WARNING, "Private key does not match certificate!");
  			}
-@@ -955,13 +935,9 @@ static int set_local_cert(SSL_CTX *ctx,
+@@ -955,13 +935,9 @@ static int set_local_cert(SSL_CTX *ctx, php_stream *stream) /* {{{ */
  static const SSL_METHOD *php_select_crypto_method(zend_long method_value, int is_client) /* {{{ */
  {
  	if (method_value == STREAM_CRYPTO_METHOD_SSLv2) {
@@ -4504,7 +4628,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	} else if (method_value == STREAM_CRYPTO_METHOD_SSLv3) {
  #ifdef HAVE_SSL3
  		return is_client ? SSLv3_client_method() : SSLv3_server_method();
-@@ -996,14 +972,27 @@ static const SSL_METHOD *php_select_cryp
+@@ -996,14 +972,27 @@ static const SSL_METHOD *php_select_crypto_method(zend_long method_value, int is
  }
  /* }}} */
  
@@ -4536,7 +4660,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  #endif
  #ifdef HAVE_SSL3
  	if (!(method_flags & STREAM_CRYPTO_METHOD_SSLv3)) {
-@@ -1139,7 +1128,7 @@ static void init_server_reneg_limit(php_
+@@ -1139,7 +1128,7 @@ static void init_server_reneg_limit(php_stream *stream, php_openssl_netstream_da
  }
  /* }}} */
  
@@ -4545,7 +4669,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  static RSA *tmp_rsa_cb(SSL *s, int is_export, int keylength)
  {
  	BIGNUM *bn = NULL;
-@@ -1163,7 +1152,6 @@ static RSA *tmp_rsa_cb(SSL *s, int is_ex
+@@ -1163,7 +1152,6 @@ static RSA *tmp_rsa_cb(SSL *s, int is_export, int keylength)
  }
  #endif
  
@@ -4553,7 +4677,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  static int set_server_dh_param(php_stream * stream, SSL_CTX *ctx) /* {{{ */
  {
  	DH *dh;
-@@ -1208,9 +1196,8 @@ static int set_server_dh_param(php_strea
+@@ -1208,9 +1196,8 @@ static int set_server_dh_param(php_stream * stream, SSL_CTX *ctx) /* {{{ */
  	return SUCCESS;
  }
  /* }}} */
@@ -4564,7 +4688,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  static int set_server_ecdh_curve(php_stream *stream, SSL_CTX *ctx) /* {{{ */
  {
  	zval *zvcurve;
-@@ -1253,13 +1240,13 @@ static int set_server_specific_opts(php_
+@@ -1253,13 +1240,13 @@ static int set_server_specific_opts(php_stream *stream, SSL_CTX *ctx) /* {{{ */
  	zval *zv;
  	long ssl_ctx_options = SSL_CTX_get_options(ctx);
  
@@ -4580,7 +4704,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	SSL_CTX_set_tmp_rsa_callback(ctx, tmp_rsa_cb);
  #endif
  	/* We now use tmp_rsa_cb to generate a key of appropriate size whenever necessary */
-@@ -1267,13 +1254,11 @@ static int set_server_specific_opts(php_
+@@ -1267,13 +1254,11 @@ static int set_server_specific_opts(php_stream *stream, SSL_CTX *ctx) /* {{{ */
  		php_error_docref(NULL, E_WARNING, "rsa_key_size context option has been removed");
  	}
  
@@ -4594,7 +4718,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	zv = php_stream_context_get_option(PHP_STREAM_CONTEXT(stream), "ssl", "honor_cipher_order");
  	if (zv != NULL && zend_is_true(zv)) {
-@@ -1531,33 +1516,22 @@ int php_openssl_setup_crypto(php_stream
+@@ -1531,33 +1516,22 @@ int php_openssl_setup_crypto(php_stream *stream,
  		}
  	}
  
@@ -4628,7 +4752,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	if (GET_VER_OPT("verify_peer") && !zend_is_true(val)) {
  		disable_peer_verification(sslsock->ctx, stream);
-@@ -1687,6 +1661,7 @@ static zend_array *capture_session_meta(
+@@ -1687,6 +1661,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  	char *proto_str;
  	long proto = SSL_version(ssl_handle);
  	const SSL_CIPHER *cipher = SSL_get_current_cipher(ssl_handle);
@@ -4636,7 +4760,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	switch (proto) {
  #ifdef HAVE_TLS12
-@@ -1707,11 +1682,6 @@ static zend_array *capture_session_meta(
+@@ -1707,11 +1682,6 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  			proto_str = "SSLv3";
  			break;
  #endif
@@ -4648,7 +4772,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  		default: proto_str = "UNKNOWN";
  	}
  
-@@ -1719,7 +1689,7 @@ static zend_array *capture_session_meta(
+@@ -1719,7 +1689,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  	add_assoc_string(&meta_arr, "protocol", proto_str);
  	add_assoc_string(&meta_arr, "cipher_name", (char *) SSL_CIPHER_get_name(cipher));
  	add_assoc_long(&meta_arr, "cipher_bits", SSL_CIPHER_get_bits(cipher, NULL));
@@ -4657,7 +4781,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  	return Z_ARR(meta_arr);
  }
-@@ -2215,39 +2185,39 @@ static inline int php_openssl_tcp_sockop
+@@ -2215,39 +2185,39 @@ static inline int php_openssl_tcp_sockop_accept(php_stream *stream, php_openssl_
  		php_stream_xport_param *xparam STREAMS_DC)
  {
  	int clisock;
@@ -4701,21 +4825,19 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 -			/* copy underlying tcp fields */
 -			memset(clisockdata, 0, sizeof(*clisockdata));
 -			memcpy(clisockdata, sock, sizeof(clisockdata->s));
--
++		/* copy underlying tcp fields */
++		memset(clisockdata, 0, sizeof(*clisockdata));
++		memcpy(clisockdata, sock, sizeof(clisockdata->s));
+ 
 -			clisockdata->s.socket = clisock;
--
++		clisockdata->s.socket = clisock;
+ 
 -			xparam->outputs.client = php_stream_alloc_rel(stream->ops, clisockdata, NULL, "r+");
 -			if (xparam->outputs.client) {
 -				xparam->outputs.client->ctx = stream->ctx;
 -				if (stream->ctx) {
 -					GC_REFCOUNT(stream->ctx)++;
 -				}
-+		/* copy underlying tcp fields */
-+		memset(clisockdata, 0, sizeof(*clisockdata));
-+		memcpy(clisockdata, sock, sizeof(clisockdata->s));
-+
-+		clisockdata->s.socket = clisock;
-+
 +		xparam->outputs.client = php_stream_alloc_rel(stream->ops, clisockdata, NULL, "r+");
 +		if (xparam->outputs.client) {
 +			xparam->outputs.client->ctx = stream->ctx;
@@ -4724,7 +4846,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			}
  		}
  
-@@ -2285,6 +2255,7 @@ static int php_openssl_sockop_set_option
+@@ -2285,6 +2255,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  			if (sslsock->ssl_active) {
  				zval tmp;
  				char *proto_str;
@@ -4732,7 +4854,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  				const SSL_CIPHER *cipher;
  
  				array_init(&tmp);
-@@ -2300,9 +2271,6 @@ static int php_openssl_sockop_set_option
+@@ -2300,9 +2271,6 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  #ifdef HAVE_SSL3
  					case SSL3_VERSION: proto_str = "SSLv3"; break;
  #endif
@@ -4742,7 +4864,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  					default: proto_str = "UNKNOWN";
  				}
  
-@@ -2311,7 +2279,7 @@ static int php_openssl_sockop_set_option
+@@ -2311,7 +2279,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  				add_assoc_string(&tmp, "protocol", proto_str);
  				add_assoc_string(&tmp, "cipher_name", (char *) SSL_CIPHER_get_name(cipher));
  				add_assoc_long(&tmp, "cipher_bits", SSL_CIPHER_get_bits(cipher, NULL));
@@ -4751,7 +4873,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  #ifdef HAVE_TLS_ALPN
  				{
-@@ -2596,14 +2564,9 @@ php_stream *php_openssl_ssl_socket_facto
+@@ -2596,14 +2564,9 @@ php_stream *php_openssl_ssl_socket_factory(const char *proto, size_t protolen,
  		sslsock->enable_on_connect = 1;
  		sslsock->method = get_crypto_method(context, STREAM_CRYPTO_METHOD_ANY_CLIENT);
  	} else if (strncmp(proto, "sslv2", protolen) == 0) {
@@ -4767,9 +4889,11 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  	} else if (strncmp(proto, "sslv3", protolen) == 0) {
  #ifdef HAVE_SSL3
  		sslsock->enable_on_connect = 1;
---- php7.0.orig/ext/phar/util.c
-+++ php7.0/ext/phar/util.c
-@@ -1494,7 +1494,7 @@ int phar_verify_signature(php_stream *fp
+diff --git a/ext/phar/util.c b/ext/phar/util.c
+index 9f7fcae..f571429 100644
+--- a/ext/phar/util.c
++++ b/ext/phar/util.c
+@@ -1494,7 +1494,7 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
  			BIO *in;
  			EVP_PKEY *key;
  			EVP_MD *mdtype = (EVP_MD *) EVP_sha1();
@@ -4778,7 +4902,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  #else
  			int tempsig;
  #endif
-@@ -1567,7 +1567,8 @@ int phar_verify_signature(php_stream *fp
+@@ -1567,7 +1567,8 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
  				return FAILURE;
  			}
  
@@ -4788,7 +4912,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  			read_len = end_of_phar;
  
  			if (read_len > sizeof(buf)) {
-@@ -1579,7 +1580,7 @@ int phar_verify_signature(php_stream *fp
+@@ -1579,7 +1580,7 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
  			php_stream_seek(fp, 0, SEEK_SET);
  
  			while (read_size && (len = php_stream_read(fp, (char*)buf, read_size)) > 0) {
@@ -4797,7 +4921,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  				read_len -= (zend_off_t)len;
  
  				if (read_len < read_size) {
-@@ -1587,9 +1588,9 @@ int phar_verify_signature(php_stream *fp
+@@ -1587,9 +1588,9 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
  				}
  			}
  
@@ -4809,7 +4933,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  
  				if (error) {
  					spprintf(error, 0, "broken openssl signature");
-@@ -1598,7 +1599,7 @@ int phar_verify_signature(php_stream *fp
+@@ -1598,7 +1599,7 @@ int phar_verify_signature(php_stream *fp, size_t end_of_phar, php_uint32 sig_typ
  				return FAILURE;
  			}
  
@@ -4818,54 +4942,3 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  #endif
  
  			*signature_len = phar_hex_str((const char*)sig, sig_len, signature);
---- /dev/null
-+++ php7.0/ext/openssl/tests/bug73478.phpt
-@@ -0,0 +1,25 @@
-+--TEST--
-+Bug #73478: openssl_pkey_new() generates wrong pub/priv keys with Diffie Hellman
-+--SKIPIF--
-+<?php
-+if (!extension_loaded("openssl")) die("skip openssl not loaded");
-+?>
-+--FILE--
-+<?php
-+$details = [
-+  'p' => base64_decode('3Pk6C4g5cuwOGZiaxaLOMQ4dN3F+jZVxu3Yjcxhm5h73Wi4niYsFf5iRwuJ6Y5w/KbYIFFgc07LKOYbSaDcFV31FwuflLcgcehcYduXOp0sUSL/frxiCjv0lGfFOReOCZjSvGUnltTXMgppIO4p2Ij5dSQolfwW9/xby+yLFg6s='),
-+  'g' => base64_decode('Ag=='),
-+  'priv_key' => base64_decode('jUdcV++P/m7oUodWiqKqKXZVenHRuj92Ig6Fmzs7QlqVdUc5mNBxmEWjug+ObffanPpOeab/LyXwjNMzevtBz3tW4oROau++9EIMJVVQr8fW9zdYBJcYieC5l4t8nRj5/Uu/Z0G2rWVLBleSi28mqqNEvnUs7uxYxrar69lwQYs=')
-+];
-+
-+$opensslKeyResource = openssl_pkey_new(['dh' => $details]);
-+$data = openssl_pkey_get_details($opensslKeyResource);
-+
-+printf("Private key:\n%s\n", base64_encode($data['dh']['priv_key']));
-+printf("Public key:\n%s\n", base64_encode($data['dh']['pub_key']));
-+?>
-+--EXPECT--
-+Private key:
-+jUdcV++P/m7oUodWiqKqKXZVenHRuj92Ig6Fmzs7QlqVdUc5mNBxmEWjug+ObffanPpOeab/LyXwjNMzevtBz3tW4oROau++9EIMJVVQr8fW9zdYBJcYieC5l4t8nRj5/Uu/Z0G2rWVLBleSi28mqqNEvnUs7uxYxrar69lwQYs=
-+Public key:
-+0DmJUe9dr02pAtVoGyLHdC+rfBU3mDCelKGPXRDFHofx6mFfN2gcZCmp/ab4ezDXfpIBOatpVdbn2fTNUGo64DtKE2WGTsZCl90RgrGUv8XW/4WDPXeE7g5u7KWHBG/LCE5+XsilE5P5/GIyqr9gsiudTmk+H/hiYZl9Smar9k0=
---- /dev/null
-+++ php7.0/ext/openssl/tests/bug74099.phpt
-@@ -0,0 +1,20 @@
-+--TEST--
-+Bug #74099 Memory leak with openssl_encrypt()
-+--SKIPIF--
-+<?php
-+if (!extension_loaded("openssl")) die("skip");
-+?>
-+--FILE--
-+<?php
-+$aad = random_bytes(32);
-+$iv = random_bytes(16);
-+$key = random_bytes(32);
-+
-+$plaintext = '';
-+$tag = null;
-+
-+$ciphertext = openssl_encrypt($plaintext, 'aes-256-gcm', $key, \OPENSSL_RAW_DATA, $iv, $tag, $aad);
-+var_dump($ciphertext);
-+?>
-+--EXPECTF--
-+string(0) ""
