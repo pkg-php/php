@@ -8,7 +8,7 @@ Subject: force_libmysqlclient_r
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ext/mysqli/config.m4 b/ext/mysqli/config.m4
-index c700dac81..89320052b 100644
+index c700dac..8932005 100644
 --- a/ext/mysqli/config.m4
 +++ b/ext/mysqli/config.m4
 @@ -59,7 +59,7 @@ elif test "$PHP_MYSQLI" != "no"; then
@@ -21,7 +21,7 @@ index c700dac81..89320052b 100644
      MYSQL_LIB_NAME='mysqlclient_r'
    else
 diff --git a/ext/pdo_mysql/config.m4 b/ext/pdo_mysql/config.m4
-index c165fb6b5..2e391eb78 100755
+index c165fb6..2e391eb 100755
 --- a/ext/pdo_mysql/config.m4
 +++ b/ext/pdo_mysql/config.m4
 @@ -67,7 +67,7 @@ if test "$PHP_PDO_MYSQL" != "no"; then

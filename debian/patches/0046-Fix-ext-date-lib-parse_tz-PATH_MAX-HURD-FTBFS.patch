@@ -7,7 +7,7 @@ Subject: Fix ext/date/lib/parse_tz PATH_MAX HURD FTBFS
  1 file changed, 41 insertions(+), 14 deletions(-)
 
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index ed7717ec7..97afe6560 100644
+index ed7717e..97afe65 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -428,13 +428,19 @@ static char *parse_iso6709(char *p, double *result)

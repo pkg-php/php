@@ -7,7 +7,7 @@ Subject: Fix check for CURL include in M-A directory
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ext/curl/config.m4 b/ext/curl/config.m4
-index 2f82c3485..f785770cb 100644
+index 2f82c34..f785770 100644
 --- a/ext/curl/config.m4
 +++ b/ext/curl/config.m4
 @@ -6,12 +6,12 @@ PHP_ARG_WITH(curl, for cURL support,

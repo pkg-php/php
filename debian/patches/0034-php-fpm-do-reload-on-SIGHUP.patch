@@ -9,7 +9,7 @@ Subject: php-fpm-do-reload-on-SIGHUP
  3 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/sapi/fpm/fpm/fpm_events.c b/sapi/fpm/fpm/fpm_events.c
-index 2b8e8cf13..5b8396964 100644
+index 2b8e8cf..5b83969 100644
 --- a/sapi/fpm/fpm/fpm_events.c
 +++ b/sapi/fpm/fpm/fpm_events.c
 @@ -113,6 +113,11 @@ static void fpm_got_signal(struct fpm_event_s *ev, short which, void *arg) /* {{
@@ -25,7 +25,7 @@ index 2b8e8cf13..5b8396964 100644
  
  		if (fpm_globals.is_child) {
 diff --git a/sapi/fpm/fpm/fpm_signals.c b/sapi/fpm/fpm/fpm_signals.c
-index 68cb15379..9e0b6429d 100644
+index 68cb153..9e0b642 100644
 --- a/sapi/fpm/fpm/fpm_signals.c
 +++ b/sapi/fpm/fpm/fpm_signals.c
 @@ -160,6 +160,7 @@ static void sig_handler(int signo) /* {{{ */
@@ -53,7 +53,7 @@ index 68cb15379..9e0b6429d 100644
  	    0 > sigaction(SIGQUIT,  &act,      0)) {
  
 diff --git a/sapi/fpm/php-fpm.8.in b/sapi/fpm/php-fpm.8.in
-index 794f5087f..b1bcf0851 100644
+index 794f508..b1bcf08 100644
 --- a/sapi/fpm/php-fpm.8.in
 +++ b/sapi/fpm/php-fpm.8.in
 @@ -150,7 +150,7 @@ Once started, php-fpm then responds to several POSIX signals:
