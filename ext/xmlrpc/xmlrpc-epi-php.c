@@ -557,7 +557,7 @@ static XMLRPC_VALUE PHP_to_XMLRPC_worker (const char* key, zval* in_val, int dep
 
 						ht = HASH_OF(&val);
 						if (ht && ht->u.v.nApplyCount > 1) {
-							php_error_docref(NULL, E_ERROR, "XML-RPC doesn't support circular references");
+							zend_throw_error(NULL, "XML-RPC doesn't support circular references");
 							return NULL;
 						}
 
@@ -577,7 +577,7 @@ static XMLRPC_VALUE PHP_to_XMLRPC_worker (const char* key, zval* in_val, int dep
 								char *num_str = NULL;
 
 								if (vtype != xmlrpc_vector_array) {
-									spprintf(&num_str, 0, "%ld", num_index);
+									spprintf(&num_str, 0, ZEND_LONG_FMT, num_index);
 								}
 
 								XMLRPC_AddValueToVector(xReturn, PHP_to_XMLRPC_worker(num_str, pIter, depth++));

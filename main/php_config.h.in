@@ -1931,6 +1931,9 @@
 /* */
 #undef HAVE_TIDY
 
+/* defined if tidybuffio.h exists */
+#undef HAVE_TIDYBUFFIO_H
+
 /* */
 #undef HAVE_TIDYOPTGETDOC
 
@@ -2197,17 +2200,11 @@
 /* */
 #undef PHPDBG_DEBUG
 
-/* Whether the system supports BlowFish salt */
-#undef PHP_BLOWFISH_CRYPT
-
 /* PHP build date */
 #undef PHP_BUILD_DATE
 
 /* Define if your system has fork/vfork/CreateProcess */
 #undef PHP_CAN_SUPPORT_PROC_OPEN
-
-/* Whether the system supports extended DES salt */
-#undef PHP_EXT_DES_CRYPT
 
 /* fpm group name */
 #undef PHP_FPM_GROUP
@@ -2245,9 +2242,6 @@
 /* Whether you have IRIX-style functions */
 #undef PHP_IRIX_TIME_R
 
-/* Whether the system supports MD5 salt */
-#undef PHP_MD5_CRYPT
-
 /* */
 #undef PHP_MHASH_BC
 
@@ -2278,17 +2272,8 @@
 /* whether pwrite64 is default */
 #undef PHP_PWRITE_64
 
-/* Whether the system supports SHA256 salt */
-#undef PHP_SHA256_CRYPT
-
-/* Whether the system supports SHA512 salt */
-#undef PHP_SHA512_CRYPT
-
 /* */
 #undef PHP_SIGCHILD
-
-/* Whether the system supports standard DES salt */
-#undef PHP_STD_DES_CRYPT
 
 /* uname -a output */
 #undef PHP_UNAME

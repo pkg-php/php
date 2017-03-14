@@ -1063,7 +1063,7 @@ static int preg_get_backref(char **str, int *backref)
 	}
 
 	if (in_brace) {
-		if (*walk == 0 || *walk != '}')
+		if (*walk != '}')
 			return 0;
 		else
 			walk++;
@@ -1620,7 +1620,7 @@ static PHP_FUNCTION(preg_replace_callback)
 	if (!zend_is_callable(replace, 0, &callback_name)) {
 		php_error_docref(NULL, E_WARNING, "Requires argument 2, '%s', to be a valid callback", ZSTR_VAL(callback_name));
 		zend_string_release(callback_name);
-		ZVAL_COPY(return_value, subject);
+		ZVAL_STR(return_value, zval_get_string(subject));
 		return;
 	}
 	zend_string_release(callback_name);

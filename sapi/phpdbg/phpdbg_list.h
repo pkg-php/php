@@ -48,7 +48,6 @@ typedef struct {
 	void *map;
 #endif
 	zend_op_array op_array;
-	zend_bool destroy_op_array;
 	uint lines;
 	uint line[1];
 } phpdbg_file_source;
