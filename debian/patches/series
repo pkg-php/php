@@ -52,4 +52,4 @@
 0052-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0053-Adjust-tidy-extension-for-tidy-html5.patch
 0054-Fix-check-for-CURL-include-in-M-A-directory.patch
-0055-libssl1.1-compatibility-patches-Courtesy-of-zsalab.patch
+0055-Use-OpenSSL-1.1-compatibility-patch-when-built-with-.patch
