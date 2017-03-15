@@ -1,3 +1,10 @@
+php7.0 (7.0.17-2) unstable; urgency=medium
+
+  * Always use custom php_ap_map_http_request_error to support older
+    apache2 at the runtime
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 15 Mar 2017 10:13:54 +0100
+
 php7.0 (7.0.17-1) unstable; urgency=medium
 
   * New upstream version 7.0.17
