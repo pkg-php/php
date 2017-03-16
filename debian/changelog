@@ -1,3 +1,9 @@
+php7.0 (7.0.17-3) unstable; urgency=medium
+
+  * Update ac*.m4 for OpenSSL 1.1.0 support
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 16 Mar 2017 10:27:12 +0100
+
 php7.0 (7.0.17-2) unstable; urgency=medium
 
   * Always use custom php_ap_map_http_request_error to support older
