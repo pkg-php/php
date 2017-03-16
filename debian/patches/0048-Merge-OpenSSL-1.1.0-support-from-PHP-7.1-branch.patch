@@ -3,6 +3,8 @@ Date: Thu, 17 Mar 2016 14:06:18 +0100
 Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
 
 ---
+ acinclude.m4                                       |   18 +-
+ aclocal.m4                                         |   12 +-
  ext/openssl/config0.m4                             |    2 +-
  ext/openssl/openssl.c                              | 1940 +++++++++++++++-----
  ext/openssl/php_openssl.h                          |   23 +
@@ -30,7 +32,7 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  .../tests/openssl_pkey_get_details_basic.phpt      |    7 +-
  ext/openssl/xp_ssl.c                               |  165 +-
  ext/phar/util.c                                    |   13 +-
- 27 files changed, 2049 insertions(+), 638 deletions(-)
+ 29 files changed, 2063 insertions(+), 654 deletions(-)
  delete mode 100644 ext/openssl/tests/bug69882.phpt
  create mode 100644 ext/openssl/tests/bug73478.phpt
  create mode 100644 ext/openssl/tests/bug74099.phpt
@@ -41,6 +43,102 @@ Subject: Merge OpenSSL 1.1.0 support from PHP-7.1 branch
  create mode 100644 ext/openssl/tests/openssl_encrypt_ccm.phpt
  create mode 100644 ext/openssl/tests/openssl_encrypt_gcm.phpt
 
+diff --git a/acinclude.m4 b/acinclude.m4
+index 49916f9..02105dd 100644
+--- a/acinclude.m4
++++ b/acinclude.m4
+@@ -2339,15 +2339,13 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+ 
+   dnl If pkg-config is found try using it
+   if test "$PHP_OPENSSL_DIR" = "yes" && test -x "$PKG_CONFIG" && $PKG_CONFIG --exists openssl; then
+-    if $PKG_CONFIG --atleast-version=1.1 openssl; then
+-      AC_MSG_ERROR([OpenSSL version >= 1.1 is not supported.])
+-    elif $PKG_CONFIG --atleast-version=0.9.8 openssl; then
++    if $PKG_CONFIG --atleast-version=1.0.1 openssl; then
+       found_openssl=yes
+       OPENSSL_LIBS=`$PKG_CONFIG --libs openssl`
+       OPENSSL_INCS=`$PKG_CONFIG --cflags-only-I openssl`
+       OPENSSL_INCDIR=`$PKG_CONFIG --variable=includedir openssl`
+     else
+-      AC_MSG_ERROR([OpenSSL version >= 0.9.8 and < 1.1 required.])
++      AC_MSG_ERROR([OpenSSL version 1.0.1 or greater required.])
+     fi
+ 
+     if test -n "$OPENSSL_LIBS"; then
+@@ -2369,7 +2367,7 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+       if test -r $i/include/openssl/evp.h; then
+         OPENSSL_INCDIR=$i/include
+       fi
+-      if test -r $i/$PHP_LIBDIR/libssl.a -o -r $i/$PHP_LIBDIR/$DEB_HOST_MULTIARCH/libssl.$SHLIB_SUFFIX_NAME -o -r $i/$PHP_LIBDIR/libssl.$SHLIB_SUFFIX_NAME; then
++      if test -r $i/$PHP_LIBDIR/libssl.a -o -r $i/$PHP_LIBDIR/libssl.$SHLIB_SUFFIX_NAME; then
+         OPENSSL_LIBDIR=$i/$PHP_LIBDIR
+       fi
+       test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
+@@ -2388,19 +2386,21 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+     AC_MSG_CHECKING([for OpenSSL version])
+     AC_EGREP_CPP(yes,[
+ #include <openssl/opensslv.h>
+-#if OPENSSL_VERSION_NUMBER >= 0x0090800fL
++#if OPENSSL_VERSION_NUMBER >= 0x10001001L
+   yes
+ #endif
+     ],[
+-      AC_MSG_RESULT([>= 0.9.8])
++      AC_MSG_RESULT([>= 1.0.1])
+     ],[
+-      AC_MSG_ERROR([OpenSSL version 0.9.8 or greater required.])
++      AC_MSG_ERROR([OpenSSL version 1.0.1 or greater required.])
+     ])
+     CPPFLAGS=$old_CPPFLAGS
+ 
+     PHP_ADD_INCLUDE($OPENSSL_INCDIR)
+   
+-    PHP_CHECK_LIBRARY(crypto, CRYPTO_free, [:],[
++    PHP_CHECK_LIBRARY(crypto, CRYPTO_free, [
++      PHP_ADD_LIBRARY(crypto,,$1)
++    ],[
+       AC_MSG_ERROR([libcrypto not found!])
+     ],[
+       -L$OPENSSL_LIBDIR
+diff --git a/aclocal.m4 b/aclocal.m4
+index 1cf9f2f..9232c59 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -2337,15 +2337,13 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+ 
+   dnl If pkg-config is found try using it
+   if test "$PHP_OPENSSL_DIR" = "yes" && test -x "$PKG_CONFIG" && $PKG_CONFIG --exists openssl; then
+-    if $PKG_CONFIG --atleast-version=1.1 openssl; then
+-      AC_MSG_ERROR([OpenSSL version >= 1.1 is not supported.])
+-    elif $PKG_CONFIG --atleast-version=0.9.8 openssl; then
++    if $PKG_CONFIG --atleast-version=1.0.1 openssl; then
+       found_openssl=yes
+       OPENSSL_LIBS=`$PKG_CONFIG --libs openssl`
+       OPENSSL_INCS=`$PKG_CONFIG --cflags-only-I openssl`
+       OPENSSL_INCDIR=`$PKG_CONFIG --variable=includedir openssl`
+     else
+-      AC_MSG_ERROR([OpenSSL version >= 0.9.8 and < 1.1 required.])
++      AC_MSG_ERROR([OpenSSL version 1.0.1 or greater required.])
+     fi
+ 
+     if test -n "$OPENSSL_LIBS"; then
+@@ -2386,13 +2384,13 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+     AC_MSG_CHECKING([for OpenSSL version])
+     AC_EGREP_CPP(yes,[
+ #include <openssl/opensslv.h>
+-#if OPENSSL_VERSION_NUMBER >= 0x0090800fL
++#if OPENSSL_VERSION_NUMBER >= 0x10001001L
+   yes
+ #endif
+     ],[
+-      AC_MSG_RESULT([>= 0.9.8])
++      AC_MSG_RESULT([>= 1.0.1])
+     ],[
+-      AC_MSG_ERROR([OpenSSL version 0.9.8 or greater required.])
++      AC_MSG_ERROR([OpenSSL version 1.0.1 or greater required.])
+     ])
+     CPPFLAGS=$old_CPPFLAGS
+ 
 diff --git a/ext/openssl/config0.m4 b/ext/openssl/config0.m4
 index 01fc89b..a7bbf05 100644
 --- a/ext/openssl/config0.m4
