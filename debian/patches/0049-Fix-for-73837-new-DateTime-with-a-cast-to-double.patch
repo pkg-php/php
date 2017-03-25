@@ -1,0 +1,21 @@
+From: Derick Rethans <github@derickrethans.nl>
+Date: Mon, 20 Mar 2017 17:48:15 +0000
+Subject: Fix for #73837: "new DateTime()" with a cast to double
+
+---
+ ext/date/php_date.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/date/php_date.c b/ext/date/php_date.c
+index c219e5b..783cbe4 100644
+--- a/ext/date/php_date.c
++++ b/ext/date/php_date.c
+@@ -2563,7 +2563,7 @@ static void update_errors_warnings(timelib_error_container *last_errors) /* {{{
+ 
+ static void php_date_set_time_fraction(timelib_time *time, int microseconds)
+ {
+-	time->f = microseconds / 1000000;
++	time->f = (double) microseconds / 1000000;
+ }
+ 
+ static void php_date_get_current_time_with_fraction(time_t *sec, suseconds_t *usec)

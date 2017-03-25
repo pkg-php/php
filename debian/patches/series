@@ -46,3 +46,5 @@
 0046-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
 0049-Fix-check-for-CURL-include-in-M-A-directory.patch
 0048-Always-use-custom-php_ap_map_http_request_error-to-s.patch
+0049-Fix-for-73837-new-DateTime-with-a-cast-to-double.patch
+0050-Fixed-74298-IntlDateFormatter-format-doesn-t-return-.patch

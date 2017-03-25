@@ -1,0 +1,70 @@
+From: andrewnester <andrew.nester.dev@gmail.com>
+Date: Fri, 24 Mar 2017 19:23:15 +0300
+Subject: Fixed #74298 - IntlDateFormatter->format() doesn't return
+ microseconds/fractions
+
+---
+ ext/intl/common/common_date.cpp |  5 ++++-
+ ext/intl/tests/bug74298.phpt    | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+ create mode 100644 ext/intl/tests/bug74298.phpt
+
+diff --git a/ext/intl/common/common_date.cpp b/ext/intl/common/common_date.cpp
+index f1bf75a..9bf7007 100644
+--- a/ext/intl/common/common_date.cpp
++++ b/ext/intl/common/common_date.cpp
+@@ -125,6 +125,8 @@ U_CFUNC int intl_datetime_decompose(zval *z, double *millis, TimeZone **tz,
+ 	}
+ 
+ 	if (millis) {
++		php_date_obj *datetime;
++
+ 		ZVAL_STRING(&zfuncname, "getTimestamp");
+ 		if (call_user_function(NULL, z, &zfuncname, &retval, 0, NULL)
+ 				!= SUCCESS || Z_TYPE(retval) != IS_LONG) {
+@@ -137,7 +139,8 @@ U_CFUNC int intl_datetime_decompose(zval *z, double *millis, TimeZone **tz,
+ 			return FAILURE;
+ 		}
+ 
+-		*millis = U_MILLIS_PER_SECOND * (double)Z_LVAL(retval);
++		datetime = Z_PHPDATE_P(z);
++		*millis = U_MILLIS_PER_SECOND * ((double)Z_LVAL(retval) + datetime->time->f);
+ 		zval_ptr_dtor(&zfuncname);
+ 	}
+ 
+diff --git a/ext/intl/tests/bug74298.phpt b/ext/intl/tests/bug74298.phpt
+new file mode 100644
+index 0000000..0600a46
+--- /dev/null
++++ b/ext/intl/tests/bug74298.phpt
+@@ -0,0 +1,30 @@
++--TEST--
++Bug #74298 (IntlDateFormatter->format() doesn't return microseconds/fractions)
++--SKIPIF--
++<?php if (!extension_loaded('intl')) print 'skip'; ?>
++--FILE--
++<?php
++var_dump((new \DateTime('2017-01-01 01:02:03.123456'))->format('Y-m-d\TH:i:s.u'));
++
++var_dump((new \IntlDateFormatter(
++    'en-US',
++    \IntlDateFormatter::FULL,
++    \IntlDateFormatter::FULL,
++    'UTC',
++    \IntlDateFormatter::GREGORIAN,
++    'yyyy-MM-dd HH:mm:ss.SSSSSS'
++))->format(new \DateTime('2017-01-01 01:02:03.123456')));
++
++var_dump(datefmt_create(
++    'en-US',
++    \IntlDateFormatter::FULL,
++    \IntlDateFormatter::FULL,
++    'UTC',
++    \IntlDateFormatter::GREGORIAN,
++    'yyyy-MM-dd HH:mm:ss.SSSSSS'
++)->format(new \DateTime('2017-01-01 01:02:03.123456')));
++?>
++--EXPECTF--
++string(26) "2017-01-01T01:02:03.123456"
++string(26) "2017-01-01 01:02:03.123000"
++string(26) "2017-01-01 01:02:03.123000"
