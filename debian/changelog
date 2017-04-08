@@ -1,3 +1,9 @@
+php5.6 (5.6.30-9) experimental; urgency=medium
+
+  * Add patch to fix segfault in zval_mark_grey
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 08 Apr 2017 10:41:00 +0200
+
 php5.6 (5.6.30-8) experimental; urgency=medium
 
   * Use update version of OpenSSL 1.1 compatibility patch (Courtesy of
