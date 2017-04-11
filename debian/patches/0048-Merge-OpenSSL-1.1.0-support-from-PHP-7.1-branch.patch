@@ -4572,7 +4572,7 @@ index 8e0cef4..3c239af 100644
  
      [type] => 3
 diff --git a/ext/openssl/xp_ssl.c b/ext/openssl/xp_ssl.c
-index b4387cd..a06f150 100644
+index 7db219d..9858133 100644
 --- a/ext/openssl/xp_ssl.c
 +++ b/ext/openssl/xp_ssl.c
 @@ -56,28 +56,19 @@
@@ -4850,7 +4850,7 @@ index b4387cd..a06f150 100644
  
  	if (GET_VER_OPT("verify_peer") && !zend_is_true(val)) {
  		disable_peer_verification(sslsock->ctx, stream);
-@@ -1687,6 +1661,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
+@@ -1684,6 +1658,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  	char *proto_str;
  	long proto = SSL_version(ssl_handle);
  	const SSL_CIPHER *cipher = SSL_get_current_cipher(ssl_handle);
@@ -4858,7 +4858,7 @@ index b4387cd..a06f150 100644
  
  	switch (proto) {
  #ifdef HAVE_TLS12
-@@ -1707,11 +1682,6 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
+@@ -1704,11 +1679,6 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  			proto_str = "SSLv3";
  			break;
  #endif
@@ -4870,7 +4870,7 @@ index b4387cd..a06f150 100644
  		default: proto_str = "UNKNOWN";
  	}
  
-@@ -1719,7 +1689,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
+@@ -1716,7 +1686,7 @@ static zend_array *capture_session_meta(SSL *ssl_handle) /* {{{ */
  	add_assoc_string(&meta_arr, "protocol", proto_str);
  	add_assoc_string(&meta_arr, "cipher_name", (char *) SSL_CIPHER_get_name(cipher));
  	add_assoc_long(&meta_arr, "cipher_bits", SSL_CIPHER_get_bits(cipher, NULL));
@@ -4879,7 +4879,7 @@ index b4387cd..a06f150 100644
  
  	return Z_ARR(meta_arr);
  }
-@@ -2215,39 +2185,33 @@ static inline int php_openssl_tcp_sockop_accept(php_stream *stream, php_openssl_
+@@ -2222,39 +2192,33 @@ static inline int php_openssl_tcp_sockop_accept(php_stream *stream, php_openssl_
  		php_stream_xport_param *xparam STREAMS_DC)
  {
  	int clisock;
@@ -4938,7 +4938,7 @@ index b4387cd..a06f150 100644
  			}
  		}
  
-@@ -2285,6 +2249,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
+@@ -2292,6 +2256,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  			if (sslsock->ssl_active) {
  				zval tmp;
  				char *proto_str;
@@ -4946,7 +4946,7 @@ index b4387cd..a06f150 100644
  				const SSL_CIPHER *cipher;
  
  				array_init(&tmp);
-@@ -2300,9 +2265,6 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
+@@ -2307,9 +2272,6 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  #ifdef HAVE_SSL3
  					case SSL3_VERSION: proto_str = "SSLv3"; break;
  #endif
@@ -4956,7 +4956,7 @@ index b4387cd..a06f150 100644
  					default: proto_str = "UNKNOWN";
  				}
  
-@@ -2311,7 +2273,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
+@@ -2318,7 +2280,7 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
  				add_assoc_string(&tmp, "protocol", proto_str);
  				add_assoc_string(&tmp, "cipher_name", (char *) SSL_CIPHER_get_name(cipher));
  				add_assoc_long(&tmp, "cipher_bits", SSL_CIPHER_get_bits(cipher, NULL));
@@ -4965,7 +4965,7 @@ index b4387cd..a06f150 100644
  
  #ifdef HAVE_TLS_ALPN
  				{
-@@ -2596,14 +2558,9 @@ php_stream *php_openssl_ssl_socket_factory(const char *proto, size_t protolen,
+@@ -2603,14 +2565,9 @@ php_stream *php_openssl_ssl_socket_factory(const char *proto, size_t protolen,
  		sslsock->enable_on_connect = 1;
  		sslsock->method = get_crypto_method(context, STREAM_CRYPTO_METHOD_ANY_CLIENT);
  	} else if (strncmp(proto, "sslv2", protolen) == 0) {

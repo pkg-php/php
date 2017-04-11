@@ -21,7 +21,7 @@ index 40ca48e..4b98ea8 100644
  			transport_len = mnd_sprintf(&transport, 0, "unix://%s", socket_or_pipe);
  			unix_socket = TRUE;
 diff --git a/ext/pdo_mysql/pdo_mysql.c b/ext/pdo_mysql/pdo_mysql.c
-index 32b85ba..70688cf 100644
+index 99fb6d3..b98fd04 100644
 --- a/ext/pdo_mysql/pdo_mysql.c
 +++ b/ext/pdo_mysql/pdo_mysql.c
 @@ -53,7 +53,7 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_mysql)
