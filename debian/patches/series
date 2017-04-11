@@ -54,3 +54,4 @@
 0054-Fix-check-for-CURL-include-in-M-A-directory.patch
 0055-Use-OpenSSL-1.1-compatibility-patch-when-built-with-.patch
 0056-Fix-PHP-bug-64827-Segfault-in-zval_mark_grey-zend_gc.patch
+0057-Detect-invalid-port-in-xp_socket-parse-ip-address.patch
