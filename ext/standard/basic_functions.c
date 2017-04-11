@@ -3810,6 +3810,8 @@ PHP_RSHUTDOWN_FUNCTION(basic) /* {{{ */
 	zend_hash_destroy(&BG(putenv_ht));
 #endif
 
+	BG(mt_rand_is_seeded) = 0;
+
 	if (BG(umask) != -1) {
 		umask(BG(umask));
 	}
@@ -4728,6 +4730,7 @@ PHPAPI int _php_error_log(int opt_err, char *message, char *opt, char *headers) 
 PHPAPI int _php_error_log_ex(int opt_err, char *message, size_t message_len, char *opt, char *headers) /* {{{ */
 {
 	php_stream *stream = NULL;
+	size_t nbytes;
 
 	switch (opt_err)
 	{
@@ -4747,8 +4750,11 @@ PHPAPI int _php_error_log_ex(int opt_err, char *message, size_t message_len, cha
 			if (!stream) {
 				return FAILURE;
 			}
-			php_stream_write(stream, message, message_len);
+			nbytes = php_stream_write(stream, message, message_len);
 			php_stream_close(stream);
+			if (nbytes != message_len) {
+				return FAILURE;
+			}
 			break;
 
 		case 4: /* send to SAPI */
