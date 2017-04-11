@@ -1,3 +1,9 @@
+php5.6 (5.6.30-10) experimental; urgency=medium
+
+  * [CVE-2017-7272]: Fix detect invalid port in xp_socket parse ip address
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 12 Apr 2017 00:24:54 +0200
+
 php5.6 (5.6.30-9) experimental; urgency=medium
 
   * Add patch to fix segfault in zval_mark_grey
