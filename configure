@@ -3662,7 +3662,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
 
 PHP_MAJOR_VERSION=7
 PHP_MINOR_VERSION=1
-PHP_RELEASE_VERSION=3
+PHP_RELEASE_VERSION=4
 PHP_EXTRA_VERSION=""
 PHP_VERSION="$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION.$PHP_RELEASE_VERSION$PHP_EXTRA_VERSION"
 PHP_VERSION_ID=`expr $PHP_MAJOR_VERSION \* 10000 + $PHP_MINOR_VERSION \* 100 + $PHP_RELEASE_VERSION`
@@ -82607,7 +82607,7 @@ else
 #include <math.h>
 #include <stdlib.h>
 
-#ifdef HAVE_DECL_ISNAN
+#if HAVE_DECL_ISNAN
 #define zend_isnan(a) isnan(a)
 #elif defined(HAVE_FPCLASS)
 #define zend_isnan(a) ((fpclass(a) == FP_SNAN) || (fpclass(a) == FP_QNAN))
@@ -82660,7 +82660,7 @@ else
 #include <math.h>
 #include <stdlib.h>
 
-#ifdef HAVE_DECL_ISINF
+#if HAVE_DECL_ISINF
 #define zend_isinf(a) isinf(a)
 #elif defined(INFINITY)
 /* Might not work, but is required by ISO C99 */
@@ -82716,7 +82716,7 @@ else
 #include <math.h>
 #include <stdlib.h>
 
-#ifdef HAVE_DECL_ISINF
+#if HAVE_DECL_ISINF
 #define zend_isinf(a) isinf(a)
 #elif defined(INFINITY)
 /* Might not work, but is required by ISO C99 */
@@ -82772,7 +82772,7 @@ else
 #include <math.h>
 #include <stdlib.h>
 
-#ifdef HAVE_DECL_ISNAN
+#if HAVE_DECL_ISNAN
 #define zend_isnan(a) isnan(a)
 #elif defined(HAVE_FPCLASS)
 #define zend_isnan(a) ((fpclass(a) == FP_SNAN) || (fpclass(a) == FP_QNAN))
